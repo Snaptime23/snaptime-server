@@ -1,0 +1,76 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+env:
+  GO_VERSION: 1.20
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Build
+        run: |
+          go mod tidy
+          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o snaptime-server main.go
+      - name: Copy artifact
+        run: |
+          mkdir action-product
+          cp snaptime-server ./action-product/
+          cp -r ./serverless/* ./action-product/
+      - name: Show files to upload
+        run: |
+          cd action-product
+          chmod +x snaptime-server
+          chmod +x scf_bootstrap
+          ls -lah
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: snaptime-server
+          path: action-product
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: snaptime-server
+          path: ./serverless
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Serverless Cloud Framework
+        run: npm install -g serverless-cloud-framework
+      - name: Configure SCF credentials
+        run: |
+          scf credentials set --secretId ${{ vars.TENCENT_SCF_SECRET_ID }} \
+                              --secretKey ${{ secrets.TENCENT_SCF_SECRET_KEY }}
+      - name: Show files to deploy
+        run: |
+          cd serverless
+          chmod +x snaptime-server
+          chmod +x scf_bootstrap
+          ls -lah
+      - name: Deploy
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then export STAGE=prod; else export STAGE=dev; fi
+          cd serverless
+          scf deploy --force --stage $STAGE

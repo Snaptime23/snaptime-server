@@ -1,0 +1,21 @@
+# https://github.com/serverless-components/tencent-scf/blob/master/docs/configure.md
+
+app: server
+# stage: dev
+# stage is read from env.STAGE while running GitHub Actions
+component: scf
+name: snaptime
+inputs:
+  src: ./
+  type: web
+  runtime: Go1
+  namespace: snaptime
+  region: ap-shanghai
+  memorySize: 64
+  initTimeout: 30
+  timeout: 10
+  ignoreTriggers: true
+  environment:
+    variables:
+      TZ: Asia/Shanghai
+      SERVERLESS: 1

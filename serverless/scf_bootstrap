@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# This script is used to bootstrap the binary on Tencent SCF.
+
+SERVERLESS=1 ./snaptime-server
