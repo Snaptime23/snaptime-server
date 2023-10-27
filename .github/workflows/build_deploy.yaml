@@ -26,7 +26,7 @@ jobs:
       - name: Build
         run: |
           go mod tidy
-          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o snaptime-server main.go
+          GOOS=linux GOARCH=amd64 go build -o snaptime-server .
       - name: Copy artifact
         run: |
           mkdir action-product
