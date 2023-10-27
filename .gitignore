@@ -22,3 +22,6 @@ go.work
 
 # macOS files
 .DS_Store
+
+# Artifacts
+/snaptime-server

@@ -11,7 +11,7 @@ on:
       - dev
 
 env:
-  GO_VERSION: '1.19'
+  GO_VERSION: '1.21'
 
 jobs:
   build:
@@ -26,7 +26,7 @@ jobs:
       - name: Build
         run: |
           go mod tidy
-          GOOS=linux GOARCH=amd64 go build -o snaptime-server .
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o snaptime-server .
       - name: Copy artifact
         run: |
           mkdir action-product
