@@ -11,19 +11,25 @@ type Server struct {
 	api.UnimplementedBaseServiceServer
 }
 
+func NewServer() *Server {
+	return &Server{
+		svr:                            service.NewService(),
+		UnimplementedBaseServiceServer: api.UnimplementedBaseServiceServer{},
+	}
+}
+
 func (s *Server) UserRegister(ctx context.Context, req *api.UserRegisterReq) (resp *api.UserRegisterResp, err error) {
-	return
+	return s.svr.UserRegister(ctx, req)
 }
 
 func (s *Server) UserLogin(ctx context.Context, req *api.UserLoginReq) (resp *api.UserLoginResp, err error) {
-	return
+	return s.svr.UserLogin(ctx, req)
 }
 
 func (s *Server) UserInfo(ctx context.Context, req *api.UserInfoReq) (resp *api.UserInfoResp, err error) {
-	resp = new(api.UserInfoResp)
-	return
+	return s.svr.UserInfo(ctx, req)
 }
 
 func (s *Server) PublishList(ctx context.Context, req *api.PublishListReq) (resp *api.PublishListResp, err error) {
-	return
+	return s.svr.PublishList(ctx, req)
 }
