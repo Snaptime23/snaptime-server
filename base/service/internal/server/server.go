@@ -20,6 +20,7 @@ func (s *Server) UserLogin(ctx context.Context, req *api.UserLoginReq) (resp *ap
 }
 
 func (s *Server) UserInfo(ctx context.Context, req *api.UserInfoReq) (resp *api.UserInfoResp, err error) {
+	resp = new(api.UserInfoResp)
 	return
 }
 

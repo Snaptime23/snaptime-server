@@ -20,7 +20,6 @@ func Run() {
 	server := http.NewServer(conn)
 
 	app := router.CreateEngine()
-	router.InitBaseRouter(app, server)
 	app.SetTrustedProxies(nil)
 
 	// first use env, then default
@@ -39,5 +38,6 @@ func Run() {
 	}
 
 	println("[Snaptime] listening on " + host + ":" + port)
+	router.InitBaseRouter(app, server)
 	app.Run(host + ":" + port)
 }

@@ -12,12 +12,12 @@ func main() {
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
-		httpInterface.Run()
+		service.Run()
 	}()
 	time.Sleep(time.Second * 5)
 	go func() {
 		defer wg.Done()
-		service.Run()
+		httpInterface.Run()
 	}()
 	wg.Wait()
 }
