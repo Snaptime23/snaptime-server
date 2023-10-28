@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+// 定义go生成后的包名
+option go_package = "./;api";
+package api;
+
+message UserLoginReq {
+  string UserName = 1;
+  string Password = 2;
+}
+
+message UserLoginResp {
+  int64 UserId = 1;
+  string Token = 2;
+}
+
+message UserRegisterReq {
+  string UserName = 1;
+  string Password = 2;
+  string ConfirmPassword = 3;
+}
+
+message UserRegisterResp {
+  int64 UserId = 1;
+  string Token = 2;
+}
+
+message UserInfoReq {
+  int64 UserId = 1;
+  string Token = 2;
+}
+
+message UserInfo {
+  int64 UserId = 1;
+  string UserName = 2;
+  int64 FollowCount = 3;
+  int64 FollowerCount = 4;
+  int64 IsFollow = 5;
+  string Avatar = 6;
+  int64 PublishNum = 7;
+  int64 FavouriteNum = 8;
+  int64 LikeNum = 9;
+  int64 ReceivedLikeNum = 10;
+}
+
+message UserInfoResp {
+    UserInfo user = 1;
+}
+
+message PublishListReq {
+  int64 UserId = 1;
+  string Token = 2;
+}
+
+message VideoInfo {
+  int64 VideoId = 1;
+  UserInfo UserInfo = 2;
+  int64 FavoriteCount = 3;
+  int64 CommentCount = 4;
+  int64 IsFavorite = 5;
+  string Title = 6;
+}
+
+message PublishListResp {
+  VideoInfo Video = 1;
+}
+
+// 定义接口
+service BaseService {
+  rpc UserRegister(UserRegisterReq) returns (UserRegisterResp);
+  rpc UserLogin(UserLoginReq) returns (UserLoginResp);
+  rpc UserInfo(UserInfoReq) returns (UserInfoResp);
+  rpc PublishList (PublishListReq) returns (PublishListResp);
+}
