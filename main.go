@@ -1,12 +1,17 @@
 package main
 
 import (
+	httpInterface "github.com/Snaptime23/snaptime-server/v2/base/interface/cmd"
+	service "github.com/Snaptime23/snaptime-server/v2/base/service/cmd"
 	"os"
 
 	"github.com/Snaptime23/snaptime-server/v2/router"
 )
 
 func main() {
+	go service.Run()
+	go httpInterface.Run()
+
 	app := router.CreateEngine()
 	app.SetTrustedProxies(nil)
 

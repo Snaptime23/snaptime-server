@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"github.com/Snaptime23/snaptime-server/v2/base/internal/api"
@@ -9,7 +9,7 @@ import (
 
 const PORT = "9001"
 
-func main() {
+func Run() {
 	s := grpc.NewServer()
 	api.RegisterBaseServiceServer(s, &server.Server{})
 
