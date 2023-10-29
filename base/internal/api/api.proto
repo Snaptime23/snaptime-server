@@ -10,7 +10,7 @@ message UserLoginReq {
 }
 
 message UserLoginResp {
-  int64 UserId = 1;
+  string UserId = 1;
   string Token = 2;
 }
 
@@ -21,17 +21,16 @@ message UserRegisterReq {
 }
 
 message UserRegisterResp {
-  int64 UserId = 1;
+  string UserId = 1;
   string Token = 2;
 }
 
 message UserInfoReq {
-  int64 UserId = 1;
-  string Token = 2;
+  string UserId = 1;
 }
 
 message UserInfo {
-  int64 UserId = 1;
+  string UserId = 1;
   string UserName = 2;
   int64 FollowCount = 3;
   int64 FollowerCount = 4;
@@ -48,8 +47,7 @@ message UserInfoResp {
 }
 
 message PublishListReq {
-  int64 UserId = 1;
-  string Token = 2;
+  string UserId = 1;
 }
 
 message VideoInfo {

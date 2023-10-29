@@ -42,24 +42,22 @@ func (s *HttpServer) UserLogin(c *gin.Context) {
 
 func (s *HttpServer) UserInfo(c *gin.Context) {
 	arg := new(struct {
-		UserId int64
-		Token  string
+		UserId string
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
-	resp, err := s.svr.UserInfo(arg.UserId, arg.Token)
+	resp, err := s.svr.UserInfo(arg.UserId)
 	tools.HandleErrOrResp(c, resp, err)
 }
 
 func (s *HttpServer) PublishList(c *gin.Context) {
 	arg := new(struct {
-		UserId int64
-		Token  string
+		UserId string
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
-	resp, err := s.svr.PublishList(arg.UserId, arg.Token)
+	resp, err := s.svr.PublishList(arg.UserId)
 	tools.HandleErrOrResp(c, resp, err)
 }

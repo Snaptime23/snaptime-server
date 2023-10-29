@@ -29,16 +29,14 @@ func (s *Service) UserLogin(UserName, Password string) (*api.UserLoginResp, erro
 	})
 }
 
-func (s *Service) UserInfo(UserId int64, Token string) (*api.UserInfoResp, error) {
+func (s *Service) UserInfo(UserId string) (*api.UserInfoResp, error) {
 	return s.baseClient.UserInfo(context.Background(), &api.UserInfoReq{
 		UserId: UserId,
-		Token:  Token,
 	})
 }
 
-func (s *Service) PublishList(UserId int64, Token string) (*api.PublishListResp, error) {
+func (s *Service) PublishList(UserId string) (*api.PublishListResp, error) {
 	return s.baseClient.PublishList(context.Background(), &api.PublishListReq{
 		UserId: UserId,
-		Token:  Token,
 	})
 }
