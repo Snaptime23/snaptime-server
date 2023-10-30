@@ -78,3 +78,13 @@ func (s *Service) PublishList(ctx context.Context, req *api.PublishListReq) (res
 	resp = new(api.PublishListResp)
 	return
 }
+
+func (s *Service) CreateComment(ctx context.Context, req *api.CreateCommentReq) (resp *api.CreateCommentResp, err error) {
+	resp = new(api.CreateCommentResp)
+	return
+}
+
+func (s *Service) CommentList(ctx context.Context, req *api.CommentListReq) (resp *api.CommentListResp, err error) {
+	resp = new(api.CommentListResp)
+	return
+}

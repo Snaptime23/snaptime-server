@@ -63,10 +63,40 @@ message PublishListResp {
   VideoInfo Video = 1;
 }
 
+message CommentInfo {
+  string CommentId = 1;
+  UserInfo User = 2;
+  string VideoId = 3;
+  string Content = 4;
+  int64 PublishDate = 5;
+}
+
+message CreateCommentReq {
+  string VideoId = 1;
+  int64 ActionType = 2;
+  string Content = 3;
+  string CommentId = 4;
+  string UserID = 5;
+}
+
+message CreateCommentResp {
+  string CommentId = 1;
+}
+
+message CommentListReq {
+  string VideoId = 1;
+}
+
+message CommentListResp {
+  repeated CommentInfo List = 1;
+}
+
 // 定义接口
 service BaseService {
   rpc UserRegister(UserRegisterReq) returns (UserRegisterResp);
   rpc UserLogin(UserLoginReq) returns (UserLoginResp);
   rpc UserInfo(UserInfoReq) returns (UserInfoResp);
   rpc PublishList (PublishListReq) returns (PublishListResp);
+  rpc CreateComment (CreateCommentReq) returns (CreateCommentResp);
+  rpc CommentList (CommentListReq) returns (CommentListResp);
 }

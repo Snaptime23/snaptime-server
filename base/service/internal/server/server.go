@@ -33,3 +33,11 @@ func (s *Server) UserInfo(ctx context.Context, req *api.UserInfoReq) (resp *api.
 func (s *Server) PublishList(ctx context.Context, req *api.PublishListReq) (resp *api.PublishListResp, err error) {
 	return s.svr.PublishList(ctx, req)
 }
+
+func (s *Server) CreateComment(ctx context.Context, req *api.CreateCommentReq) (resp *api.CreateCommentResp, err error) {
+	return s.svr.CreateComment(ctx, req)
+}
+
+func (s *Server) CommentList(ctx context.Context, req *api.CommentListReq) (resp *api.CommentListResp, err error) {
+	return s.svr.CommentList(ctx, req)
+}

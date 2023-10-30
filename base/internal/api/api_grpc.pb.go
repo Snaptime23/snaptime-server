@@ -19,10 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	BaseService_UserRegister_FullMethodName = "/api.BaseService/UserRegister"
-	BaseService_UserLogin_FullMethodName    = "/api.BaseService/UserLogin"
-	BaseService_UserInfo_FullMethodName     = "/api.BaseService/UserInfo"
-	BaseService_PublishList_FullMethodName  = "/api.BaseService/PublishList"
+	BaseService_UserRegister_FullMethodName  = "/api.BaseService/UserRegister"
+	BaseService_UserLogin_FullMethodName     = "/api.BaseService/UserLogin"
+	BaseService_UserInfo_FullMethodName      = "/api.BaseService/UserInfo"
+	BaseService_PublishList_FullMethodName   = "/api.BaseService/PublishList"
+	BaseService_CreateComment_FullMethodName = "/api.BaseService/CreateComment"
+	BaseService_CommentList_FullMethodName   = "/api.BaseService/CommentList"
 )
 
 // BaseServiceClient is the client API for BaseService service.
@@ -33,6 +35,8 @@ type BaseServiceClient interface {
 	UserLogin(ctx context.Context, in *UserLoginReq, opts ...grpc.CallOption) (*UserLoginResp, error)
 	UserInfo(ctx context.Context, in *UserInfoReq, opts ...grpc.CallOption) (*UserInfoResp, error)
 	PublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
+	CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error)
+	CommentList(ctx context.Context, in *CommentListReq, opts ...grpc.CallOption) (*CommentListResp, error)
 }
 
 type baseServiceClient struct {
@@ -79,6 +83,24 @@ func (c *baseServiceClient) PublishList(ctx context.Context, in *PublishListReq,
 	return out, nil
 }
 
+func (c *baseServiceClient) CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error) {
+	out := new(CreateCommentResp)
+	err := c.cc.Invoke(ctx, BaseService_CreateComment_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseServiceClient) CommentList(ctx context.Context, in *CommentListReq, opts ...grpc.CallOption) (*CommentListResp, error) {
+	out := new(CommentListResp)
+	err := c.cc.Invoke(ctx, BaseService_CommentList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BaseServiceServer is the server API for BaseService service.
 // All implementations must embed UnimplementedBaseServiceServer
 // for forward compatibility
@@ -87,6 +109,8 @@ type BaseServiceServer interface {
 	UserLogin(context.Context, *UserLoginReq) (*UserLoginResp, error)
 	UserInfo(context.Context, *UserInfoReq) (*UserInfoResp, error)
 	PublishList(context.Context, *PublishListReq) (*PublishListResp, error)
+	CreateComment(context.Context, *CreateCommentReq) (*CreateCommentResp, error)
+	CommentList(context.Context, *CommentListReq) (*CommentListResp, error)
 	mustEmbedUnimplementedBaseServiceServer()
 }
 
@@ -105,6 +129,12 @@ func (UnimplementedBaseServiceServer) UserInfo(context.Context, *UserInfoReq) (*
 }
 func (UnimplementedBaseServiceServer) PublishList(context.Context, *PublishListReq) (*PublishListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PublishList not implemented")
+}
+func (UnimplementedBaseServiceServer) CreateComment(context.Context, *CreateCommentReq) (*CreateCommentResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateComment not implemented")
+}
+func (UnimplementedBaseServiceServer) CommentList(context.Context, *CommentListReq) (*CommentListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CommentList not implemented")
 }
 func (UnimplementedBaseServiceServer) mustEmbedUnimplementedBaseServiceServer() {}
 
@@ -191,6 +221,42 @@ func _BaseService_PublishList_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BaseService_CreateComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCommentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).CreateComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_CreateComment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).CreateComment(ctx, req.(*CreateCommentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BaseService_CommentList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CommentListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).CommentList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_CommentList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).CommentList(ctx, req.(*CommentListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BaseService_ServiceDesc is the grpc.ServiceDesc for BaseService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -213,6 +279,14 @@ var BaseService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PublishList",
 			Handler:    _BaseService_PublishList_Handler,
+		},
+		{
+			MethodName: "CreateComment",
+			Handler:    _BaseService_CreateComment_Handler,
+		},
+		{
+			MethodName: "CommentList",
+			Handler:    _BaseService_CommentList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

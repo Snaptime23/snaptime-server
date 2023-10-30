@@ -40,3 +40,11 @@ func (s *Service) PublishList(UserId string) (*api.PublishListResp, error) {
 		UserId: UserId,
 	})
 }
+
+func (s *Service) CreateComment(ctx context.Context, req *api.CreateCommentReq) (*api.CreateCommentResp, error) {
+	return s.baseClient.CreateComment(ctx, req)
+}
+
+func (s *Service) CommentList(ctx context.Context, req *api.CommentListReq) (*api.CommentListResp, error) {
+	return s.baseClient.CommentList(ctx, req)
+}

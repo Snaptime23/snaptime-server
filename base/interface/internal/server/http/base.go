@@ -1,7 +1,9 @@
 package http
 
 import (
+	"context"
 	"github.com/Snaptime23/snaptime-server/v2/base/interface/internal/service"
+	"github.com/Snaptime23/snaptime-server/v2/base/internal/api"
 	"github.com/Snaptime23/snaptime-server/v2/tools"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
@@ -59,5 +61,38 @@ func (s *HttpServer) PublishList(c *gin.Context) {
 		return
 	}
 	resp, err := s.svr.PublishList(arg.UserId)
+	tools.HandleErrOrResp(c, resp, err)
+}
+
+func (s *HttpServer) CreateComment(c *gin.Context) {
+	arg := new(struct {
+		VideoId    string
+		ActionType int64
+		Content    string
+		CommentId  string
+	})
+	if tools.HandleError(c, c.Bind(arg), "") {
+		return
+	}
+	resp, err := s.svr.CreateComment(context.Background(), &api.CreateCommentReq{
+		VideoId:    arg.VideoId,
+		ActionType: arg.ActionType,
+		Content:    arg.Content,
+		CommentId:  arg.CommentId,
+		UserID:     c.Query("user_id"),
+	})
+	tools.HandleErrOrResp(c, resp, err)
+}
+
+func (s *HttpServer) CommentList(c *gin.Context) {
+	arg := new(struct {
+		VideoId string
+	})
+	if tools.HandleError(c, c.Bind(arg), "") {
+		return
+	}
+	resp, err := s.svr.CommentList(context.Background(), &api.CommentListReq{
+		VideoId: arg.VideoId,
+	})
 	tools.HandleErrOrResp(c, resp, err)
 }
