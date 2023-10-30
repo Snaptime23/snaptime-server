@@ -4,13 +4,14 @@ import (
 	"context"
 	"errors"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao/model"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"log"
 )
 
 func CreateUser(ctx context.Context, username, password string) (string, error) {
-	// 其他的那些count会自动初始化为0，不用在这里指定了
 	user := &model.User{
+		ID:       uuid.NewString(),
 		UserName: username,
 		Password: password,
 	}
