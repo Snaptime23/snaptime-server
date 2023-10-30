@@ -9,6 +9,7 @@ func HandleError(c *gin.Context, err error, message string) bool {
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
+			"result":  err,
 			"message": message + ": " + err.Error(),
 		})
 		return true
@@ -19,7 +20,7 @@ func HandleError(c *gin.Context, err error, message string) bool {
 func SendResp(c *gin.Context, code int, T any, message string) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":    code,
-		"data":    T,
+		"result":  T,
 		"message": message,
 	})
 }

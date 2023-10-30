@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/Snaptime23/snaptime-server/v2/base/interface/internal/server/http"
+	"github.com/Snaptime23/snaptime-server/v2/mw"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -27,7 +28,7 @@ func InitBaseRouter(engine *gin.Engine, server *http.HttpServer) {
 	{
 		user.POST("/register", server.UserRegister)
 		user.POST("/login", server.UserLogin)
-		user.GET("/info", server.UserInfo)
-		user.GET("/publish/list", server.PublishList)
+		user.GET("/info", server.UserInfo).Use(mw.JwtAuth())
+		user.GET("/publish/list", server.PublishList).Use(mw.JwtAuth())
 	}
 }
