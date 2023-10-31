@@ -2,11 +2,15 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	"github.com/Snaptime23/snaptime-server/v2/base/internal/api"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao"
+	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao/model"
 	"github.com/Snaptime23/snaptime-server/v2/tools/errno"
 	"github.com/Snaptime23/snaptime-server/v2/tools/jwt"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"time"
 )
 
 type Service struct {
@@ -81,10 +85,52 @@ func (s *Service) PublishList(ctx context.Context, req *api.PublishListReq) (res
 
 func (s *Service) CreateComment(ctx context.Context, req *api.CreateCommentReq) (resp *api.CreateCommentResp, err error) {
 	resp = new(api.CreateCommentResp)
+	if req.ActionType == 0 { // create
+		resp.CommentId = uuid.NewString()
+		err = dao.CreateComment(ctx, &model.Comment{
+			CommentID:   resp.CommentId,
+			CreatedAt:   time.Time{},
+			UpdatedAt:   time.Time{},
+			DeletedAt:   sql.NullTime{},
+			UserId:      req.UserID,
+			VideoId:     req.VideoId,
+			Content:     req.Content,
+			PublishDate: time.Now().Format(time.DateTime),
+		})
+	} else { // delete
+		err = dao.DeleteCommentByID(ctx, req.CommentId)
+	}
 	return
 }
 
 func (s *Service) CommentList(ctx context.Context, req *api.CommentListReq) (resp *api.CommentListResp, err error) {
 	resp = new(api.CommentListResp)
+	ret, err := dao.GetCommentList(ctx, req.VideoId)
+	list := make([]*api.CommentInfo, 0)
+	for _, val := range ret {
+		user, err := dao.GetUserById(ctx, val.UserId)
+		if err != nil {
+			continue
+		}
+		list = append(list, &api.CommentInfo{
+			CommentId: val.CommentID,
+			User: &api.UserInfo{
+				UserId:          user.ID,
+				UserName:        user.UserName,
+				FollowCount:     user.FollowerCount,
+				FollowerCount:   user.FollowCount,
+				IsFollow:        0,
+				Avatar:          user.Avatar,
+				PublishNum:      user.PublishNum,
+				FavouriteNum:    user.FavouriteNum,
+				LikeNum:         user.LikeNum,
+				ReceivedLikeNum: user.ReceivedLikeNum,
+			},
+			VideoId:     val.VideoId,
+			Content:     val.Content,
+			PublishDate: val.PublishDate,
+		})
+	}
+	resp.List = list
 	return
 }

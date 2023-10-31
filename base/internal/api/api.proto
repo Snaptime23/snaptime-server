@@ -68,7 +68,7 @@ message CommentInfo {
   UserInfo User = 2;
   string VideoId = 3;
   string Content = 4;
-  int64 PublishDate = 5;
+  string PublishDate = 5;
 }
 
 message CreateCommentReq {
