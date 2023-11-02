@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
-	"github.com/Snaptime23/snaptime-server/v2/base/internal/api"
+	"github.com/Snaptime23/snaptime-server/v2/base/internal/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao/model"
 	"github.com/Snaptime23/snaptime-server/v2/tools/errno"
@@ -20,8 +20,8 @@ func NewService() *Service {
 	return &Service{}
 }
 
-func (s *Service) UserRegister(ctx context.Context, req *api.UserRegisterReq) (resp *api.UserRegisterResp, err error) {
-	resp = new(api.UserRegisterResp)
+func (s *Service) UserRegister(ctx context.Context, req *baseApi.UserRegisterReq) (resp *baseApi.UserRegisterResp, err error) {
+	resp = new(baseApi.UserRegisterResp)
 	user, err := dao.GetUserByName(ctx, req.UserName)
 	if req.Password != req.ConfirmPassword {
 		return resp, errno.NewErrNo("两次密码不一致")
@@ -41,8 +41,8 @@ func (s *Service) UserRegister(ctx context.Context, req *api.UserRegisterReq) (r
 	return
 }
 
-func (s *Service) UserLogin(ctx context.Context, req *api.UserLoginReq) (resp *api.UserLoginResp, err error) {
-	resp = new(api.UserLoginResp)
+func (s *Service) UserLogin(ctx context.Context, req *baseApi.UserLoginReq) (resp *baseApi.UserLoginResp, err error) {
+	resp = new(baseApi.UserLoginResp)
 	user, err := dao.GetUserByName(ctx, req.UserName)
 	if err != nil {
 		return
@@ -51,40 +51,38 @@ func (s *Service) UserLogin(ctx context.Context, req *api.UserLoginReq) (resp *a
 	if err != nil {
 		return
 	}
-	resp.UserId = user.ID
-	resp.Token, err = jwt.GenToken(user.ID, req.UserName)
+	resp.UserId = user.UserID
+	resp.Token, err = jwt.GenToken(user.UserID, req.UserName)
 	return
 }
 
-func (s *Service) UserInfo(ctx context.Context, req *api.UserInfoReq) (resp *api.UserInfoResp, err error) {
+func (s *Service) UserInfo(ctx context.Context, req *baseApi.UserInfoReq) (resp *baseApi.UserInfoResp, err error) {
 	user, err := dao.GetUserByName(ctx, req.UserId)
 	if err != nil {
 		return
 	}
-	resp = &api.UserInfoResp{
-		User: &api.UserInfo{
-			UserId:          user.ID,
-			UserName:        user.UserName,
-			FollowCount:     user.FollowCount,
-			FollowerCount:   user.FollowerCount,
-			IsFollow:        0,
-			Avatar:          user.Avatar,
-			PublishNum:      user.PublishNum,
-			FavouriteNum:    user.FavouriteNum,
-			LikeNum:         user.LikeNum,
-			ReceivedLikeNum: user.ReceivedLikeNum,
+	resp = &baseApi.UserInfoResp{
+		User: &baseApi.UserInfo{
+			UserId:        user.UserID,
+			UserName:      user.UserName,
+			FollowCount:   user.FollowCount,
+			FollowerCount: user.FollowerCount,
+			IsFollow:      0,
+			Avatar:        user.Avatar,
+			PublishNum:    user.VideoNum,
+			FavouriteNum:  user.FavouriteNum,
 		},
 	}
 	return
 }
 
-func (s *Service) PublishList(ctx context.Context, req *api.PublishListReq) (resp *api.PublishListResp, err error) {
-	resp = new(api.PublishListResp)
+func (s *Service) PublishList(ctx context.Context, req *baseApi.PublishListReq) (resp *baseApi.PublishListResp, err error) {
+	resp = new(baseApi.PublishListResp)
 	return
 }
 
-func (s *Service) CreateComment(ctx context.Context, req *api.CreateCommentReq) (resp *api.CreateCommentResp, err error) {
-	resp = new(api.CreateCommentResp)
+func (s *Service) CreateComment(ctx context.Context, req *baseApi.CreateCommentReq) (resp *baseApi.CreateCommentResp, err error) {
+	resp = new(baseApi.CreateCommentResp)
 	if req.ActionType == 0 { // create
 		resp.CommentId = uuid.NewString()
 		err = dao.CreateComment(ctx, &model.Comment{
@@ -103,28 +101,26 @@ func (s *Service) CreateComment(ctx context.Context, req *api.CreateCommentReq) 
 	return
 }
 
-func (s *Service) CommentList(ctx context.Context, req *api.CommentListReq) (resp *api.CommentListResp, err error) {
-	resp = new(api.CommentListResp)
+func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) (resp *baseApi.CommentListResp, err error) {
+	resp = new(baseApi.CommentListResp)
 	ret, err := dao.GetCommentList(ctx, req.VideoId)
-	list := make([]*api.CommentInfo, 0)
+	list := make([]*baseApi.CommentInfo, 0)
 	for _, val := range ret {
 		user, err := dao.GetUserById(ctx, val.UserId)
 		if err != nil {
 			continue
 		}
-		list = append(list, &api.CommentInfo{
+		list = append(list, &baseApi.CommentInfo{
 			CommentId: val.CommentID,
-			User: &api.UserInfo{
-				UserId:          user.ID,
-				UserName:        user.UserName,
-				FollowCount:     user.FollowerCount,
-				FollowerCount:   user.FollowCount,
-				IsFollow:        0,
-				Avatar:          user.Avatar,
-				PublishNum:      user.PublishNum,
-				FavouriteNum:    user.FavouriteNum,
-				LikeNum:         user.LikeNum,
-				ReceivedLikeNum: user.ReceivedLikeNum,
+			User: &baseApi.UserInfo{
+				UserId:        user.UserID,
+				UserName:      user.UserName,
+				FollowCount:   user.FollowerCount,
+				FollowerCount: user.FollowCount,
+				IsFollow:      0,
+				Avatar:        user.Avatar,
+				PublishNum:    user.VideoNum,
+				FavouriteNum:  user.FavouriteNum,
 			},
 			VideoId:     val.VideoId,
 			Content:     val.Content,

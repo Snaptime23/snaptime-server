@@ -11,7 +11,7 @@ import (
 
 func CreateUser(ctx context.Context, username, password string) (string, error) {
 	user := &model.User{
-		ID:       uuid.NewString(),
+		UserID:   uuid.NewString(),
 		UserName: username,
 		Password: password,
 	}
@@ -20,7 +20,7 @@ func CreateUser(ctx context.Context, username, password string) (string, error) 
 		log.Printf("Create User error: %v, user: %+v", err, user)
 		return "", err
 	}
-	return user.ID, nil
+	return user.UserID, nil
 }
 
 func GetUserById(ctx context.Context, userId string) (*model.User, error) {

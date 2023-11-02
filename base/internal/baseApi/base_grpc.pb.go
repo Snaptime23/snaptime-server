@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.24.4
-// source: api.proto
+// source: base.proto
 
-package api
+package baseApi
 
 import (
 	context "context"
@@ -19,12 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	BaseService_UserRegister_FullMethodName  = "/api.BaseService/UserRegister"
-	BaseService_UserLogin_FullMethodName     = "/api.BaseService/UserLogin"
-	BaseService_UserInfo_FullMethodName      = "/api.BaseService/UserInfo"
-	BaseService_PublishList_FullMethodName   = "/api.BaseService/PublishList"
-	BaseService_CreateComment_FullMethodName = "/api.BaseService/CreateComment"
-	BaseService_CommentList_FullMethodName   = "/api.BaseService/CommentList"
+	BaseService_UserRegister_FullMethodName  = "/base.BaseService/UserRegister"
+	BaseService_UserLogin_FullMethodName     = "/base.BaseService/UserLogin"
+	BaseService_UserInfo_FullMethodName      = "/base.BaseService/UserInfo"
+	BaseService_PublishList_FullMethodName   = "/base.BaseService/PublishList"
+	BaseService_CreateComment_FullMethodName = "/base.BaseService/CreateComment"
+	BaseService_CommentList_FullMethodName   = "/base.BaseService/CommentList"
 )
 
 // BaseServiceClient is the client API for BaseService service.
@@ -261,7 +261,7 @@ func _BaseService_CommentList_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var BaseService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.BaseService",
+	ServiceName: "base.BaseService",
 	HandlerType: (*BaseServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -290,5 +290,5 @@ var BaseService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api.proto",
+	Metadata: "base.proto",
 }

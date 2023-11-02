@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/Snaptime23/snaptime-server/v2/base/internal/api"
+	"github.com/Snaptime23/snaptime-server/v2/base/internal/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/server"
 	"google.golang.org/grpc"
@@ -14,7 +14,7 @@ func Run() {
 	dao.Init()
 
 	s := grpc.NewServer()
-	api.RegisterBaseServiceServer(s, server.NewServer())
+	baseApi.RegisterBaseServiceServer(s, server.NewServer())
 
 	lis, err := net.Listen("tcp", ":"+PORT)
 	if err != nil {

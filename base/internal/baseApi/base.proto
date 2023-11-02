@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 // 定义go生成后的包名
-option go_package = "./;api";
-package api;
+option go_package = "./;baseApi";
+package base;
 
 message UserLoginReq {
   string UserName = 1;
@@ -43,7 +43,7 @@ message UserInfo {
 }
 
 message UserInfoResp {
-    UserInfo user = 1;
+  UserInfo user = 1;
 }
 
 message PublishListReq {

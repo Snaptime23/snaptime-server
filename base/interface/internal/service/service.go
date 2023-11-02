@@ -2,49 +2,49 @@ package service
 
 import (
 	"context"
-	"github.com/Snaptime23/snaptime-server/v2/base/internal/api"
+	"github.com/Snaptime23/snaptime-server/v2/base/internal/baseApi"
 	"google.golang.org/grpc"
 )
 
 type Service struct {
-	baseClient api.BaseServiceClient
+	baseClient baseApi.BaseServiceClient
 }
 
 func NewService(conn *grpc.ClientConn) *Service {
-	return &Service{baseClient: api.NewBaseServiceClient(conn)}
+	return &Service{baseClient: baseApi.NewBaseServiceClient(conn)}
 }
 
-func (s *Service) UserRegister(username, password, confirmPassword string) (*api.UserRegisterResp, error) {
-	return s.baseClient.UserRegister(context.Background(), &api.UserRegisterReq{
+func (s *Service) UserRegister(username, password, confirmPassword string) (*baseApi.UserRegisterResp, error) {
+	return s.baseClient.UserRegister(context.Background(), &baseApi.UserRegisterReq{
 		UserName:        username,
 		Password:        password,
 		ConfirmPassword: confirmPassword,
 	})
 }
 
-func (s *Service) UserLogin(UserName, Password string) (*api.UserLoginResp, error) {
-	return s.baseClient.UserLogin(context.Background(), &api.UserLoginReq{
+func (s *Service) UserLogin(UserName, Password string) (*baseApi.UserLoginResp, error) {
+	return s.baseClient.UserLogin(context.Background(), &baseApi.UserLoginReq{
 		UserName: UserName,
 		Password: Password,
 	})
 }
 
-func (s *Service) UserInfo(UserId string) (*api.UserInfoResp, error) {
-	return s.baseClient.UserInfo(context.Background(), &api.UserInfoReq{
+func (s *Service) UserInfo(UserId string) (*baseApi.UserInfoResp, error) {
+	return s.baseClient.UserInfo(context.Background(), &baseApi.UserInfoReq{
 		UserId: UserId,
 	})
 }
 
-func (s *Service) PublishList(UserId string) (*api.PublishListResp, error) {
-	return s.baseClient.PublishList(context.Background(), &api.PublishListReq{
+func (s *Service) PublishList(UserId string) (*baseApi.PublishListResp, error) {
+	return s.baseClient.PublishList(context.Background(), &baseApi.PublishListReq{
 		UserId: UserId,
 	})
 }
 
-func (s *Service) CreateComment(ctx context.Context, req *api.CreateCommentReq) (*api.CreateCommentResp, error) {
+func (s *Service) CreateComment(ctx context.Context, req *baseApi.CreateCommentReq) (*baseApi.CreateCommentResp, error) {
 	return s.baseClient.CreateComment(ctx, req)
 }
 
-func (s *Service) CommentList(ctx context.Context, req *api.CommentListReq) (*api.CommentListResp, error) {
+func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) (*baseApi.CommentListResp, error) {
 	return s.baseClient.CommentList(ctx, req)
 }

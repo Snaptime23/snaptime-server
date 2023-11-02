@@ -3,7 +3,7 @@ package http
 import (
 	"context"
 	"github.com/Snaptime23/snaptime-server/v2/base/interface/internal/service"
-	"github.com/Snaptime23/snaptime-server/v2/base/internal/api"
+	"github.com/Snaptime23/snaptime-server/v2/base/internal/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/tools"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
@@ -74,7 +74,7 @@ func (s *HttpServer) CreateComment(c *gin.Context) {
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
-	resp, err := s.svr.CreateComment(context.Background(), &api.CreateCommentReq{
+	resp, err := s.svr.CreateComment(context.Background(), &baseApi.CreateCommentReq{
 		VideoId:    arg.VideoId,
 		ActionType: arg.ActionType,
 		Content:    arg.Content,
@@ -91,7 +91,7 @@ func (s *HttpServer) CommentList(c *gin.Context) {
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
-	resp, err := s.svr.CommentList(context.Background(), &api.CommentListReq{
+	resp, err := s.svr.CommentList(context.Background(), &baseApi.CommentListReq{
 		VideoId: arg.VideoId,
 	})
 	tools.HandleErrOrResp(c, resp, err)

@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+// 定义go生成后的包名
+option go_package = "./;videoApi";
+package video;
+
+message UserInfo {
+  string UserId = 1;
+  string UserName = 2;
+  int64 FollowCount = 3;
+  int64 FollowerCount = 4;
+  int64 IsFollow = 5;
+  string Avatar = 6;
+  int64 PublishNum = 7;
+  int64 FavouriteNum = 8;
+  int64 LikeNum = 9;
+  int64 ReceivedLikeNum = 10;
+}
+
+message VideoInfo {
+  string VideoID = 1;
+  UserInfo Author = 2;
+  string PlayUrl = 3;
+  string CoverUrl = 4;
+  int64 FavoriteCount = 5;
+  int64 CommentCount = 6;
+  int64 IsFavorite = 7;
+  string Title = 8;
+}
+
+message VideoFeedReq {
+  int64 LatestTime = 1;
+}
+message VideoFeedResp {
+  repeated VideoInfo VideoList = 1;
+}
+
+// 定义接口
+service VideoService {
+  rpc VideoFeed (VideoFeedReq) returns(VideoFeedResp);
+}
