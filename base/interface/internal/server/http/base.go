@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"fmt"
 	"github.com/Snaptime23/snaptime-server/v2/base/interface/internal/service"
 	"github.com/Snaptime23/snaptime-server/v2/base/internal/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/tools"
@@ -19,21 +20,22 @@ func NewServer(conn *grpc.ClientConn) *HttpServer {
 
 func (s *HttpServer) UserRegister(c *gin.Context) {
 	arg := new(struct {
-		UserName        string
-		Password        string
-		ConfirmPassword string
+		UserName        string `json:"user_name"`
+		Password        string `json:"password"`
+		ConfirmPassword string `json:"confirm_password"`
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
+	fmt.Println(arg)
 	resp, err := s.svr.UserRegister(arg.UserName, arg.Password, arg.ConfirmPassword)
 	tools.HandleErrOrResp(c, resp, err)
 }
 
 func (s *HttpServer) UserLogin(c *gin.Context) {
 	arg := new(struct {
-		UserName string
-		Password string
+		UserName string `json:"user_name"`
+		Password string `json:"password"`
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
@@ -44,7 +46,7 @@ func (s *HttpServer) UserLogin(c *gin.Context) {
 
 func (s *HttpServer) UserInfo(c *gin.Context) {
 	arg := new(struct {
-		UserId string
+		UserId string `json:"user_id"`
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
@@ -55,7 +57,7 @@ func (s *HttpServer) UserInfo(c *gin.Context) {
 
 func (s *HttpServer) PublishList(c *gin.Context) {
 	arg := new(struct {
-		UserId string
+		UserId string `json:"user_id"`
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
@@ -66,12 +68,12 @@ func (s *HttpServer) PublishList(c *gin.Context) {
 
 func (s *HttpServer) CreateComment(c *gin.Context) {
 	arg := new(struct {
-		VideoId    string
-		ActionType int64
-		Content    string
-		CommentId  string
-		RootId     string
-		PareNtId   string
+		VideoId    string `json:"video_id"`
+		ActionType int64  `json:"action_type"`
+		Content    string `json:"content"`
+		CommentId  string `json:"comment_id"`
+		RootId     string `json:"root_id"`
+		ParentId   string `json:"parent_id"`
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
@@ -83,7 +85,7 @@ func (s *HttpServer) CreateComment(c *gin.Context) {
 		CommentId:  arg.CommentId,
 		UserID:     c.Query("user_id"),
 		RootId:     arg.RootId,
-		ParentId:   arg.PareNtId,
+		ParentId:   arg.ParentId,
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }

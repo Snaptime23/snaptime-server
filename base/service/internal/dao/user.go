@@ -25,7 +25,7 @@ func CreateUser(ctx context.Context, username, password string) (string, error) 
 
 func GetUserById(ctx context.Context, userId string) (*model.User, error) {
 	var user model.User
-	err := DB.WithContext(ctx).Model(model.User{}).Where("id = ?", userId).First(&user).Error
+	err := DB.WithContext(ctx).Model(model.User{}).Where("user_id = ?", userId).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -37,19 +37,20 @@ func GetUserById(ctx context.Context, userId string) (*model.User, error) {
 }
 
 func GetUserByName(ctx context.Context, name string) (*model.User, error) {
-	var user model.User
-	err := DB.WithContext(ctx).Model(model.User{}).Where("name = ?", name).First(&user).Error
+	user := &model.User{}
+	err := DB.WithContext(ctx).Model(model.User{}).Where("user_name = ?", name).First(user).Error
+	//fmt.Println("user = ", user, "err = ", err)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
-		return &user, err
+		return user, err
 	}
-	return &user, nil
+	return user, nil
 }
 
 func UpdateUser(ctx context.Context, uid string, userMap *map[string]interface{}) (err error) {
-	if err = DB.WithContext(ctx).Model(model.User{}).Where("id = ?", uid).Updates(&userMap).Error; err != nil {
+	if err = DB.WithContext(ctx).Model(model.User{}).Where("user_id = ?", uid).Updates(&userMap).Error; err != nil {
 		return err
 	}
 	return nil
