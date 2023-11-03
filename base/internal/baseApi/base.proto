@@ -69,6 +69,7 @@ message CommentInfo {
   string VideoId = 3;
   string Content = 4;
   string PublishDate = 5;
+  repeated CommentInfo Replies = 6;
 }
 
 message CreateCommentReq {
@@ -77,6 +78,8 @@ message CreateCommentReq {
   string Content = 3;
   string CommentId = 4;
   string UserID = 5;
+  string RootId = 6;
+  string  ParentId = 7;
 }
 
 message CreateCommentResp {
@@ -85,10 +88,13 @@ message CreateCommentResp {
 
 message CommentListReq {
   string VideoId = 1;
+  string Token = 2;
 }
 
 message CommentListResp {
   repeated CommentInfo List = 1;
+  int64 HasNext = 7;
+  string NextPageToken = 8;
 }
 
 // 定义接口

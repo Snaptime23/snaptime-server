@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"encoding/base64"
 	"github.com/Snaptime23/snaptime-server/v2/base/internal/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao/model"
@@ -10,6 +11,8 @@ import (
 	"github.com/Snaptime23/snaptime-server/v2/tools/jwt"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -93,6 +96,8 @@ func (s *Service) CreateComment(ctx context.Context, req *baseApi.CreateCommentR
 			UserId:      req.UserID,
 			VideoId:     req.VideoId,
 			Content:     req.Content,
+			RootID:      req.RootId,
+			ParentID:    req.ParentId,
 			PublishDate: time.Now().Format(time.DateTime),
 		})
 	} else { // delete
@@ -101,14 +106,54 @@ func (s *Service) CreateComment(ctx context.Context, req *baseApi.CreateCommentR
 	return
 }
 
+func generateToken(page int64) string {
+	l := strconv.Itoa(int(page))
+	s := []byte(l)
+	token := base64.StdEncoding.EncodeToString(s)
+	return token
+}
+
+func parseToken(token string) (left int64) {
+	b, _ := base64.StdEncoding.DecodeString(token)
+	s := strings.Split(string(b), "-")
+	left, _ = strconv.ParseInt(s[0], 10, 64)
+	return
+}
+
 func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) (resp *baseApi.CommentListResp, err error) {
 	resp = new(baseApi.CommentListResp)
-	ret, err := dao.GetCommentList(ctx, req.VideoId)
+
+	var page int64 = 1
+	if req.Token != "" {
+		page = parseToken(req.Token)
+	}
+	sum := dao.GetCommentCount(req.VideoId)
+	if page*10 < sum {
+		resp.HasNext = 1
+		resp.NextPageToken = generateToken(page + 1)
+	}
+
+	ret, err := dao.GetPageQue(ctx, req.VideoId, page)
 	list := make([]*baseApi.CommentInfo, 0)
 	for _, val := range ret {
 		user, err := dao.GetUserById(ctx, val.UserId)
 		if err != nil {
 			continue
+		}
+		chl := make([]*baseApi.CommentInfo, 0)
+		for _, ch := range val.Children {
+			chl = append(chl, &baseApi.CommentInfo{
+				CommentId: ch.CommentID,
+				User: &baseApi.UserInfo{
+					UserId:   ch.UserId,
+					UserName: ch.UserName,
+					Avatar:   ch.UserAvatar,
+				},
+				VideoId:     ch.VideoId,
+				Content:     ch.Content,
+				PublishDate: ch.PublishDate,
+				Replies:     nil,
+			})
 		}
 		list = append(list, &baseApi.CommentInfo{
 			CommentId: val.CommentID,
@@ -125,6 +170,7 @@ func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) 
 			VideoId:     val.VideoId,
 			Content:     val.Content,
 			PublishDate: val.PublishDate,
+			Replies:     chl,
 		})
 	}
 	resp.List = list

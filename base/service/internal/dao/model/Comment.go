@@ -9,13 +9,19 @@ const TableNameComment = "comment"
 
 type Comment struct {
 	CommentID   string `gorm:"primarykey"`
+	RootID      string
+	ParentID    string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   sql.NullTime `gorm:"index"`
-	UserId      string       `json:"user_id" gorm:"index:idx_comment_user_id"`
-	VideoId     string       `json:"video_id"`
-	Content     string       `json:"content"`
-	PublishDate string       `json:"publish_date"`
+	LikeCount   int64
+	UserId      string `json:"user_id" gorm:"index:idx_comment_user_id"`
+	UserName    string
+	UserAvatar  string
+	VideoId     string     `json:"video_id"`
+	Content     string     `json:"content"`
+	PublishDate string     `json:"publish_date"`
+	Children    []*Comment `gorm:"-" json:"children"`
 }
 
 // TableName Comment's table name

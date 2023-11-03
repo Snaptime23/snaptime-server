@@ -25,6 +25,6 @@ func CreateEngine() *gin.Engine {
 func InitBaseRouter(engine *gin.Engine, server *http.HttpServer) {
 	video := engine.Group("/video")
 	{
-		video.POST("/upload", http.UpLoadVideo)
+		video.POST("/upload", server.UpLoadVideo)
 	}
 }

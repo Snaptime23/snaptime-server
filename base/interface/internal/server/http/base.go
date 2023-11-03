@@ -70,6 +70,8 @@ func (s *HttpServer) CreateComment(c *gin.Context) {
 		ActionType int64
 		Content    string
 		CommentId  string
+		RootId     string
+		PareNtId   string
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
@@ -80,6 +82,8 @@ func (s *HttpServer) CreateComment(c *gin.Context) {
 		Content:    arg.Content,
 		CommentId:  arg.CommentId,
 		UserID:     c.Query("user_id"),
+		RootId:     arg.RootId,
+		ParentId:   arg.PareNtId,
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }
@@ -87,12 +91,14 @@ func (s *HttpServer) CreateComment(c *gin.Context) {
 func (s *HttpServer) CommentList(c *gin.Context) {
 	arg := new(struct {
 		VideoId string
+		Token   string
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
 	resp, err := s.svr.CommentList(context.Background(), &baseApi.CommentListReq{
 		VideoId: arg.VideoId,
+		Token:   arg.Token,
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }
