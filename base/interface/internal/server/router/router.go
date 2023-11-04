@@ -36,5 +36,12 @@ func InitBaseRouter(engine *gin.RouterGroup, server *http.HttpServer) {
 	{
 		comment.Use(mw.JwtAuth()).POST("/create", server.CreateComment)
 		comment.GET("/list", server.CommentList)
+		comment.POST("/like", server.LikeComment)
+	}
+
+	video := engine.Group("/video")
+	{
+		video.POST("/like", server.LikeVideoAction)
+		video.GET("/like/list", server.VideoLikeList)
 	}
 }
