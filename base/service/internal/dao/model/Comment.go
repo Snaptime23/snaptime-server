@@ -20,7 +20,7 @@ type Comment struct {
 	UserAvatar  string
 	VideoId     string     `json:"video_id"`
 	Content     string     `json:"content"`
-	PublishDate string     `json:"publish_date"`
+	PublishDate int64      `json:"publish_date"`
 	Children    []*Comment `gorm:"-" json:"children"`
 }
 

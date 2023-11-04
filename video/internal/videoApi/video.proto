@@ -40,7 +40,15 @@ message VideoFeedResp {
   repeated VideoInfo VideoList = 1 [json_name = "video_info", (gogoproto.jsontag) = "video_info"];
 }
 
+message UploadVideoReq {
+
+}
+message UploadVideoResp {
+
+}
+
 // 定义接口
 service VideoService {
   rpc VideoFeed (VideoFeedReq) returns(VideoFeedResp);
+  rpc UploadVideo (UploadVideoReq) returns (UploadVideoResp);
 }

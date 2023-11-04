@@ -28,13 +28,13 @@ func InitBaseRouter(engine *gin.Engine, server *http.HttpServer) {
 	{
 		user.POST("/register", server.UserRegister)
 		user.POST("/login", server.UserLogin)
-		user.GET("/info", server.UserInfo).Use(mw.JwtAuth())
-		user.GET("/publish/list", server.PublishList).Use(mw.JwtAuth())
+		user.Use(mw.JwtAuth()).GET("/info", server.UserInfo)
+		user.Use(mw.JwtAuth()).GET("/publish/list", server.PublishList)
 	}
 
 	comment := engine.Group("/comment")
 	{
-		comment.POST("/create", server.CreateComment).Use(mw.JwtAuth())
-		comment.GET("/list", server.PublishList)
+		comment.Use(mw.JwtAuth()).POST("/create", server.CreateComment)
+		comment.GET("/list", server.CommentList)
 	}
 }

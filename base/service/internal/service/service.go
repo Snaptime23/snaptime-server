@@ -98,7 +98,7 @@ func (s *Service) CreateComment(ctx context.Context, req *baseApi.CreateCommentR
 			Content:     req.Content,
 			RootID:      req.RootId,
 			ParentID:    req.ParentId,
-			PublishDate: time.Now().Format(time.DateTime),
+			PublishDate: time.Now().Unix(),
 		})
 	} else { // delete
 		err = dao.DeleteCommentByID(ctx, req.CommentId)
@@ -133,27 +133,12 @@ func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) 
 		resp.NextPageToken = generateToken(page + 1)
 	}
 
-	ret, err := dao.GetPageQue(ctx, req.VideoId, page)
+	ret, err := dao.GetPageQue(ctx, req.VideoId, req.RootID, page)
 	list := make([]*baseApi.CommentInfo, 0)
 	for _, val := range ret {
 		user, err := dao.GetUserById(ctx, val.UserId)
 		if err != nil {
 			continue
-		}
-		chl := make([]*baseApi.CommentInfo, 0)
-		for _, ch := range val.Children {
-			chl = append(chl, &baseApi.CommentInfo{
-				CommentId: ch.CommentID,
-				User: &baseApi.UserInfo{
-					UserId:   ch.UserId,
-					UserName: ch.UserName,
-					Avatar:   ch.UserAvatar,
-				},
-				VideoId:     ch.VideoId,
-				Content:     ch.Content,
-				PublishDate: ch.PublishDate,
-				Replies:     nil,
-			})
 		}
 		list = append(list, &baseApi.CommentInfo{
 			CommentId: val.CommentID,
@@ -170,7 +155,7 @@ func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) 
 			VideoId:     val.VideoId,
 			Content:     val.Content,
 			PublishDate: val.PublishDate,
-			Replies:     chl,
+			Replies:     dao.GetChildrenNum(req.VideoId, val.CommentID),
 		})
 	}
 	resp.List = list
