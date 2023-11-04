@@ -3,98 +3,98 @@ syntax = "proto3";
 // 定义go生成后的包名
 option go_package = "./;baseApi";
 package base;
-
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 message UserLoginReq {
-  string UserName = 1;
-  string Password = 2;
+  string UserName = 1 [json_name = "user_name", (gogoproto.jsontag) = "user_name"];
+  string Password = 2 [json_name = "password", (gogoproto.jsontag) = "password"];
 }
 
 message UserLoginResp {
-  string UserId = 1;
-  string Token = 2;
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+  string Token = 2 [json_name = "token", (gogoproto.jsontag) = "token"];
 }
 
 message UserRegisterReq {
-  string UserName = 1;
-  string Password = 2;
-  string ConfirmPassword = 3;
+  string UserName = 1 [json_name = "user_name", (gogoproto.jsontag) = "user_name"];
+  string Password = 2 [json_name = "password", (gogoproto.jsontag) = "password"];
+  string ConfirmPassword = 3 [json_name = "confirm_password", (gogoproto.jsontag) = "confirm_password"];
 }
 
 message UserRegisterResp {
-  string UserId = 1;
-  string Token = 2;
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+  string Token = 2 [json_name = "token", (gogoproto.jsontag) = "token"];
 }
 
 message UserInfoReq {
-  string UserId = 1;
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
 }
 
 message UserInfo {
-  string UserId = 1;
-  string UserName = 2;
-  int64 FollowCount = 3;
-  int64 FollowerCount = 4;
-  int64 IsFollow = 5;
-  string Avatar = 6;
-  int64 PublishNum = 7;
-  int64 FavouriteNum = 8;
-  int64 LikeNum = 9;
-  int64 ReceivedLikeNum = 10;
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+  string UserName = 2 [json_name = "user_name", (gogoproto.jsontag) = "user_name"];
+  int64 FollowCount = 3 [json_name = "follow_count", (gogoproto.jsontag) = "follow_count"];
+  int64 FollowerCount = 4 [json_name = "follower_count", (gogoproto.jsontag) = "follower_count"];
+  int64 IsFollow = 5 [json_name = "is_follow", (gogoproto.jsontag) = "is_follow"];
+  string Avatar = 6 [json_name = "avatar", (gogoproto.jsontag) = "avatar"];
+  int64 PublishNum = 7 [json_name = "publish_num", (gogoproto.jsontag) = "publish_num"];
+  int64 FavouriteNum = 8 [json_name = "favourite_num", (gogoproto.jsontag) = "favourite_num"];
+  int64 LikeNum = 9 [json_name = "like_num", (gogoproto.jsontag) = "like_num"];
+  int64 ReceivedLikeNum = 10 [json_name = "received_like_num", (gogoproto.jsontag) = "received_like_num"];
 }
 
 message UserInfoResp {
-  UserInfo user = 1;
+  UserInfo User = 1 [json_name = "user", (gogoproto.jsontag) = "user"];
 }
 
 message PublishListReq {
-  string UserId = 1;
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
 }
 
 message VideoInfo {
-  int64 VideoId = 1;
-  UserInfo UserInfo = 2;
-  int64 FavoriteCount = 3;
-  int64 CommentCount = 4;
-  int64 IsFavorite = 5;
-  string Title = 6;
+  int64 VideoId = 1 [json_name = "password", (gogoproto.jsontag) = "video_id"];
+  UserInfo UserInfo = 2 [json_name = "user_info", (gogoproto.jsontag) = "user_info"];
+  int64 FavoriteCount = 3 [json_name = "favourite_count", (gogoproto.jsontag) = "favourite_count"];
+  int64 CommentCount = 4 [json_name = "comment_count", (gogoproto.jsontag) = "comment_count"];
+  int64 IsFavorite = 5 [json_name = "is_favourite", (gogoproto.jsontag) = "is_favourite"];
+  string Title = 6 [json_name = "title", (gogoproto.jsontag) = "title"];
 }
 
 message PublishListResp {
-  VideoInfo Video = 1;
+  VideoInfo Video = 1 [json_name = "video", (gogoproto.jsontag) = "video"];
 }
 
 message CommentInfo {
-  string CommentId = 1;
-  UserInfo User = 2;
-  string VideoId = 3;
-  string Content = 4;
-  string PublishDate = 5;
-  repeated CommentInfo Replies = 6;
+  string CommentId = 1 [json_name = "comment_id", (gogoproto.jsontag) = "comment_id"];
+  UserInfo User = 2 [json_name = "user", (gogoproto.jsontag) = "user"];
+  string VideoId = 3 [json_name = "video_id", (gogoproto.jsontag) = "video_id"];
+  string Content = 4 [json_name = "content", (gogoproto.jsontag) = "content"];
+  string PublishDate = 5 [json_name = "publish_date", (gogoproto.jsontag) = "publish_date"];
+  repeated CommentInfo Replies = 6 [json_name = "replies", (gogoproto.jsontag) = "replies"];
 }
 
 message CreateCommentReq {
-  string VideoId = 1;
-  int64 ActionType = 2;
-  string Content = 3;
-  string CommentId = 4;
-  string UserID = 5;
-  string RootId = 6;
-  string  ParentId = 7;
+  string VideoId = 1 [json_name = "video_id", (gogoproto.jsontag) = "video_id"];
+  int64 ActionType = 2 [json_name = "action_type", (gogoproto.jsontag) = "action_type"];
+  string Content = 3 [json_name = "content", (gogoproto.jsontag) = "content"];
+  string CommentId = 4 [json_name = "comment_id", (gogoproto.jsontag) = "comment_id"];
+  string UserID = 5 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+  string RootId = 6 [json_name = "root_id", (gogoproto.jsontag) = "root_id"];
+  string  ParentId = 7 [json_name = "parent_id", (gogoproto.jsontag) = "parent_id"];
 }
 
 message CreateCommentResp {
-  string CommentId = 1;
+  string CommentId = 1 [json_name = "comment_id", (gogoproto.jsontag) = "comment_id"];
 }
 
 message CommentListReq {
-  string VideoId = 1;
-  string Token = 2;
+  string VideoId = 1 [json_name = "video_id", (gogoproto.jsontag) = "video_id"];
+  string Token = 2 [json_name = "token", (gogoproto.jsontag) = "token"];
 }
 
 message CommentListResp {
-  repeated CommentInfo List = 1;
-  int64 HasNext = 7;
-  string NextPageToken = 8;
+  repeated CommentInfo List = 1 [json_name = "comment_info", (gogoproto.jsontag) = "comment_info"];
+  int64 HasNext = 7 [json_name = "has_next", (gogoproto.jsontag) = "has_next"];
+  string NextPageToken = 8 [json_name = "next_page_token", (gogoproto.jsontag) = "next_page_token"];
 }
 
 // 定义接口
