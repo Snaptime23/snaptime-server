@@ -4,6 +4,8 @@
 // - protoc             v4.24.4
 // source: video.proto
 
+// protoc -I=. -I=$GOPATH/pkg/mod --go-grpc_out=. --gogo_out=. *.proto
+
 package videoApi
 
 import (

@@ -2,37 +2,42 @@ syntax = "proto3";
 
 // 定义go生成后的包名
 option go_package = "./;videoApi";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+// protoc -I=. -I=$GOPATH/pkg/mod --go-grpc_out=. --gogo_out=. *.proto
 package video;
 
 message UserInfo {
-  string UserId = 1;
-  string UserName = 2;
-  int64 FollowCount = 3;
-  int64 FollowerCount = 4;
-  int64 IsFollow = 5;
-  string Avatar = 6;
-  int64 PublishNum = 7;
-  int64 FavouriteNum = 8;
-  int64 LikeNum = 9;
-  int64 ReceivedLikeNum = 10;
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+  string UserName = 2 [json_name = "user_name", (gogoproto.jsontag) = "user_name"];
+  int64 FollowCount = 3 [json_name = "follow_count", (gogoproto.jsontag) = "follow_count"];
+  int64 FollowerCount = 4 [json_name = "follower_count", (gogoproto.jsontag) = "follower_count"];
+  int64 IsFollow = 5 [json_name = "is_follow", (gogoproto.jsontag) = "is_follow"];
+  string Avatar = 6 [json_name = "avatar", (gogoproto.jsontag) = "avatar"];
+  int64 PublishNum = 7 [json_name = "publish_num", (gogoproto.jsontag) = "publish_num"];
+  int64 FavouriteNum = 8 [json_name = "favourite_num", (gogoproto.jsontag) = "favourite_num"];
+  int64 LikeNum = 9 [json_name = "like_num", (gogoproto.jsontag) = "like_num"];
+  int64 ReceivedLikeNum = 10 [json_name = "received_like_num", (gogoproto.jsontag) = "received_like_num"];
 }
+
 
 message VideoInfo {
-  string VideoID = 1;
-  UserInfo Author = 2;
-  string PlayUrl = 3;
-  string CoverUrl = 4;
-  int64 FavoriteCount = 5;
-  int64 CommentCount = 6;
-  int64 IsFavorite = 7;
-  string Title = 8;
+  string VideoID = 1 [json_name = "video_i_d", (gogoproto.jsontag) = "video_i_d"];
+  UserInfo Author = 2 [json_name = "author", (gogoproto.jsontag) = "author"];
+  string PlayUrl = 3 [json_name = "play_url", (gogoproto.jsontag) = "play_url"];
+  string CoverUrl = 4 [json_name = "cover_url", (gogoproto.jsontag) = "cover_url"];
+  int64 FavoriteCount = 5 [json_name = "favorite_count", (gogoproto.jsontag) = "favorite_count"];
+  int64 CommentCount = 6 [json_name = "comment_count", (gogoproto.jsontag) = "comment_count"];
+  int64 IsFavorite = 7 [json_name = "is_favorite", (gogoproto.jsontag) = "is_favorite"];
+  string Title = 8 [json_name = "title", (gogoproto.jsontag) = "title"];
 }
 
+
 message VideoFeedReq {
-  int64 LatestTime = 1;
+  int64 LatestTime = 1 [json_name = "latest_time", (gogoproto.jsontag) = "latest_time"];
 }
 message VideoFeedResp {
-  repeated VideoInfo VideoList = 1;
+  repeated VideoInfo VideoList = 1 [json_name = "video_info", (gogoproto.jsontag) = "video_info"];
 }
 
 // 定义接口

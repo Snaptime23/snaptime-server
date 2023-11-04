@@ -3,6 +3,7 @@ syntax = "proto3";
 // 定义go生成后的包名
 option go_package = "./;baseApi";
 package base;
+// protoc -I=. -I=$GOPATH/pkg/mod --go-grpc_out=. --gogo_out=. *.proto
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 message UserLoginReq {
   string UserName = 1 [json_name = "user_name", (gogoproto.jsontag) = "user_name"];
