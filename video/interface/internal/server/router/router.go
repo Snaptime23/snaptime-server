@@ -22,9 +22,10 @@ func CreateEngine() *gin.Engine {
 	return eng
 }
 
-func InitBaseRouter(engine *gin.Engine, server *http.HttpServer) {
+func InitVideoRouter(engine *gin.RouterGroup, server *http.HttpServer) {
 	video := engine.Group("/video")
 	{
-		video.POST("/upload", server.UpLoadVideo)
+		video.POST("/upload_token", server.UpLoadVideo)
+		video.GET("/download_token", server.DownLoadVideo)
 	}
 }

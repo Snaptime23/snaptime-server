@@ -23,7 +23,7 @@ func CreateEngine() *gin.Engine {
 	return eng
 }
 
-func InitBaseRouter(engine *gin.Engine, server *http.HttpServer) {
+func InitBaseRouter(engine *gin.RouterGroup, server *http.HttpServer) {
 	user := engine.Group("/user")
 	{
 		user.POST("/register", server.UserRegister)

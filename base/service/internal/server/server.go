@@ -41,3 +41,11 @@ func (s *Server) CreateComment(ctx context.Context, req *baseApi.CreateCommentRe
 func (s *Server) CommentList(ctx context.Context, req *baseApi.CommentListReq) (resp *baseApi.CommentListResp, err error) {
 	return s.svr.CommentList(ctx, req)
 }
+
+func (s *Server) LikeAction(ctx context.Context, req *baseApi.LikeActionReq) (resp *baseApi.LikeActionResp, err error) {
+	return
+}
+
+func (s *Server) LikeList(ctx context.Context, req *baseApi.LikeListReq) (resp *baseApi.LikeListResp, err error) {
+	return
+}

@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/Snaptime23/snaptime-server/v2/base/interface/internal/server/http"
 	"github.com/Snaptime23/snaptime-server/v2/base/interface/internal/server/router"
+	"github.com/Snaptime23/snaptime-server/v2/mw"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"os"
@@ -20,7 +21,9 @@ func Run() {
 	server := http.NewServer(conn)
 
 	app := router.CreateEngine()
-	router.InitBaseRouter(app, server)
+	app.Use(mw.Cors())
+	api := app.Group("/api")
+	router.InitBaseRouter(api, server)
 	app.SetTrustedProxies(nil)
 
 	// first use env, then default

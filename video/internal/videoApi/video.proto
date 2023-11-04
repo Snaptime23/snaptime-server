@@ -22,7 +22,7 @@ message UserInfo {
 
 
 message VideoInfo {
-  string VideoID = 1 [json_name = "video_i_d", (gogoproto.jsontag) = "video_i_d"];
+  string VideoID = 1 [json_name = "video_id", (gogoproto.jsontag) = "video_id"];
   UserInfo Author = 2 [json_name = "author", (gogoproto.jsontag) = "author"];
   string PlayUrl = 3 [json_name = "play_url", (gogoproto.jsontag) = "play_url"];
   string CoverUrl = 4 [json_name = "cover_url", (gogoproto.jsontag) = "cover_url"];
@@ -41,14 +41,20 @@ message VideoFeedResp {
 }
 
 message UploadVideoReq {
-
 }
 message UploadVideoResp {
+  string Token = 1 [json_name = "token", (gogoproto.jsontag) = "token"];
+}
 
+message DownloadReq {
+}
+message DownLoadResp {
+  string Token = 1 [json_name = "token", (gogoproto.jsontag) = "token"];
 }
 
 // 定义接口
 service VideoService {
   rpc VideoFeed (VideoFeedReq) returns(VideoFeedResp);
-  rpc UploadVideo (UploadVideoReq) returns (UploadVideoResp);
+  rpc UploadVideoToken (UploadVideoReq) returns (UploadVideoResp);
+  rpc DownLoadVideoToken (DownloadReq) returns (DownLoadResp);
 }

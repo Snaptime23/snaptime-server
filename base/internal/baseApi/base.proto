@@ -52,7 +52,7 @@ message PublishListReq {
 }
 
 message VideoInfo {
-  int64 VideoId = 1 [json_name = "password", (gogoproto.jsontag) = "video_id"];
+  string VideoId = 1 [json_name = "password", (gogoproto.jsontag) = "video_id"];
   UserInfo UserInfo = 2 [json_name = "user_info", (gogoproto.jsontag) = "user_info"];
   int64 FavoriteCount = 3 [json_name = "favourite_count", (gogoproto.jsontag) = "favourite_count"];
   int64 CommentCount = 4 [json_name = "comment_count", (gogoproto.jsontag) = "comment_count"];
@@ -100,6 +100,21 @@ message CommentListResp {
   string NextPageToken = 8 [json_name = "next_page_token", (gogoproto.jsontag) = "next_page_token"];
 }
 
+message LikeActionReq {
+  string UserId = 1;
+  string VideoId = 2;
+  int64 ActionType = 3;
+}
+message LikeActionResp {
+}
+
+message LikeListReq {
+  string UserId = 1;
+}
+message LikeListResp {
+  repeated VideoInfo VideoList = 1;
+}
+
 // 定义接口
 service BaseService {
   rpc UserRegister(UserRegisterReq) returns (UserRegisterResp);
@@ -108,4 +123,6 @@ service BaseService {
   rpc PublishList (PublishListReq) returns (PublishListResp);
   rpc CreateComment (CreateCommentReq) returns (CreateCommentResp);
   rpc CommentList (CommentListReq) returns (CommentListResp);
+  rpc LikeAction (LikeActionReq) returns (LikeActionResp);
+  rpc LikeList (LikeListReq) returns (LikeListResp);
 }

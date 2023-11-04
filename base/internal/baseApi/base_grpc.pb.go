@@ -25,6 +25,8 @@ const (
 	BaseService_PublishList_FullMethodName   = "/base.BaseService/PublishList"
 	BaseService_CreateComment_FullMethodName = "/base.BaseService/CreateComment"
 	BaseService_CommentList_FullMethodName   = "/base.BaseService/CommentList"
+	BaseService_LikeAction_FullMethodName    = "/base.BaseService/LikeAction"
+	BaseService_LikeList_FullMethodName      = "/base.BaseService/LikeList"
 )
 
 // BaseServiceClient is the client API for BaseService service.
@@ -37,6 +39,8 @@ type BaseServiceClient interface {
 	PublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
 	CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error)
 	CommentList(ctx context.Context, in *CommentListReq, opts ...grpc.CallOption) (*CommentListResp, error)
+	LikeAction(ctx context.Context, in *LikeActionReq, opts ...grpc.CallOption) (*LikeActionResp, error)
+	LikeList(ctx context.Context, in *LikeListReq, opts ...grpc.CallOption) (*LikeListResp, error)
 }
 
 type baseServiceClient struct {
@@ -101,6 +105,24 @@ func (c *baseServiceClient) CommentList(ctx context.Context, in *CommentListReq,
 	return out, nil
 }
 
+func (c *baseServiceClient) LikeAction(ctx context.Context, in *LikeActionReq, opts ...grpc.CallOption) (*LikeActionResp, error) {
+	out := new(LikeActionResp)
+	err := c.cc.Invoke(ctx, BaseService_LikeAction_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseServiceClient) LikeList(ctx context.Context, in *LikeListReq, opts ...grpc.CallOption) (*LikeListResp, error) {
+	out := new(LikeListResp)
+	err := c.cc.Invoke(ctx, BaseService_LikeList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BaseServiceServer is the server API for BaseService service.
 // All implementations must embed UnimplementedBaseServiceServer
 // for forward compatibility
@@ -111,6 +133,8 @@ type BaseServiceServer interface {
 	PublishList(context.Context, *PublishListReq) (*PublishListResp, error)
 	CreateComment(context.Context, *CreateCommentReq) (*CreateCommentResp, error)
 	CommentList(context.Context, *CommentListReq) (*CommentListResp, error)
+	LikeAction(context.Context, *LikeActionReq) (*LikeActionResp, error)
+	LikeList(context.Context, *LikeListReq) (*LikeListResp, error)
 	mustEmbedUnimplementedBaseServiceServer()
 }
 
@@ -135,6 +159,12 @@ func (UnimplementedBaseServiceServer) CreateComment(context.Context, *CreateComm
 }
 func (UnimplementedBaseServiceServer) CommentList(context.Context, *CommentListReq) (*CommentListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CommentList not implemented")
+}
+func (UnimplementedBaseServiceServer) LikeAction(context.Context, *LikeActionReq) (*LikeActionResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LikeAction not implemented")
+}
+func (UnimplementedBaseServiceServer) LikeList(context.Context, *LikeListReq) (*LikeListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LikeList not implemented")
 }
 func (UnimplementedBaseServiceServer) mustEmbedUnimplementedBaseServiceServer() {}
 
@@ -257,6 +287,42 @@ func _BaseService_CommentList_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BaseService_LikeAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LikeActionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).LikeAction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_LikeAction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).LikeAction(ctx, req.(*LikeActionReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BaseService_LikeList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LikeListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).LikeList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_LikeList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).LikeList(ctx, req.(*LikeListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BaseService_ServiceDesc is the grpc.ServiceDesc for BaseService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -287,6 +353,14 @@ var BaseService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CommentList",
 			Handler:    _BaseService_CommentList_Handler,
+		},
+		{
+			MethodName: "LikeAction",
+			Handler:    _BaseService_LikeAction_Handler,
+		},
+		{
+			MethodName: "LikeList",
+			Handler:    _BaseService_LikeList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -161,3 +161,43 @@ func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) 
 	resp.List = list
 	return
 }
+
+func (s *Service) LikeAction(ctx context.Context, req *baseApi.LikeActionReq) (resp *baseApi.LikeActionResp, err error) {
+	resp = new(baseApi.LikeActionResp)
+	err = dao.UpdateAndInsertLikeRecord(ctx, req.UserId, req.VideoId, req.ActionType)
+	return
+}
+
+func (s *Service) LikeList(ctx context.Context, req *baseApi.LikeListReq) (resp *baseApi.LikeListResp, err error) {
+	resp = new(baseApi.LikeListResp)
+	resp.VideoList = make([]*baseApi.VideoInfo, 0)
+	videoIDS, err := dao.GetUserLikeRecords(ctx, req.UserId)
+	for _, videoID := range videoIDS {
+		video, err := dao.GetVideoByVideoId(ctx, videoID)
+		if err != nil {
+			continue
+		}
+		user, err := dao.GetUserById(ctx, video.CreateUserId)
+		resp.VideoList = append(resp.VideoList, &baseApi.VideoInfo{
+			VideoId: video.VideoID,
+			UserInfo: &baseApi.UserInfo{
+				UserId:        user.UserID,
+				UserName:      user.UserName,
+				FollowCount:   user.FollowerCount,
+				FollowerCount: user.FollowerCount,
+				IsFollow:      0,
+				Avatar:        user.Avatar,
+				PublishNum:    user.VideoNum,
+				// TODO: 修改这里的逻辑
+				FavouriteNum:    user.FavouriteNum,
+				LikeNum:         user.FavouriteNum,
+				ReceivedLikeNum: user.FavouriteNum,
+			},
+			FavoriteCount: video.FavouriteCount,
+			CommentCount:  video.CommentCount,
+			IsFavorite:    0,
+			Title:         video.VideoName,
+		})
+	}
+	return
+}

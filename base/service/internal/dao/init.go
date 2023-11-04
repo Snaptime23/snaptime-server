@@ -18,7 +18,7 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
-	err = DB.AutoMigrate(&model.User{}, model.Comment{})
+	err = DB.AutoMigrate(&model.User{}, model.Comment{}, model.Like{}, model.Video{})
 	if err != nil {
 		panic(err)
 	}

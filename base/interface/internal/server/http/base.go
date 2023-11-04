@@ -111,3 +111,25 @@ func (s *HttpServer) CommentList(c *gin.Context) {
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }
+
+func (s *HttpServer) LikeAction(c *gin.Context) {
+	arg := new(struct {
+		UserId  string `json:"user_id"`
+		VideoId string `json:"video_id"`
+	})
+	userID, _ := c.Get("user_id")
+	arg.UserId = userID.(string)
+	if tools.HandleError(c, c.Bind(arg), "") {
+		return
+	}
+
+}
+
+func (s *HttpServer) LikeList(c *gin.Context) {
+	arg := new(struct {
+		UserId string `json:"user_id"`
+	})
+	userID, _ := c.Get("user_id")
+	arg.UserId = userID.(string)
+
+}

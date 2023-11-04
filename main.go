@@ -1,23 +1,38 @@
 package main
 
 import (
-	httpInterface "github.com/Snaptime23/snaptime-server/v2/base/interface/cmd"
-	service "github.com/Snaptime23/snaptime-server/v2/base/service/cmd"
+	baseHttpInterface "github.com/Snaptime23/snaptime-server/v2/base/interface/cmd"
+	baseService "github.com/Snaptime23/snaptime-server/v2/base/service/cmd"
+
+	videoHttpInterface "github.com/Snaptime23/snaptime-server/v2/video/interface/cmd"
+	videoService "github.com/Snaptime23/snaptime-server/v2/video/service/cmd"
 	"sync"
 	"time"
 )
 
 func main() {
 	wg := sync.WaitGroup{}
-	wg.Add(2)
+	wg.Add(4)
+
 	go func() {
 		defer wg.Done()
-		service.Run()
+		baseService.Run()
 	}()
 	time.Sleep(time.Second * 5)
 	go func() {
 		defer wg.Done()
-		httpInterface.Run()
+		baseHttpInterface.Run()
 	}()
+
+	go func() {
+		defer wg.Done()
+		videoService.Run()
+	}()
+	time.Sleep(time.Second * 5)
+	go func() {
+		defer wg.Done()
+		videoHttpInterface.Run()
+	}()
+
 	wg.Wait()
 }
