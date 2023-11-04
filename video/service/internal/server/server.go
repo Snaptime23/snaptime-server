@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"github.com/Snaptime23/snaptime-server/v2/video/internal/videoApi"
+	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/service"
 )
 
@@ -26,6 +26,10 @@ func (s *Server) UploadVideoToken(ctx context.Context, req *videoApi.UploadVideo
 	return s.svr.UploadVideoToken(ctx, req)
 }
 
-func (s *Server) DownLoadVideoToken(ctx context.Context, req *videoApi.DownloadReq) (reso *videoApi.DownLoadResp, err error) {
+func (s *Server) DownLoadVideoToken(ctx context.Context, req *videoApi.DownloadReq) (resp *videoApi.DownLoadResp, err error) {
 	return s.svr.DownLoadVideoToken(ctx, req)
+}
+
+func (s *Server) GetVideoInfoById(ctx context.Context, req *videoApi.GetVideoInfoByIdReq) (resp *videoApi.GetVideoInfoByIdResp, err error) {
+	return
 }

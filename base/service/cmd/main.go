@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/Snaptime23/snaptime-server/v2/base/internal/baseApi"
+	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/server"
 	"google.golang.org/grpc"

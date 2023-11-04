@@ -75,3 +75,16 @@ func DeleteCommentByID(ctx context.Context, id string) error {
 		Where("comment_id = ?", id).
 		Delete(nil).Error
 }
+
+func UpdateCommentLikeCount(ctx context.Context, commentId string, likeAction int64) error {
+	if likeAction == 0 {
+		return DB.WithContext(ctx).
+			Model(model.Comment{}).
+			Where("comment_id = ?", commentId).
+			UpdateColumn("like_count", gorm.Expr("like_count+1")).Error
+	} else {
+		return DB.WithContext(ctx).Model(model.Comment{}).
+			Where("comment_id = ?", commentId).
+			UpdateColumn("like_count", gorm.Expr("like_count-1")).Error
+	}
+}

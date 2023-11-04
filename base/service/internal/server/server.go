@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"github.com/Snaptime23/snaptime-server/v2/base/internal/baseApi"
+	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/service"
 )
 
@@ -42,10 +42,14 @@ func (s *Server) CommentList(ctx context.Context, req *baseApi.CommentListReq) (
 	return s.svr.CommentList(ctx, req)
 }
 
-func (s *Server) LikeAction(ctx context.Context, req *baseApi.LikeActionReq) (resp *baseApi.LikeActionResp, err error) {
-	return
+func (s *Server) LikeVideoAction(ctx context.Context, req *baseApi.LikeVideoActionReq) (resp *baseApi.LikeVideoActionResp, err error) {
+	return s.svr.LikeVideoAction(ctx, req)
 }
 
-func (s *Server) LikeList(ctx context.Context, req *baseApi.LikeListReq) (resp *baseApi.LikeListResp, err error) {
-	return
+func (s *Server) VideoLikeList(ctx context.Context, req *baseApi.VideoLikeListReq) (resp *baseApi.VideoLikeListResp, err error) {
+	return s.svr.VideoLikeList(ctx, req)
+}
+
+func (s *Server) LikeComment(ctx context.Context, req *baseApi.LikeCommentReq) (resp *baseApi.LikeCommentResp, err error) {
+	return s.svr.LikeComment(ctx, req)
 }

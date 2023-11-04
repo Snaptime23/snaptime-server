@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Snaptime23/snaptime-server/v2/base/interface/internal/service"
-	"github.com/Snaptime23/snaptime-server/v2/base/internal/baseApi"
+	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/tools"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
@@ -112,24 +112,48 @@ func (s *HttpServer) CommentList(c *gin.Context) {
 	tools.HandleErrOrResp(c, resp, err)
 }
 
-func (s *HttpServer) LikeAction(c *gin.Context) {
+func (s *HttpServer) LikeVideoAction(c *gin.Context) {
 	arg := new(struct {
-		UserId  string `json:"user_id"`
-		VideoId string `json:"video_id"`
+		UserId     string `json:"user_id"`
+		VideoId    string `json:"video_id"`
+		ActionType int64  `json:"action_type"`
 	})
 	userID, _ := c.Get("user_id")
 	arg.UserId = userID.(string)
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
-
+	resp, err := s.svr.LikeVideoAction(context.Background(), &baseApi.LikeVideoActionReq{
+		UserId:     arg.UserId,
+		VideoId:    arg.VideoId,
+		ActionType: arg.ActionType,
+	})
+	tools.HandleErrOrResp(c, resp, err)
 }
 
-func (s *HttpServer) LikeList(c *gin.Context) {
+func (s *HttpServer) VideoLikeList(c *gin.Context) {
 	arg := new(struct {
 		UserId string `json:"user_id"`
 	})
 	userID, _ := c.Get("user_id")
 	arg.UserId = userID.(string)
+	resp, err := s.svr.VideoLikeList(context.Background(), &baseApi.VideoLikeListReq{
+		UserId: arg.UserId,
+	})
+	tools.HandleErrOrResp(c, resp, err)
+}
 
+func (s *HttpServer) LikeComment(c *gin.Context) {
+	arg := new(struct {
+		CommentID  string `json:"comment_id"`
+		ActionType int64  `json:"action_type"`
+	})
+	if tools.HandleError(c, c.Bind(arg), "") {
+		return
+	}
+	resp, err := s.svr.LikeComment(context.Background(), &baseApi.LikeCommentReq{
+		CommentID:  arg.CommentID,
+		ActionType: arg.ActionType,
+	})
+	tools.HandleErrOrResp(c, resp, err)
 }

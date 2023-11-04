@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"github.com/Snaptime23/snaptime-server/v2/video/internal/videoApi"
+	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
 	"google.golang.org/grpc"
 )
 

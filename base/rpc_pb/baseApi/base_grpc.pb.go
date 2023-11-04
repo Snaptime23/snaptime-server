@@ -19,14 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	BaseService_UserRegister_FullMethodName  = "/base.BaseService/UserRegister"
-	BaseService_UserLogin_FullMethodName     = "/base.BaseService/UserLogin"
-	BaseService_UserInfo_FullMethodName      = "/base.BaseService/UserInfo"
-	BaseService_PublishList_FullMethodName   = "/base.BaseService/PublishList"
-	BaseService_CreateComment_FullMethodName = "/base.BaseService/CreateComment"
-	BaseService_CommentList_FullMethodName   = "/base.BaseService/CommentList"
-	BaseService_LikeAction_FullMethodName    = "/base.BaseService/LikeAction"
-	BaseService_LikeList_FullMethodName      = "/base.BaseService/LikeList"
+	BaseService_UserRegister_FullMethodName    = "/base.BaseService/UserRegister"
+	BaseService_UserLogin_FullMethodName       = "/base.BaseService/UserLogin"
+	BaseService_UserInfo_FullMethodName        = "/base.BaseService/UserInfo"
+	BaseService_PublishList_FullMethodName     = "/base.BaseService/PublishList"
+	BaseService_CreateComment_FullMethodName   = "/base.BaseService/CreateComment"
+	BaseService_CommentList_FullMethodName     = "/base.BaseService/CommentList"
+	BaseService_LikeVideoAction_FullMethodName = "/base.BaseService/LikeVideoAction"
+	BaseService_VideoLikeList_FullMethodName   = "/base.BaseService/VideoLikeList"
+	BaseService_LikeComment_FullMethodName     = "/base.BaseService/LikeComment"
 )
 
 // BaseServiceClient is the client API for BaseService service.
@@ -39,8 +40,9 @@ type BaseServiceClient interface {
 	PublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
 	CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error)
 	CommentList(ctx context.Context, in *CommentListReq, opts ...grpc.CallOption) (*CommentListResp, error)
-	LikeAction(ctx context.Context, in *LikeActionReq, opts ...grpc.CallOption) (*LikeActionResp, error)
-	LikeList(ctx context.Context, in *LikeListReq, opts ...grpc.CallOption) (*LikeListResp, error)
+	LikeVideoAction(ctx context.Context, in *LikeVideoActionReq, opts ...grpc.CallOption) (*LikeVideoActionResp, error)
+	VideoLikeList(ctx context.Context, in *VideoLikeListReq, opts ...grpc.CallOption) (*VideoLikeListResp, error)
+	LikeComment(ctx context.Context, in *LikeCommentReq, opts ...grpc.CallOption) (*LikeCommentResp, error)
 }
 
 type baseServiceClient struct {
@@ -105,18 +107,27 @@ func (c *baseServiceClient) CommentList(ctx context.Context, in *CommentListReq,
 	return out, nil
 }
 
-func (c *baseServiceClient) LikeAction(ctx context.Context, in *LikeActionReq, opts ...grpc.CallOption) (*LikeActionResp, error) {
-	out := new(LikeActionResp)
-	err := c.cc.Invoke(ctx, BaseService_LikeAction_FullMethodName, in, out, opts...)
+func (c *baseServiceClient) LikeVideoAction(ctx context.Context, in *LikeVideoActionReq, opts ...grpc.CallOption) (*LikeVideoActionResp, error) {
+	out := new(LikeVideoActionResp)
+	err := c.cc.Invoke(ctx, BaseService_LikeVideoAction_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *baseServiceClient) LikeList(ctx context.Context, in *LikeListReq, opts ...grpc.CallOption) (*LikeListResp, error) {
-	out := new(LikeListResp)
-	err := c.cc.Invoke(ctx, BaseService_LikeList_FullMethodName, in, out, opts...)
+func (c *baseServiceClient) VideoLikeList(ctx context.Context, in *VideoLikeListReq, opts ...grpc.CallOption) (*VideoLikeListResp, error) {
+	out := new(VideoLikeListResp)
+	err := c.cc.Invoke(ctx, BaseService_VideoLikeList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseServiceClient) LikeComment(ctx context.Context, in *LikeCommentReq, opts ...grpc.CallOption) (*LikeCommentResp, error) {
+	out := new(LikeCommentResp)
+	err := c.cc.Invoke(ctx, BaseService_LikeComment_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -133,8 +144,9 @@ type BaseServiceServer interface {
 	PublishList(context.Context, *PublishListReq) (*PublishListResp, error)
 	CreateComment(context.Context, *CreateCommentReq) (*CreateCommentResp, error)
 	CommentList(context.Context, *CommentListReq) (*CommentListResp, error)
-	LikeAction(context.Context, *LikeActionReq) (*LikeActionResp, error)
-	LikeList(context.Context, *LikeListReq) (*LikeListResp, error)
+	LikeVideoAction(context.Context, *LikeVideoActionReq) (*LikeVideoActionResp, error)
+	VideoLikeList(context.Context, *VideoLikeListReq) (*VideoLikeListResp, error)
+	LikeComment(context.Context, *LikeCommentReq) (*LikeCommentResp, error)
 	mustEmbedUnimplementedBaseServiceServer()
 }
 
@@ -160,11 +172,14 @@ func (UnimplementedBaseServiceServer) CreateComment(context.Context, *CreateComm
 func (UnimplementedBaseServiceServer) CommentList(context.Context, *CommentListReq) (*CommentListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CommentList not implemented")
 }
-func (UnimplementedBaseServiceServer) LikeAction(context.Context, *LikeActionReq) (*LikeActionResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LikeAction not implemented")
+func (UnimplementedBaseServiceServer) LikeVideoAction(context.Context, *LikeVideoActionReq) (*LikeVideoActionResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LikeVideoAction not implemented")
 }
-func (UnimplementedBaseServiceServer) LikeList(context.Context, *LikeListReq) (*LikeListResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LikeList not implemented")
+func (UnimplementedBaseServiceServer) VideoLikeList(context.Context, *VideoLikeListReq) (*VideoLikeListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VideoLikeList not implemented")
+}
+func (UnimplementedBaseServiceServer) LikeComment(context.Context, *LikeCommentReq) (*LikeCommentResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LikeComment not implemented")
 }
 func (UnimplementedBaseServiceServer) mustEmbedUnimplementedBaseServiceServer() {}
 
@@ -287,38 +302,56 @@ func _BaseService_CommentList_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BaseService_LikeAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LikeActionReq)
+func _BaseService_LikeVideoAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LikeVideoActionReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BaseServiceServer).LikeAction(ctx, in)
+		return srv.(BaseServiceServer).LikeVideoAction(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BaseService_LikeAction_FullMethodName,
+		FullMethod: BaseService_LikeVideoAction_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServiceServer).LikeAction(ctx, req.(*LikeActionReq))
+		return srv.(BaseServiceServer).LikeVideoAction(ctx, req.(*LikeVideoActionReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BaseService_LikeList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LikeListReq)
+func _BaseService_VideoLikeList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VideoLikeListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BaseServiceServer).LikeList(ctx, in)
+		return srv.(BaseServiceServer).VideoLikeList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BaseService_LikeList_FullMethodName,
+		FullMethod: BaseService_VideoLikeList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServiceServer).LikeList(ctx, req.(*LikeListReq))
+		return srv.(BaseServiceServer).VideoLikeList(ctx, req.(*VideoLikeListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BaseService_LikeComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LikeCommentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).LikeComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_LikeComment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).LikeComment(ctx, req.(*LikeCommentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -355,12 +388,16 @@ var BaseService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _BaseService_CommentList_Handler,
 		},
 		{
-			MethodName: "LikeAction",
-			Handler:    _BaseService_LikeAction_Handler,
+			MethodName: "LikeVideoAction",
+			Handler:    _BaseService_LikeVideoAction_Handler,
 		},
 		{
-			MethodName: "LikeList",
-			Handler:    _BaseService_LikeList_Handler,
+			MethodName: "VideoLikeList",
+			Handler:    _BaseService_VideoLikeList_Handler,
+		},
+		{
+			MethodName: "LikeComment",
+			Handler:    _BaseService_LikeComment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

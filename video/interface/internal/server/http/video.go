@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/Snaptime23/snaptime-server/v2/tools"
 	"github.com/Snaptime23/snaptime-server/v2/video/interface/internal/service"
-	"github.com/Snaptime23/snaptime-server/v2/video/internal/videoApi"
+	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 )

@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"github.com/Snaptime23/snaptime-server/v2/base/internal/baseApi"
+	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
 	"google.golang.org/grpc"
 )
 
@@ -49,10 +49,14 @@ func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) 
 	return s.baseClient.CommentList(ctx, req)
 }
 
-func (s *Service) LikeAction(ctx context.Context, req *baseApi.LikeActionReq) (*baseApi.LikeActionResp, error) {
-	return s.baseClient.LikeAction(ctx, req)
+func (s *Service) LikeVideoAction(ctx context.Context, req *baseApi.LikeVideoActionReq) (*baseApi.LikeVideoActionResp, error) {
+	return s.baseClient.LikeVideoAction(ctx, req)
 }
 
-func (s *Service) LikeList(ctx context.Context, req *baseApi.LikeListReq) (*baseApi.LikeListResp, error) {
-	return s.baseClient.LikeList(ctx, req)
+func (s *Service) VideoLikeList(ctx context.Context, req *baseApi.VideoLikeListReq) (*baseApi.VideoLikeListResp, error) {
+	return s.baseClient.VideoLikeList(ctx, req)
+}
+
+func (s *Service) LikeComment(ctx context.Context, req *baseApi.LikeCommentReq) (resp *baseApi.LikeCommentResp, err error) {
+	return s.baseClient.LikeComment(ctx, req)
 }

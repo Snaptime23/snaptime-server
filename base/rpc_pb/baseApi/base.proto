@@ -71,6 +71,7 @@ message CommentInfo {
   string Content = 4 [json_name = "content", (gogoproto.jsontag) = "content"];
   int64 PublishDate = 5 [json_name = "publish_date", (gogoproto.jsontag) = "publish_date"];
   int64 Replies = 6 [json_name = "replies", (gogoproto.jsontag) = "replies"];
+  int64 LikeCount = 7  [json_name = "like_count", (gogoproto.jsontag) = "like_count"];
 }
 
 message CreateCommentReq {
@@ -100,19 +101,27 @@ message CommentListResp {
   string NextPageToken = 8 [json_name = "next_page_token", (gogoproto.jsontag) = "next_page_token"];
 }
 
-message LikeActionReq {
-  string UserId = 1;
-  string VideoId = 2;
-  int64 ActionType = 3;
+message LikeVideoActionReq {
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+  string VideoId = 2 [json_name = "video_id", (gogoproto.jsontag) = "video_id"];
+  int64 ActionType = 3 [json_name = "action_type", (gogoproto.jsontag) = "action_type"];
 }
-message LikeActionResp {
+message LikeVideoActionResp {
 }
 
-message LikeListReq {
-  string UserId = 1;
+message VideoLikeListReq {
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
 }
-message LikeListResp {
-  repeated VideoInfo VideoList = 1;
+message VideoLikeListResp {
+  repeated VideoInfo VideoList = 1 [json_name = "video_info", (gogoproto.jsontag) = "video_info"];
+}
+
+
+message LikeCommentReq {
+  string CommentID = 1 [json_name = "comment_id", (gogoproto.jsontag) = "comment_id"];
+  int64 ActionType = 2 [json_name = "action_type", (gogoproto.jsontag) = "action_type"];
+}
+message LikeCommentResp {
 }
 
 // 定义接口
@@ -123,6 +132,7 @@ service BaseService {
   rpc PublishList (PublishListReq) returns (PublishListResp);
   rpc CreateComment (CreateCommentReq) returns (CreateCommentResp);
   rpc CommentList (CommentListReq) returns (CommentListResp);
-  rpc LikeAction (LikeActionReq) returns (LikeActionResp);
-  rpc LikeList (LikeListReq) returns (LikeListResp);
+  rpc LikeVideoAction (LikeVideoActionReq) returns (LikeVideoActionResp);
+  rpc VideoLikeList (VideoLikeListReq) returns (VideoLikeListResp);
+  rpc LikeComment (LikeCommentReq) returns (LikeCommentResp);
 }

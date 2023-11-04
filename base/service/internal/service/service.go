@@ -4,23 +4,33 @@ import (
 	"context"
 	"database/sql"
 	"encoding/base64"
-	"github.com/Snaptime23/snaptime-server/v2/base/internal/baseApi"
+	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao/model"
 	"github.com/Snaptime23/snaptime-server/v2/tools/errno"
 	"github.com/Snaptime23/snaptime-server/v2/tools/jwt"
+	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"strconv"
 	"strings"
 	"time"
 )
 
 type Service struct {
+	videoClient videoApi.VideoServiceClient
 }
 
 func NewService() *Service {
-	return &Service{}
+	conn, err := grpc.Dial(":9002", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		panic(err)
+	}
+	return &Service{
+		videoClient: videoApi.NewVideoServiceClient(conn),
+	}
 }
 
 func (s *Service) UserRegister(ctx context.Context, req *baseApi.UserRegisterReq) (resp *baseApi.UserRegisterResp, err error) {
@@ -162,41 +172,47 @@ func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) 
 	return
 }
 
-func (s *Service) LikeAction(ctx context.Context, req *baseApi.LikeActionReq) (resp *baseApi.LikeActionResp, err error) {
-	resp = new(baseApi.LikeActionResp)
+func (s *Service) LikeComment(ctx context.Context, req *baseApi.LikeCommentReq) (resp *baseApi.LikeCommentResp, err error) {
+	resp = new(baseApi.LikeCommentResp)
+	err = dao.UpdateCommentLikeCount(ctx, req.CommentID, req.ActionType)
+	return
+}
+
+func (s *Service) LikeVideoAction(ctx context.Context, req *baseApi.LikeVideoActionReq) (resp *baseApi.LikeVideoActionResp, err error) {
+	resp = new(baseApi.LikeVideoActionResp)
 	err = dao.UpdateAndInsertLikeRecord(ctx, req.UserId, req.VideoId, req.ActionType)
 	return
 }
 
-func (s *Service) LikeList(ctx context.Context, req *baseApi.LikeListReq) (resp *baseApi.LikeListResp, err error) {
-	resp = new(baseApi.LikeListResp)
+func (s *Service) VideoLikeList(ctx context.Context, req *baseApi.VideoLikeListReq) (resp *baseApi.VideoLikeListResp, err error) {
+	resp = new(baseApi.VideoLikeListResp)
 	resp.VideoList = make([]*baseApi.VideoInfo, 0)
 	videoIDS, err := dao.GetUserLikeRecords(ctx, req.UserId)
 	for _, videoID := range videoIDS {
-		video, err := dao.GetVideoByVideoId(ctx, videoID)
+		video, err := s.videoClient.GetVideoInfoById(ctx, &videoApi.GetVideoInfoByIdReq{
+			VideoId: videoID,
+		})
 		if err != nil {
 			continue
 		}
-		user, err := dao.GetUserById(ctx, video.CreateUserId)
 		resp.VideoList = append(resp.VideoList, &baseApi.VideoInfo{
-			VideoId: video.VideoID,
+			VideoId: videoID,
 			UserInfo: &baseApi.UserInfo{
-				UserId:        user.UserID,
-				UserName:      user.UserName,
-				FollowCount:   user.FollowerCount,
-				FollowerCount: user.FollowerCount,
-				IsFollow:      0,
-				Avatar:        user.Avatar,
-				PublishNum:    user.VideoNum,
-				// TODO: 修改这里的逻辑
-				FavouriteNum:    user.FavouriteNum,
-				LikeNum:         user.FavouriteNum,
-				ReceivedLikeNum: user.FavouriteNum,
+				UserId:          video.Video.Author.UserId,
+				UserName:        video.Video.Author.UserName,
+				FollowCount:     video.Video.Author.FollowerCount,
+				FollowerCount:   video.Video.Author.FollowerCount,
+				IsFollow:        0,
+				Avatar:          video.Video.Author.Avatar,
+				PublishNum:      video.Video.Author.PublishNum,
+				FavouriteNum:    video.Video.Author.FavouriteNum,
+				LikeNum:         video.Video.Author.LikeNum,
+				ReceivedLikeNum: video.Video.Author.ReceivedLikeNum,
 			},
-			FavoriteCount: video.FavouriteCount,
-			CommentCount:  video.CommentCount,
+			FavoriteCount: video.Video.FavoriteCount,
+			CommentCount:  video.Video.CommentCount,
 			IsFavorite:    0,
-			Title:         video.VideoName,
+			Title:         video.Video.Title,
 		})
 	}
 	return
