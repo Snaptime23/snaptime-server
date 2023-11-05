@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/qiniu/go-sdk/v7/auth"
 	"github.com/qiniu/go-sdk/v7/storage"
@@ -91,13 +92,13 @@ func main() {
 }
 
 func GetToken() string {
-	putPolicy := storage.PutPolicy{
-		Scope: bucket,
+	putPolicy := &storage.PutPolicy{
+		Scope: "snaptime-bucket",
 	}
 	mac := auth.New(accessKey, secretKey)
 	//upToken := putPolicy.UploadToken(mac)
 	// 设置上传凭证有效期
-	putPolicy.Expires = 7200 //示例2小时有效期
+	putPolicy.Expires = uint64(time.Now().Unix() + 7200) //示例2小时有效期
 
 	upToken := putPolicy.UploadToken(mac)
 	return upToken

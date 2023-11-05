@@ -7,7 +7,6 @@ import (
 	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao/model"
-	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/service/downloadToken"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/service/uploadToken"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
@@ -44,7 +43,7 @@ func (s *Service) UploadVideo(ctx context.Context, req *videoApi.UploadVideoReq)
 		CreateUserId: req.UserId,
 	}
 	err = dao.CreateVideo(ctx, video)
-	resp.Token = downloadToken.GetToken()
+	resp.Token = uploadToken.GetToken()
 	// return user_upload/{user_uuid}/{video_uuid.file_extension}
 	resp.ResourceKey = fmt.Sprintf("user_upload/%s/%s.%s", req.UserId, videoId, req.FileExtension)
 	return
