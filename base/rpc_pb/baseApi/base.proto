@@ -63,6 +63,7 @@ message CommentInfo {
   int64 PublishDate = 5 [json_name = "publish_date", (gogoproto.jsontag) = "publish_date"];
   int64 Replies = 6 [json_name = "replies", (gogoproto.jsontag) = "replies"];
   int64 LikeCount = 7  [json_name = "like_count", (gogoproto.jsontag) = "like_count"];
+  int64 HasLike = 8  [json_name = "has_like", (gogoproto.jsontag) = "has_like"];
 }
 
 message CreateCommentReq {
@@ -111,6 +112,7 @@ message VideoLikeListResp {
 message LikeCommentReq {
   string CommentID = 1 [json_name = "comment_id", (gogoproto.jsontag) = "comment_id"];
   int64 ActionType = 2 [json_name = "action_type", (gogoproto.jsontag) = "action_type"];
+  string UserId = 3 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
 }
 message LikeCommentResp {
 }

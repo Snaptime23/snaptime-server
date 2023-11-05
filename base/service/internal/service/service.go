@@ -142,6 +142,7 @@ func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) 
 		if err != nil {
 			continue
 		}
+		hasLike, err := dao.HasLikeComment(ctx, val.CommentID, user.UserID)
 		list = append(list, &baseApi.CommentInfo{
 			CommentId: val.CommentID,
 			User: &baseApi.UserInfo{
@@ -158,6 +159,8 @@ func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) 
 			Content:     val.Content,
 			PublishDate: val.PublishDate,
 			Replies:     dao.GetChildrenNum(req.VideoId, val.CommentID),
+			LikeCount:   val.LikeCount,
+			HasLike:     hasLike,
 		})
 	}
 	resp.List = list
@@ -166,7 +169,8 @@ func (s *Service) CommentList(ctx context.Context, req *baseApi.CommentListReq) 
 
 func (s *Service) LikeComment(ctx context.Context, req *baseApi.LikeCommentReq) (resp *baseApi.LikeCommentResp, err error) {
 	resp = new(baseApi.LikeCommentResp)
-	err = dao.UpdateCommentLikeCount(ctx, req.CommentID, req.ActionType)
+	err = dao.UpdateCommentLikeCount(ctx, req.CommentID, req.UserId, req.ActionType)
+
 	return
 }
 

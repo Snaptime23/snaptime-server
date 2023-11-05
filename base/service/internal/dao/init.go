@@ -23,6 +23,7 @@ func Init() {
 		&model.Comment{},
 		&model.Like{},
 		&model.Relation{},
+		&model.CommentLike{},
 	)
 	if err != nil {
 		panic(err)

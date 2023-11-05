@@ -149,9 +149,11 @@ func (s *HttpServer) LikeComment(c *gin.Context) {
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
+	userId, _ := c.Get("user_id")
 	resp, err := s.svr.LikeComment(context.Background(), &baseApi.LikeCommentReq{
 		CommentID:  arg.CommentID,
 		ActionType: arg.ActionType,
+		UserId:     userId.(string),
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }

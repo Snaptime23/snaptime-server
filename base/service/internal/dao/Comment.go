@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao/model"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -76,15 +77,52 @@ func DeleteCommentByID(ctx context.Context, id string) error {
 		Delete(nil).Error
 }
 
-func UpdateCommentLikeCount(ctx context.Context, commentId string, likeAction int64) error {
+func UpdateCommentLikeCount(ctx context.Context, commentId, userId string, likeAction int64) error {
 	if likeAction == 0 {
-		return DB.WithContext(ctx).
+		err := DB.WithContext(ctx).
 			Model(model.Comment{}).
 			Where("comment_id = ?", commentId).
 			UpdateColumn("like_count", gorm.Expr("like_count+1")).Error
+		if err != nil {
+			return err
+		}
+		err = DB.WithContext(ctx).
+			Model(model.CommentLike{}).
+			Create(&model.CommentLike{
+				LikeID:    uuid.NewString(),
+				UserId:    userId,
+				CommentId: "",
+				Action:    0,
+			}).Error
+		return err
 	} else {
-		return DB.WithContext(ctx).Model(model.Comment{}).
+		err := DB.WithContext(ctx).Model(model.Comment{}).
 			Where("comment_id = ?", commentId).
 			UpdateColumn("like_count", gorm.Expr("like_count-1")).Error
+		if err != nil {
+			return err
+		}
+
+		err = DB.WithContext(ctx).
+			Model(model.CommentLike{}).
+			Where("comment_id = ? and user_id = ?", commentId, userId).
+			Delete(nil).Error
+		return err
 	}
+}
+
+func HasLikeComment(ctx context.Context, commentId, uid string) (int64, error) {
+	like := &model.CommentLike{}
+	err := DB.WithContext(ctx).
+		Model(model.CommentLike{}).
+		Where("comment_id = ? and user_id = ?", commentId, uid).
+		First(&like).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			err = nil
+			return 0, nil
+		}
+	}
+
+	return 1, nil
 }
