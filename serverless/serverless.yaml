@@ -15,7 +15,10 @@ inputs:
   initTimeout: 30
   timeout: 10
   ignoreTriggers: true
-  # environment:
-  #   variables:
-  #     TZ: Asia/Shanghai
-  #     SERVERLESS: 1
+  environment:
+    variables:
+      TZ: Asia/Shanghai
+      SERVERLESS: 1
+      QINIU_ACCESS_KEY: __PLACEHOLDER_QINIU_ACCESS_KEY__
+      QINIU_SECRET_KEY: __PLACEHOLDER_QINIU_SECRET_KEY__
+      DB_PASSWORD: __PLACEHOLDER_DB_PASSWORD__
