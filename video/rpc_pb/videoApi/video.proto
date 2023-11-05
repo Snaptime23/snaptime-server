@@ -68,7 +68,8 @@ message GetVideoInfoByIdResp {
 }
 
 message RebackOneReq {
-  string Title = 1;
+  string Title = 1 [json_name = "title", (gogoproto.jsontag) = "title"];
+  string CoverUrl = 2 [json_name = "cover_url", (gogoproto.jsontag) = "cover_url"];
 }
 message RebackOneResp {
 

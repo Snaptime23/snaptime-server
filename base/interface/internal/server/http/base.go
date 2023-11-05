@@ -188,7 +188,7 @@ func (s *HttpServer) DownLoadVideo(c *gin.Context) {
 	tools.HandleErrOrResp(c, resp, err)
 }
 
-func (s *HttpServer) Callbackone(c *gin.Context) {
+func (s *HttpServer) CallbackOne(c *gin.Context) {
 	arg := new(struct {
 		Input struct {
 			KodoFile struct {
@@ -196,15 +196,34 @@ func (s *HttpServer) Callbackone(c *gin.Context) {
 				Key    string `json:"key"`
 			} `json:"kodo_file"`
 		} `json:"input"`
+		Ops []struct {
+			ID  string `json:"id"`
+			Fop struct {
+				Result struct {
+					KodoFile struct {
+						Bucket string `json:"bucket"`
+						Key    string `json:"key"`
+					} `json:"kodo_file"`
+				} `json:"result"`
+			} `json:"fop,omitempty"`
+		}
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
 	tmp := strings.Split(arg.Input.KodoFile.Key, ".")
+	coverUrl := ""
+	for _, val := range arg.Ops {
+		if val.ID == "node4_saveas" {
+			coverUrl = val.Fop.Result.KodoFile.Key
+			break
+		}
+	}
 	if len(tmp) > 0 {
 		key := tmp[0]
 		resp, err := s.svr.CallbackOne(context.Background(), &videoApi.RebackOneReq{
-			Title: key,
+			Title:    key,
+			CoverUrl: coverUrl,
 		})
 		tools.HandleErrOrResp(c, resp, err)
 	}

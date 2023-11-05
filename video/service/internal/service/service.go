@@ -124,7 +124,8 @@ func (s *Service) CallbackOne(ctx context.Context, req *videoApi.RebackOneReq) (
 	}
 	video.UploadState++
 	err = dao.UpdateVideo(ctx, video.VideoID, &map[string]interface{}{
-		"UploadState": video.UploadState,
+		"upload_state": video.UploadState,
+		"cover_url":    req.CoverUrl,
 	})
 	return
 }
