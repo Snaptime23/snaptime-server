@@ -116,6 +116,9 @@ func (s *Service) CallbackOne(ctx context.Context, req *videoApi.RebackOneReq) (
 	resp = new(videoApi.RebackOneResp)
 	fmt.Println("title = ", req.Title)
 	tmp := strings.Split(req.Title, "/")
+	if len(tmp) < 2 {
+		return
+	}
 	videoId := tmp[2]
 	videoId = strings.ReplaceAll(videoId, ".mp4", "")
 	video, err := dao.GetVideoByVideoId(ctx, videoId)
@@ -132,6 +135,15 @@ func (s *Service) CallbackOne(ctx context.Context, req *videoApi.RebackOneReq) (
 
 func (s *Service) CallbackTwo(ctx context.Context, req *videoApi.RebackTwoReq) (resp *videoApi.RebackTwoResp, err error) {
 	resp = new(videoApi.RebackTwoResp)
+	for i := 0; i < len(req.ResourceKey); i++ {
+		definition := &model.Definition{
+			VideoID:     req.VideoId,
+			ResourceKey: req.ResourceKey[i],
+			Type:        req.Type[i],
+			Quality:     req.Quality[i],
+		}
+		err = dao.CreateVideoDefinition(ctx, definition)
+	}
 	return
 }
 

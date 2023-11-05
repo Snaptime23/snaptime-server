@@ -72,14 +72,16 @@ message RebackOneReq {
   string CoverUrl = 2 [json_name = "cover_url", (gogoproto.jsontag) = "cover_url"];
 }
 message RebackOneResp {
-
 }
 
 message RebackTwoReq {
   string Title = 1;
+  repeated string ResourceKey = 2;
+  repeated string Type = 3;
+  string VideoId = 4;
+  repeated int64 Quality = 5;
 }
 message RebackTwoResp {
-
 }
 
 message PublishListReq {

@@ -231,11 +231,74 @@ func (s *HttpServer) CallbackOne(c *gin.Context) {
 
 func (s *HttpServer) CallbackTwo(c *gin.Context) {
 	arg := new(struct {
+		Input struct {
+			KodoFile struct {
+				Bucket string `json:"bucket"`
+				Key    string `json:"key"`
+			} `json:"kodo_file"`
+		} `json:"input"`
+
+		Ops []struct {
+			ID  string `json:"id"`
+			Fop struct {
+				Result struct {
+					KodoFile struct {
+						Bucket string `json:"bucket"`
+						Key    string `json:"key"`
+						Hash   string `json:"hash"`
+					} `json:"kodo_file"`
+				} `json:"result"`
+			} `json:"fop,omitempty"`
+		}
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
-	resp, err := s.svr.CallbackOne(context.Background(), &videoApi.RebackOneReq{})
+	tmp := strings.Split(arg.Input.KodoFile.Key, ".")
+	ResourceKey := make([]string, 0)
+	VideoId := ""
+	if len(tmp) > 0 {
+		tmp = strings.Split(tmp[0], "/")
+		VideoId = tmp[2]
+	}
+	Quality := make([]int64, 0)
+	Type := make([]string, 0)
+
+	for _, val := range arg.Ops {
+		if val.ID == "node5_saveas" {
+			if !strings.HasPrefix(val.Fop.Result.KodoFile.Key, "encoded") {
+				continue
+			}
+			ResourceKey = append(ResourceKey, val.Fop.Result.KodoFile.Key)
+			Quality = append(Quality, 10)
+			Type = append(Type, "audio")
+			break
+		}
+	}
+	for _, val := range arg.Ops {
+		if val.ID == "node6_saveas" {
+			ResourceKey = append(ResourceKey, val.Fop.Result.KodoFile.Key)
+			Quality = append(Quality, 10)
+			Type = append(Type, "video")
+			break
+		}
+	}
+	for _, val := range arg.Ops {
+		if val.ID == "node7_saveas" {
+			ResourceKey = append(ResourceKey, val.Fop.Result.KodoFile.Key)
+			Quality = append(Quality, 20)
+			Type = append(Type, "video")
+			break
+		}
+	}
+
+	resp, err := s.svr.CallbackTwo(context.Background(), &videoApi.RebackTwoReq{
+		//Title:       arg,
+		ResourceKey: ResourceKey,
+		Type:        Type,
+		VideoId:     VideoId,
+		Quality:     Quality,
+	})
 	tools.HandleErrOrResp(c, resp, err)
 }
 
