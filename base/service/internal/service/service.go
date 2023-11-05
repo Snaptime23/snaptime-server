@@ -102,8 +102,16 @@ func (s *Service) CreateComment(ctx context.Context, req *baseApi.CreateCommentR
 			ParentID:    req.ParentId,
 			PublishDate: time.Now().Unix(),
 		})
+		_, err = s.videoClient.InrcCommentCount(ctx, &videoApi.InrcCommentCountReq{
+			VideoId: req.VideoId,
+			Count:   1,
+		})
 	} else { // delete
 		err = dao.DeleteCommentByID(ctx, req.CommentId)
+		_, err = s.videoClient.InrcCommentCount(ctx, &videoApi.InrcCommentCountReq{
+			VideoId: req.VideoId,
+			Count:   -1,
+		})
 	}
 	return
 }

@@ -98,6 +98,13 @@ message SearchVideoByVideoTagResp {
   repeated VideoInfo Video = 1 [json_name = "video_info", (gogoproto.jsontag) = "video_info"];
 }
 
+message InrcCommentCountReq {
+  string VideoId = 1;
+  int64 Count = 2;
+}
+message InrcCommentCountResp {
+}
+
 // 定义接口
 service VideoService {
   rpc VideoFeed (VideoFeedReq) returns(VideoFeedResp);
@@ -108,4 +115,5 @@ service VideoService {
   rpc CallbackTwo(RebackTwoReq) returns (RebackTwoResp);
   rpc PublishList (PublishListReq) returns (PublishListResp);
   rpc SearchVideoByVideoTag (SearchVideoByVideoTagReq) returns (SearchVideoByVideoTagResp);
+  rpc InrcCommentCount (InrcCommentCountReq) returns (InrcCommentCountResp);
 }

@@ -29,6 +29,7 @@ const (
 	VideoService_CallbackTwo_FullMethodName           = "/video.VideoService/CallbackTwo"
 	VideoService_PublishList_FullMethodName           = "/video.VideoService/PublishList"
 	VideoService_SearchVideoByVideoTag_FullMethodName = "/video.VideoService/SearchVideoByVideoTag"
+	VideoService_InrcCommentCount_FullMethodName      = "/video.VideoService/InrcCommentCount"
 )
 
 // VideoServiceClient is the client API for VideoService service.
@@ -43,6 +44,7 @@ type VideoServiceClient interface {
 	CallbackTwo(ctx context.Context, in *RebackTwoReq, opts ...grpc.CallOption) (*RebackTwoResp, error)
 	PublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
 	SearchVideoByVideoTag(ctx context.Context, in *SearchVideoByVideoTagReq, opts ...grpc.CallOption) (*SearchVideoByVideoTagResp, error)
+	InrcCommentCount(ctx context.Context, in *InrcCommentCountReq, opts ...grpc.CallOption) (*InrcCommentCountResp, error)
 }
 
 type videoServiceClient struct {
@@ -125,6 +127,15 @@ func (c *videoServiceClient) SearchVideoByVideoTag(ctx context.Context, in *Sear
 	return out, nil
 }
 
+func (c *videoServiceClient) InrcCommentCount(ctx context.Context, in *InrcCommentCountReq, opts ...grpc.CallOption) (*InrcCommentCountResp, error) {
+	out := new(InrcCommentCountResp)
+	err := c.cc.Invoke(ctx, VideoService_InrcCommentCount_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VideoServiceServer is the server API for VideoService service.
 // All implementations must embed UnimplementedVideoServiceServer
 // for forward compatibility
@@ -137,6 +148,7 @@ type VideoServiceServer interface {
 	CallbackTwo(context.Context, *RebackTwoReq) (*RebackTwoResp, error)
 	PublishList(context.Context, *PublishListReq) (*PublishListResp, error)
 	SearchVideoByVideoTag(context.Context, *SearchVideoByVideoTagReq) (*SearchVideoByVideoTagResp, error)
+	InrcCommentCount(context.Context, *InrcCommentCountReq) (*InrcCommentCountResp, error)
 	mustEmbedUnimplementedVideoServiceServer()
 }
 
@@ -167,6 +179,9 @@ func (UnimplementedVideoServiceServer) PublishList(context.Context, *PublishList
 }
 func (UnimplementedVideoServiceServer) SearchVideoByVideoTag(context.Context, *SearchVideoByVideoTagReq) (*SearchVideoByVideoTagResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchVideoByVideoTag not implemented")
+}
+func (UnimplementedVideoServiceServer) InrcCommentCount(context.Context, *InrcCommentCountReq) (*InrcCommentCountResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InrcCommentCount not implemented")
 }
 func (UnimplementedVideoServiceServer) mustEmbedUnimplementedVideoServiceServer() {}
 
@@ -325,6 +340,24 @@ func _VideoService_SearchVideoByVideoTag_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VideoService_InrcCommentCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InrcCommentCountReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoServiceServer).InrcCommentCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VideoService_InrcCommentCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoServiceServer).InrcCommentCount(ctx, req.(*InrcCommentCountReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VideoService_ServiceDesc is the grpc.ServiceDesc for VideoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -363,6 +396,10 @@ var VideoService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SearchVideoByVideoTag",
 			Handler:    _VideoService_SearchVideoByVideoTag_Handler,
+		},
+		{
+			MethodName: "InrcCommentCount",
+			Handler:    _VideoService_InrcCommentCount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

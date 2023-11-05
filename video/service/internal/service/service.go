@@ -237,3 +237,15 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 	}
 	return
 }
+
+func (s *Service) InrcCommentCount(ctx context.Context, req *videoApi.InrcCommentCountReq) (resp *videoApi.InrcCommentCountResp, err error) {
+	resp = new(videoApi.InrcCommentCountResp)
+	video, err := dao.GetVideoByVideoId(ctx, req.VideoId)
+	if err != nil {
+		return
+	}
+	err = dao.UpdateVideo(ctx, req.VideoId, &map[string]interface{}{
+		"comment_count": video.CommentCount + req.Count,
+	})
+	return
+}

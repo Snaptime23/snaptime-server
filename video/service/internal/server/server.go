@@ -49,3 +49,7 @@ func (s *Server) PublishList(ctx context.Context, req *videoApi.PublishListReq) 
 func (s *Server) SearchVideoByVideoTag(ctx context.Context, req *videoApi.SearchVideoByVideoTagReq) (resp *videoApi.SearchVideoByVideoTagResp, err error) {
 	return s.svr.SearchVideoByVideoTag(ctx, req)
 }
+
+func (s *Server) InrcCommentCount(ctx context.Context, req *videoApi.InrcCommentCountReq) (resp *videoApi.InrcCommentCountResp, err error) {
+	return s.svr.InrcCommentCount(ctx, req)
+}
