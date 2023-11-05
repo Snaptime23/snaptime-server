@@ -199,7 +199,7 @@ func (s *HttpServer) Callbackone(c *gin.Context) {
 	tmp := strings.Split(arg.Input.KodoFile.Key, ".")
 	if len(tmp) > 0 {
 		key := tmp[0]
-		resp, err := s.svr.Callbackone(context.Background(), &videoApi.RebackOneReq{
+		resp, err := s.svr.CallbackOne(context.Background(), &videoApi.RebackOneReq{
 			Title: key,
 		})
 		tools.HandleErrOrResp(c, resp, err)
@@ -207,5 +207,5 @@ func (s *HttpServer) Callbackone(c *gin.Context) {
 }
 
 func (s *HttpServer) CallbackTwo(c *gin.Context) {
-	
+
 }

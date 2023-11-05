@@ -73,6 +73,10 @@ func (s *Service) DownLoadVideo(ctx context.Context, req *videoApi.DownloadReq) 
 	return s.videoClient.DownLoadVideo(ctx, req)
 }
 
-func (s *Service) Callbackone(ctx context.Context, req *videoApi.RebackOneReq) (resp *videoApi.RebackOneResp, err error) {
+func (s *Service) CallbackOne(ctx context.Context, req *videoApi.RebackOneReq) (resp *videoApi.RebackOneResp, err error) {
 	return s.videoClient.CallbackOne(ctx, req)
+}
+
+func (s *Service) CallbackTwo(ctx context.Context, req *videoApi.RebackTwoReq) (resp *videoApi.RebackTwoResp, err error) {
+	return s.videoClient.CallbackTwo(ctx, req)
 }
