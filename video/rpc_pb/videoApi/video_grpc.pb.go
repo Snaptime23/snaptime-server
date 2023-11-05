@@ -21,10 +21,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	VideoService_VideoFeed_FullMethodName          = "/video.VideoService/VideoFeed"
-	VideoService_UploadVideoToken_FullMethodName   = "/video.VideoService/UploadVideoToken"
-	VideoService_DownLoadVideoToken_FullMethodName = "/video.VideoService/DownLoadVideoToken"
-	VideoService_GetVideoInfoById_FullMethodName   = "/video.VideoService/GetVideoInfoById"
+	VideoService_VideoFeed_FullMethodName        = "/video.VideoService/VideoFeed"
+	VideoService_UploadVideo_FullMethodName      = "/video.VideoService/UploadVideo"
+	VideoService_DownLoadVideo_FullMethodName    = "/video.VideoService/DownLoadVideo"
+	VideoService_GetVideoInfoById_FullMethodName = "/video.VideoService/GetVideoInfoById"
+	VideoService_Rebackone_FullMethodName        = "/video.VideoService/Rebackone"
+	VideoService_RebackTwo_FullMethodName        = "/video.VideoService/RebackTwo"
 )
 
 // VideoServiceClient is the client API for VideoService service.
@@ -32,9 +34,11 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type VideoServiceClient interface {
 	VideoFeed(ctx context.Context, in *VideoFeedReq, opts ...grpc.CallOption) (*VideoFeedResp, error)
-	UploadVideoToken(ctx context.Context, in *UploadVideoReq, opts ...grpc.CallOption) (*UploadVideoResp, error)
-	DownLoadVideoToken(ctx context.Context, in *DownloadReq, opts ...grpc.CallOption) (*DownLoadResp, error)
+	UploadVideo(ctx context.Context, in *UploadVideoReq, opts ...grpc.CallOption) (*UploadVideoResp, error)
+	DownLoadVideo(ctx context.Context, in *DownloadReq, opts ...grpc.CallOption) (*DownLoadResp, error)
 	GetVideoInfoById(ctx context.Context, in *GetVideoInfoByIdReq, opts ...grpc.CallOption) (*GetVideoInfoByIdResp, error)
+	Rebackone(ctx context.Context, in *RebackOneReq, opts ...grpc.CallOption) (*RebackOneResp, error)
+	RebackTwo(ctx context.Context, in *RebackTwoReq, opts ...grpc.CallOption) (*RebackTwoResp, error)
 }
 
 type videoServiceClient struct {
@@ -54,18 +58,18 @@ func (c *videoServiceClient) VideoFeed(ctx context.Context, in *VideoFeedReq, op
 	return out, nil
 }
 
-func (c *videoServiceClient) UploadVideoToken(ctx context.Context, in *UploadVideoReq, opts ...grpc.CallOption) (*UploadVideoResp, error) {
+func (c *videoServiceClient) UploadVideo(ctx context.Context, in *UploadVideoReq, opts ...grpc.CallOption) (*UploadVideoResp, error) {
 	out := new(UploadVideoResp)
-	err := c.cc.Invoke(ctx, VideoService_UploadVideoToken_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, VideoService_UploadVideo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *videoServiceClient) DownLoadVideoToken(ctx context.Context, in *DownloadReq, opts ...grpc.CallOption) (*DownLoadResp, error) {
+func (c *videoServiceClient) DownLoadVideo(ctx context.Context, in *DownloadReq, opts ...grpc.CallOption) (*DownLoadResp, error) {
 	out := new(DownLoadResp)
-	err := c.cc.Invoke(ctx, VideoService_DownLoadVideoToken_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, VideoService_DownLoadVideo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -81,14 +85,34 @@ func (c *videoServiceClient) GetVideoInfoById(ctx context.Context, in *GetVideoI
 	return out, nil
 }
 
+func (c *videoServiceClient) Rebackone(ctx context.Context, in *RebackOneReq, opts ...grpc.CallOption) (*RebackOneResp, error) {
+	out := new(RebackOneResp)
+	err := c.cc.Invoke(ctx, VideoService_Rebackone_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *videoServiceClient) RebackTwo(ctx context.Context, in *RebackTwoReq, opts ...grpc.CallOption) (*RebackTwoResp, error) {
+	out := new(RebackTwoResp)
+	err := c.cc.Invoke(ctx, VideoService_RebackTwo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VideoServiceServer is the server API for VideoService service.
 // All implementations must embed UnimplementedVideoServiceServer
 // for forward compatibility
 type VideoServiceServer interface {
 	VideoFeed(context.Context, *VideoFeedReq) (*VideoFeedResp, error)
-	UploadVideoToken(context.Context, *UploadVideoReq) (*UploadVideoResp, error)
-	DownLoadVideoToken(context.Context, *DownloadReq) (*DownLoadResp, error)
+	UploadVideo(context.Context, *UploadVideoReq) (*UploadVideoResp, error)
+	DownLoadVideo(context.Context, *DownloadReq) (*DownLoadResp, error)
 	GetVideoInfoById(context.Context, *GetVideoInfoByIdReq) (*GetVideoInfoByIdResp, error)
+	Rebackone(context.Context, *RebackOneReq) (*RebackOneResp, error)
+	RebackTwo(context.Context, *RebackTwoReq) (*RebackTwoResp, error)
 	mustEmbedUnimplementedVideoServiceServer()
 }
 
@@ -99,14 +123,20 @@ type UnimplementedVideoServiceServer struct {
 func (UnimplementedVideoServiceServer) VideoFeed(context.Context, *VideoFeedReq) (*VideoFeedResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VideoFeed not implemented")
 }
-func (UnimplementedVideoServiceServer) UploadVideoToken(context.Context, *UploadVideoReq) (*UploadVideoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UploadVideoToken not implemented")
+func (UnimplementedVideoServiceServer) UploadVideo(context.Context, *UploadVideoReq) (*UploadVideoResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadVideo not implemented")
 }
-func (UnimplementedVideoServiceServer) DownLoadVideoToken(context.Context, *DownloadReq) (*DownLoadResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DownLoadVideoToken not implemented")
+func (UnimplementedVideoServiceServer) DownLoadVideo(context.Context, *DownloadReq) (*DownLoadResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DownLoadVideo not implemented")
 }
 func (UnimplementedVideoServiceServer) GetVideoInfoById(context.Context, *GetVideoInfoByIdReq) (*GetVideoInfoByIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVideoInfoById not implemented")
+}
+func (UnimplementedVideoServiceServer) Rebackone(context.Context, *RebackOneReq) (*RebackOneResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Rebackone not implemented")
+}
+func (UnimplementedVideoServiceServer) RebackTwo(context.Context, *RebackTwoReq) (*RebackTwoResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RebackTwo not implemented")
 }
 func (UnimplementedVideoServiceServer) mustEmbedUnimplementedVideoServiceServer() {}
 
@@ -139,38 +169,38 @@ func _VideoService_VideoFeed_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _VideoService_UploadVideoToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _VideoService_UploadVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UploadVideoReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VideoServiceServer).UploadVideoToken(ctx, in)
+		return srv.(VideoServiceServer).UploadVideo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: VideoService_UploadVideoToken_FullMethodName,
+		FullMethod: VideoService_UploadVideo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VideoServiceServer).UploadVideoToken(ctx, req.(*UploadVideoReq))
+		return srv.(VideoServiceServer).UploadVideo(ctx, req.(*UploadVideoReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _VideoService_DownLoadVideoToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _VideoService_DownLoadVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DownloadReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VideoServiceServer).DownLoadVideoToken(ctx, in)
+		return srv.(VideoServiceServer).DownLoadVideo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: VideoService_DownLoadVideoToken_FullMethodName,
+		FullMethod: VideoService_DownLoadVideo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VideoServiceServer).DownLoadVideoToken(ctx, req.(*DownloadReq))
+		return srv.(VideoServiceServer).DownLoadVideo(ctx, req.(*DownloadReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -193,6 +223,42 @@ func _VideoService_GetVideoInfoById_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VideoService_Rebackone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RebackOneReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoServiceServer).Rebackone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VideoService_Rebackone_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoServiceServer).Rebackone(ctx, req.(*RebackOneReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VideoService_RebackTwo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RebackTwoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoServiceServer).RebackTwo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VideoService_RebackTwo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoServiceServer).RebackTwo(ctx, req.(*RebackTwoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VideoService_ServiceDesc is the grpc.ServiceDesc for VideoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -205,16 +271,24 @@ var VideoService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _VideoService_VideoFeed_Handler,
 		},
 		{
-			MethodName: "UploadVideoToken",
-			Handler:    _VideoService_UploadVideoToken_Handler,
+			MethodName: "UploadVideo",
+			Handler:    _VideoService_UploadVideo_Handler,
 		},
 		{
-			MethodName: "DownLoadVideoToken",
-			Handler:    _VideoService_DownLoadVideoToken_Handler,
+			MethodName: "DownLoadVideo",
+			Handler:    _VideoService_DownLoadVideo_Handler,
 		},
 		{
 			MethodName: "GetVideoInfoById",
 			Handler:    _VideoService_GetVideoInfoById_Handler,
+		},
+		{
+			MethodName: "Rebackone",
+			Handler:    _VideoService_Rebackone_Handler,
+		},
+		{
+			MethodName: "RebackTwo",
+			Handler:    _VideoService_RebackTwo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

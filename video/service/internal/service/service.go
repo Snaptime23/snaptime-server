@@ -2,11 +2,14 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao"
+	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao/model"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/service/downloadToken"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/service/uploadToken"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -29,13 +32,25 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 	return
 }
 
-func (s *Service) UploadVideoToken(ctx context.Context, req *videoApi.UploadVideoReq) (resp *videoApi.UploadVideoResp, err error) {
+func (s *Service) UploadVideo(ctx context.Context, req *videoApi.UploadVideoReq) (resp *videoApi.UploadVideoResp, err error) {
 	resp = new(videoApi.UploadVideoResp)
+	videoId := uuid.NewString()
+	video := &model.Video{
+		VideoID:      videoId,
+		Bio:          req.Description,
+		VideoName:    req.Title,
+		PlayUrl:      "",
+		CoverUrl:     "",
+		CreateUserId: req.UserId,
+	}
+	err = dao.CreateVideo(ctx, video)
 	resp.Token = downloadToken.GetToken()
+	// return user_upload/{user_uuid}/{video_uuid.file_extension}
+	resp.ResourceKey = fmt.Sprintf("user_upload/%s/%s.%s", req.UserId, videoId, req.FileExtension)
 	return
 }
 
-func (s *Service) DownLoadVideoToken(ctx context.Context, req *videoApi.DownloadReq) (resp *videoApi.DownLoadResp, err error) {
+func (s *Service) DownLoadVideo(ctx context.Context, req *videoApi.DownloadReq) (resp *videoApi.DownLoadResp, err error) {
 	resp = new(videoApi.DownLoadResp)
 	resp.Token = uploadToken.GetToken()
 	return
@@ -50,6 +65,9 @@ func (s *Service) GetVideoInfoById(ctx context.Context, req *videoApi.GetVideoIn
 	user, err := s.baseClient.UserInfo(ctx, &baseApi.UserInfoReq{
 		UserId: video.CreateUserId,
 	})
+	if err != nil {
+		return
+	}
 	resp.Video = &videoApi.VideoInfo{
 		VideoID: video.VideoID,
 		Author: &videoApi.UserInfo{

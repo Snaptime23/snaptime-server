@@ -12,7 +12,7 @@ func JwtAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		auth := c.Request.Header.Get("Authorization")
 		if auth == "" {
-			tools.SendResp(c, 404, nil, "You don't have permission")
+			tools.SendResp(c, 401, nil, "You don't have permission")
 			c.Abort()
 			return
 		}
@@ -22,6 +22,7 @@ func JwtAuth() gin.HandlerFunc {
 
 		fmt.Println("mc =", mc)
 		if err != nil {
+			tools.SendResp(c, 401, nil, "You don't have permission")
 			c.Abort()
 			return
 		}

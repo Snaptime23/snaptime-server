@@ -2,10 +2,8 @@ package dao
 
 import (
 	"context"
-	"errors"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao/model"
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 	"log"
 )
 
@@ -27,9 +25,6 @@ func GetUserById(ctx context.Context, userId string) (*model.User, error) {
 	var user model.User
 	err := DB.WithContext(ctx).Model(model.User{}).Where("user_id = ?", userId).First(&user).Error
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
 		log.Printf("Get User by Id error: %v", err)
 		return &user, err
 	}
@@ -39,12 +34,8 @@ func GetUserById(ctx context.Context, userId string) (*model.User, error) {
 func GetUserByName(ctx context.Context, name string) (*model.User, error) {
 	user := &model.User{}
 	err := DB.WithContext(ctx).Model(model.User{}).Where("user_name = ?", name).First(user).Error
-	//fmt.Println("user = ", user, "err = ", err)
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-		return user, err
+		return nil, err
 	}
 	return user, nil
 }

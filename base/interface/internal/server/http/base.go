@@ -6,6 +6,7 @@ import (
 	"github.com/Snaptime23/snaptime-server/v2/base/interface/internal/service"
 	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/tools"
+	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 )
@@ -14,21 +15,22 @@ type HttpServer struct {
 	svr *service.Service
 }
 
-func NewServer(conn *grpc.ClientConn) *HttpServer {
-	return &HttpServer{svr: service.NewService(conn)}
+func NewServer(connBase, connVideo *grpc.ClientConn) *HttpServer {
+	return &HttpServer{
+		svr: service.NewService(connBase, connVideo),
+	}
 }
 
 func (s *HttpServer) UserRegister(c *gin.Context) {
 	arg := new(struct {
-		UserName        string `json:"user_name"`
-		Password        string `json:"password"`
-		ConfirmPassword string `json:"confirm_password"`
+		UserName string `json:"user_name"`
+		Password string `json:"password"`
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
 	fmt.Println(arg)
-	resp, err := s.svr.UserRegister(arg.UserName, arg.Password, arg.ConfirmPassword)
+	resp, err := s.svr.UserRegister(arg.UserName, arg.Password)
 	tools.HandleErrOrResp(c, resp, err)
 }
 
@@ -48,9 +50,7 @@ func (s *HttpServer) UserInfo(c *gin.Context) {
 	arg := new(struct {
 		UserId string `json:"user_id"`
 	})
-	if tools.HandleError(c, c.Bind(arg), "") {
-		return
-	}
+	arg.UserId = c.Query("user_id")
 	resp, err := s.svr.UserInfo(arg.UserId)
 	tools.HandleErrOrResp(c, resp, err)
 }
@@ -59,9 +59,7 @@ func (s *HttpServer) PublishList(c *gin.Context) {
 	arg := new(struct {
 		UserId string `json:"user_id"`
 	})
-	if tools.HandleError(c, c.Bind(arg), "") {
-		return
-	}
+	arg.UserId = c.Query("user_id")
 	resp, err := s.svr.PublishList(arg.UserId)
 	tools.HandleErrOrResp(c, resp, err)
 }
@@ -135,8 +133,7 @@ func (s *HttpServer) VideoLikeList(c *gin.Context) {
 	arg := new(struct {
 		UserId string `json:"user_id"`
 	})
-	userID, _ := c.Get("user_id")
-	arg.UserId = userID.(string)
+	arg.UserId = c.Query("user_id")
 	resp, err := s.svr.VideoLikeList(context.Background(), &baseApi.VideoLikeListReq{
 		UserId: arg.UserId,
 	})
@@ -155,5 +152,33 @@ func (s *HttpServer) LikeComment(c *gin.Context) {
 		CommentID:  arg.CommentID,
 		ActionType: arg.ActionType,
 	})
+	tools.HandleErrOrResp(c, resp, err)
+}
+
+func (s *HttpServer) UpLoadVideo(c *gin.Context) {
+	arg := new(struct {
+		Title         string   `json:"title"`
+		Description   string   `json:"description"`
+		VideoTags     []string `json:"video_tags"`
+		FileExtension string   `json:"file_extension"`
+	})
+	if tools.HandleError(c, c.Bind(arg), "") {
+		return
+	}
+	fmt.Println(arg)
+	// return user_upload/{user_uuid}/{video_uuid.file_extension}
+	userId, _ := c.Get("user_id")
+	resp, err := s.svr.UploadVideo(context.Background(), &videoApi.UploadVideoReq{
+		Description: arg.Description,
+		Title:       arg.Title,
+		//VideoTag:      arg.VideoTag,
+		FileExtension: arg.FileExtension,
+		UserId:        userId.(string),
+	})
+	tools.HandleErrOrResp(c, resp, err)
+}
+
+func (s *HttpServer) DownLoadVideo(c *gin.Context) {
+	resp, err := s.svr.DownLoadVideo(context.Background(), &videoApi.DownloadReq{})
 	tools.HandleErrOrResp(c, resp, err)
 }

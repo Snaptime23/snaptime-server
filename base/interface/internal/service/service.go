@@ -3,22 +3,26 @@ package service
 import (
 	"context"
 	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
+	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
 	"google.golang.org/grpc"
 )
 
 type Service struct {
-	baseClient baseApi.BaseServiceClient
+	baseClient  baseApi.BaseServiceClient
+	videoClient videoApi.VideoServiceClient
 }
 
-func NewService(conn *grpc.ClientConn) *Service {
-	return &Service{baseClient: baseApi.NewBaseServiceClient(conn)}
+func NewService(connBase, connVideo *grpc.ClientConn) *Service {
+	return &Service{
+		baseClient:  baseApi.NewBaseServiceClient(connBase),
+		videoClient: videoApi.NewVideoServiceClient(connVideo),
+	}
 }
 
-func (s *Service) UserRegister(username, password, confirmPassword string) (*baseApi.UserRegisterResp, error) {
+func (s *Service) UserRegister(username, password string) (*baseApi.UserRegisterResp, error) {
 	return s.baseClient.UserRegister(context.Background(), &baseApi.UserRegisterReq{
-		UserName:        username,
-		Password:        password,
-		ConfirmPassword: confirmPassword,
+		UserName: username,
+		Password: password,
 	})
 }
 
@@ -59,4 +63,12 @@ func (s *Service) VideoLikeList(ctx context.Context, req *baseApi.VideoLikeListR
 
 func (s *Service) LikeComment(ctx context.Context, req *baseApi.LikeCommentReq) (resp *baseApi.LikeCommentResp, err error) {
 	return s.baseClient.LikeComment(ctx, req)
+}
+
+func (s *Service) UploadVideo(ctx context.Context, req *videoApi.UploadVideoReq) (resp *videoApi.UploadVideoResp, err error) {
+	return s.videoClient.UploadVideo(ctx, req)
+}
+
+func (s *Service) DownLoadVideo(ctx context.Context, req *videoApi.DownloadReq) (resp *videoApi.DownLoadResp, err error) {
+	return s.videoClient.DownLoadVideo(ctx, req)
 }

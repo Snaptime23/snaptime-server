@@ -6,13 +6,7 @@ import (
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao/model"
 )
 
-func CreateVideo(ctx context.Context, playUrl string, coverUrl string, title string, uid string) (err error) {
-	video := &model.Video{
-		VideoName:    title,
-		PlayUrl:      playUrl,
-		CoverUrl:     coverUrl,
-		CreateUserId: uid,
-	}
+func CreateVideo(ctx context.Context, video *model.Video) (err error) {
 	tx := DB.Begin().WithContext(ctx)
 	if err = tx.Create(video).Error; err != nil {
 		tx.Rollback()

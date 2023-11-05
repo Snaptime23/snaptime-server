@@ -13,7 +13,7 @@ import (
 var (
 	accessKey = os.Getenv("QINIU_ACCESS_KEY")
 	secretKey = os.Getenv("QINIU_SECRET_KEY")
-	bucket    = os.Getenv("QINIU_TEST_BUCKET")
+	bucket    = "snaptime-bucket"
 )
 
 func main() {

@@ -9,16 +9,24 @@ import (
 	"os"
 )
 
-const PORT = "9001"
+const BasePORT = "9001"
+const VideoPORT = "9002"
 
 func Run() {
-	conn, err := grpc.Dial(":"+PORT, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	defer conn.Close()
+	connBase, err := grpc.Dial(":"+BasePORT, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err)
 	}
+	connVideo, err := grpc.Dial(":"+VideoPORT, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		panic(err)
+	}
+	defer func() {
+		connBase.Close()
+		connVideo.Close()
+	}()
 
-	server := http.NewServer(conn)
+	server := http.NewServer(connBase, connVideo)
 
 	app := router.CreateEngine()
 	app.Use(mw.Cors())

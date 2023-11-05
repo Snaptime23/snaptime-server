@@ -18,7 +18,6 @@ message UserLoginResp {
 message UserRegisterReq {
   string UserName = 1 [json_name = "user_name", (gogoproto.jsontag) = "user_name"];
   string Password = 2 [json_name = "password", (gogoproto.jsontag) = "password"];
-  string ConfirmPassword = 3 [json_name = "confirm_password", (gogoproto.jsontag) = "confirm_password"];
 }
 
 message UserRegisterResp {

@@ -22,14 +22,20 @@ func (s *Server) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (res
 	return s.svr.VideoFeed(ctx, req)
 }
 
-func (s *Server) UploadVideoToken(ctx context.Context, req *videoApi.UploadVideoReq) (resp *videoApi.UploadVideoResp, err error) {
-	return s.svr.UploadVideoToken(ctx, req)
+func (s *Server) UploadVideo(ctx context.Context, req *videoApi.UploadVideoReq) (resp *videoApi.UploadVideoResp, err error) {
+	return s.svr.UploadVideo(ctx, req)
 }
 
-func (s *Server) DownLoadVideoToken(ctx context.Context, req *videoApi.DownloadReq) (resp *videoApi.DownLoadResp, err error) {
-	return s.svr.DownLoadVideoToken(ctx, req)
+func (s *Server) DownLoadVideo(ctx context.Context, req *videoApi.DownloadReq) (resp *videoApi.DownLoadResp, err error) {
+	return s.svr.DownLoadVideo(ctx, req)
 }
 
 func (s *Server) GetVideoInfoById(ctx context.Context, req *videoApi.GetVideoInfoByIdReq) (resp *videoApi.GetVideoInfoByIdResp, err error) {
+	return s.svr.GetVideoInfoById(ctx, req)
+}
+
+func (s *Server) Rebackone(ctx context.Context, req *videoApi.RebackOneReq) (resp *videoApi.RebackOneResp, err error) {
 	return
 }
+
+//func (s *Server) Rebacl

@@ -36,9 +36,6 @@ func NewService() *Service {
 func (s *Service) UserRegister(ctx context.Context, req *baseApi.UserRegisterReq) (resp *baseApi.UserRegisterResp, err error) {
 	resp = new(baseApi.UserRegisterResp)
 	user, err := dao.GetUserByName(ctx, req.UserName)
-	if req.Password != req.ConfirmPassword {
-		return resp, errno.NewErrNo("两次密码不一致")
-	}
 	if user != nil {
 		return resp, errno.NewErrNo("用户已存在")
 	}
@@ -70,7 +67,7 @@ func (s *Service) UserLogin(ctx context.Context, req *baseApi.UserLoginReq) (res
 }
 
 func (s *Service) UserInfo(ctx context.Context, req *baseApi.UserInfoReq) (resp *baseApi.UserInfoResp, err error) {
-	user, err := dao.GetUserByName(ctx, req.UserId)
+	user, err := dao.GetUserById(ctx, req.UserId)
 	if err != nil {
 		return
 	}

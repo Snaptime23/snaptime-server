@@ -36,12 +36,14 @@ func InitBaseRouter(engine *gin.RouterGroup, server *http.HttpServer) {
 	{
 		comment.Use(mw.JwtAuth()).POST("/create", server.CreateComment)
 		comment.GET("/list", server.CommentList)
-		comment.POST("/like", server.LikeComment)
+		comment.Use(mw.JwtAuth()).POST("/like", server.LikeComment)
 	}
 
-	video := engine.Group("/video")
+	video := engine.Group("/video").Use(mw.JwtAuth())
 	{
 		video.POST("/like", server.LikeVideoAction)
 		video.GET("/like/list", server.VideoLikeList)
+		video.Use(mw.JwtAuth()).POST("/upload", server.UpLoadVideo)
+		video.GET("/download", server.DownLoadVideo)
 	}
 }
