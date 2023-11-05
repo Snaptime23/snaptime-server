@@ -46,10 +46,12 @@ message UploadVideoReq {
   repeated string VideoTag = 3 [json_name = "video_tag", (gogoproto.jsontag) = "video_tag"];
   string FileExtension = 4 [json_name = "file_extension", (gogoproto.jsontag) = "file_extension"];
   string UserId = 5 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+  string VideoId = 6 [json_name = "video_id", (gogoproto.jsontag) = "video_id"];
 }
 message UploadVideoResp {
   string Token = 1 [json_name = "token", (gogoproto.jsontag) = "token"];
   string ResourceKey = 2 [json_name = "resource_key", (gogoproto.jsontag) = "resource_key"];
+  string VideoId = 3 [json_name = "video_id", (gogoproto.jsontag) = "video_id"];
 }
 
 message DownloadReq {

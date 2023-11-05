@@ -162,6 +162,7 @@ func (s *HttpServer) UpLoadVideo(c *gin.Context) {
 		Description   string   `json:"description"`
 		VideoTags     []string `json:"video_tags"`
 		FileExtension string   `json:"file_extension"`
+		VideoId       string   `json:"video_id"`
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return

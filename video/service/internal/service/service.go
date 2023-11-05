@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"strings"
 )
 
 type Service struct {
@@ -33,19 +34,38 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 
 func (s *Service) UploadVideo(ctx context.Context, req *videoApi.UploadVideoReq) (resp *videoApi.UploadVideoResp, err error) {
 	resp = new(videoApi.UploadVideoResp)
-	videoId := uuid.NewString()
-	video := &model.Video{
-		VideoID:      videoId,
-		Bio:          req.Description,
-		VideoName:    req.Title,
-		PlayUrl:      "",
-		CoverUrl:     "",
-		CreateUserId: req.UserId,
+	videoId := ""
+	if req.VideoId != "" {
+		videoId = req.VideoId
+		err = dao.UpdateVideo(ctx, videoId, &map[string]interface{}{
+			"bio":        req.Description,
+			"video_name": req.Title,
+			"play_url":   "",
+			"cover_url":  "",
+		})
+		if err != nil {
+			return nil, err
+		}
+		return
+	} else {
+		videoId = uuid.NewString()
+		video := &model.Video{
+			VideoID:      videoId,
+			Bio:          req.Description,
+			VideoName:    req.Title,
+			PlayUrl:      "",
+			CoverUrl:     "",
+			CreateUserId: req.UserId,
+		}
+		err = dao.CreateVideo(ctx, video)
+		if err != nil {
+			return nil, err
+		}
+		resp.Token = uploadToken.GetToken()
+		resp.VideoId = videoId
+		// return user_upload/{user_uuid}/{video_uuid.file_extension}
+		resp.ResourceKey = fmt.Sprintf("user_upload/%s/%s.%s", req.UserId, videoId, req.FileExtension)
 	}
-	err = dao.CreateVideo(ctx, video)
-	resp.Token = uploadToken.GetToken()
-	// return user_upload/{user_uuid}/{video_uuid.file_extension}
-	resp.ResourceKey = fmt.Sprintf("user_upload/%s/%s.%s", req.UserId, videoId, req.FileExtension)
 	return
 }
 
@@ -93,7 +113,11 @@ func (s *Service) GetVideoInfoById(ctx context.Context, req *videoApi.GetVideoIn
 
 func (s *Service) CallbackOne(ctx context.Context, req *videoApi.RebackOneReq) (resp *videoApi.RebackOneResp, err error) {
 	resp = new(videoApi.RebackOneResp)
-	video, err := dao.GetVideoByVideoId(ctx, req.Title)
+	fmt.Println("title = ", req.Title)
+	tmp := strings.Split(req.Title, "/")
+	videoId := tmp[2]
+	videoId = strings.ReplaceAll(videoId, ".mp4", "")
+	video, err := dao.GetVideoByVideoId(ctx, videoId)
 	if err != nil {
 		return
 	}

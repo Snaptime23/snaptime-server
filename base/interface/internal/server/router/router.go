@@ -46,10 +46,16 @@ func InitBaseRouter(engine *gin.RouterGroup, server *http.HttpServer) {
 	{
 		video.POST("/like", server.LikeVideoAction)
 		video.GET("/like/list", server.VideoLikeList)
-		video.Use(mw.JwtAuth()).POST("/upload", server.UpLoadVideo)
 		video.GET("/download", server.DownLoadVideo)
-		video.POST("/callback_one", server.Callbackone)
-		video.POST("/callback_two", server.Callbackone)
 		video.GET("/search", server.SearchVideoByVideoTag)
+
+		video.POST("/upload/token", server.UpLoadVideo)
+		video.POST("/upload/meta", server.UpLoadVideo)
+	}
+
+	callback := engine.Group("/video/callback").Use(mw.QiniuAuth())
+	{
+		callback.POST("/uploaded", server.Callbackone)
+		callback.POST("/encoded", server.Callbackone)
 	}
 }
