@@ -15,7 +15,7 @@ inputs:
   initTimeout: 30
   timeout: 10
   ignoreTriggers: true
-  environment:
-    variables:
-      TZ: Asia/Shanghai
-      SERVERLESS: 1
+  # environment:
+  #   variables:
+  #     TZ: Asia/Shanghai
+  #     SERVERLESS: 1
