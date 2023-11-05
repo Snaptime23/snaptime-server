@@ -7,10 +7,12 @@ import (
 	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao/model"
+	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/service/downloadToken"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/service/uploadToken"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"gorm.io/gorm"
 	"strings"
 )
 
@@ -50,13 +52,16 @@ func (s *Service) UploadVideo(ctx context.Context, req *videoApi.UploadVideoReq)
 		return
 	} else {
 		videoId = uuid.NewString()
+		// return user_upload/{user_uuid}/{video_uuid.file_extension}
+		resp.ResourceKey = fmt.Sprintf("user_uploads/%s/%s.%s", req.UserId, videoId, req.FileExtension)
 		video := &model.Video{
 			VideoID:      videoId,
 			Bio:          req.Description,
 			VideoName:    req.Title,
-			PlayUrl:      "",
+			PlayUrl:      downloadToken.GetToken(resp.ResourceKey),
 			CoverUrl:     "",
 			CreateUserId: req.UserId,
+			ResourceKey:  resp.ResourceKey,
 		}
 		err = dao.CreateVideo(ctx, video)
 		if err != nil {
@@ -64,8 +69,6 @@ func (s *Service) UploadVideo(ctx context.Context, req *videoApi.UploadVideoReq)
 		}
 		resp.Token = uploadToken.GetToken()
 		resp.VideoId = videoId
-		// return user_upload/{user_uuid}/{video_uuid.file_extension}
-		resp.ResourceKey = fmt.Sprintf("user_uploads/%s/%s.%s", req.UserId, videoId, req.FileExtension)
 	}
 	return
 }
@@ -157,12 +160,20 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 	resp.Video = make([]*videoApi.VideoInfo, 0)
 	videos, err := dao.GetVideoListByUserId(ctx, req.UserId)
 	for _, val := range videos {
-		if val.UploadState == 0 || val.MetaState == 0 {
+		if val.UploadState == 0 && val.MetaState == 0 {
 			continue
 		}
 		isEncoding := true
 		if val.UploadState == 2 {
 			isEncoding = false
+		}
+		playUrl, err := dao.GetHighUrl(ctx, val.VideoID)
+		playUrl = downloadToken.GetToken(playUrl)
+		if err != nil && err != gorm.ErrRecordNotFound {
+			continue
+		}
+		if playUrl == "" {
+			playUrl = val.PlayUrl
 		}
 		resp.Video = append(resp.Video, &videoApi.VideoInfo{
 			VideoID: val.VideoID,
@@ -178,8 +189,8 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 				LikeNum:         0,
 				ReceivedLikeNum: 0,
 			},
-			PlayUrl:       val.PlayUrl,
-			CoverUrl:      val.CoverUrl,
+			PlayUrl:       playUrl,
+			CoverUrl:      downloadToken.GetToken(val.CoverUrl),
 			FavoriteCount: val.FavouriteCount,
 			CommentCount:  val.CommentCount,
 			IsFavorite:    0,
@@ -217,7 +228,7 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 				ReceivedLikeNum: 0,
 			},
 			PlayUrl:       video.PlayUrl,
-			CoverUrl:      video.CoverUrl,
+			CoverUrl:      downloadToken.GetToken(video.CoverUrl),
 			FavoriteCount: video.FavouriteCount,
 			CommentCount:  video.CommentCount,
 			IsFavorite:    0,

@@ -21,6 +21,7 @@ type Video struct {
 	FavouriteCount int64
 	UploadState    int64
 	MetaState      int64
+	ResourceKey    string
 }
 
 // TableName Comment's table name
