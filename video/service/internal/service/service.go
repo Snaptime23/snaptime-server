@@ -65,7 +65,7 @@ func (s *Service) UploadVideo(ctx context.Context, req *videoApi.UploadVideoReq)
 		resp.Token = uploadToken.GetToken()
 		resp.VideoId = videoId
 		// return user_upload/{user_uuid}/{video_uuid.file_extension}
-		resp.ResourceKey = fmt.Sprintf("user_upload/%s/%s.%s", req.UserId, videoId, req.FileExtension)
+		resp.ResourceKey = fmt.Sprintf("user_uploads/%s/%s.%s", req.UserId, videoId, req.FileExtension)
 	}
 	return
 }

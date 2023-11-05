@@ -230,7 +230,13 @@ func (s *HttpServer) CallbackOne(c *gin.Context) {
 }
 
 func (s *HttpServer) CallbackTwo(c *gin.Context) {
-
+	arg := new(struct {
+	})
+	if tools.HandleError(c, c.Bind(arg), "") {
+		return
+	}
+	resp, err := s.svr.CallbackOne(context.Background(), &videoApi.RebackOneReq{})
+	tools.HandleErrOrResp(c, resp, err)
 }
 
 func (s *HttpServer) FollowList(c *gin.Context) {
