@@ -45,5 +45,7 @@ func InitBaseRouter(engine *gin.RouterGroup, server *http.HttpServer) {
 		video.GET("/like/list", server.VideoLikeList)
 		video.Use(mw.JwtAuth()).POST("/upload", server.UpLoadVideo)
 		video.GET("/download", server.DownLoadVideo)
+		video.POST("/callback_one", server.Callbackone)
+		video.POST("/callback_two", server.Callbackone)
 	}
 }

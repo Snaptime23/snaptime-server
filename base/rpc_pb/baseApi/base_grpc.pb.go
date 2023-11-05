@@ -22,7 +22,6 @@ const (
 	BaseService_UserRegister_FullMethodName    = "/base.BaseService/UserRegister"
 	BaseService_UserLogin_FullMethodName       = "/base.BaseService/UserLogin"
 	BaseService_UserInfo_FullMethodName        = "/base.BaseService/UserInfo"
-	BaseService_PublishList_FullMethodName     = "/base.BaseService/PublishList"
 	BaseService_CreateComment_FullMethodName   = "/base.BaseService/CreateComment"
 	BaseService_CommentList_FullMethodName     = "/base.BaseService/CommentList"
 	BaseService_LikeVideoAction_FullMethodName = "/base.BaseService/LikeVideoAction"
@@ -37,7 +36,6 @@ type BaseServiceClient interface {
 	UserRegister(ctx context.Context, in *UserRegisterReq, opts ...grpc.CallOption) (*UserRegisterResp, error)
 	UserLogin(ctx context.Context, in *UserLoginReq, opts ...grpc.CallOption) (*UserLoginResp, error)
 	UserInfo(ctx context.Context, in *UserInfoReq, opts ...grpc.CallOption) (*UserInfoResp, error)
-	PublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
 	CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error)
 	CommentList(ctx context.Context, in *CommentListReq, opts ...grpc.CallOption) (*CommentListResp, error)
 	LikeVideoAction(ctx context.Context, in *LikeVideoActionReq, opts ...grpc.CallOption) (*LikeVideoActionResp, error)
@@ -74,15 +72,6 @@ func (c *baseServiceClient) UserLogin(ctx context.Context, in *UserLoginReq, opt
 func (c *baseServiceClient) UserInfo(ctx context.Context, in *UserInfoReq, opts ...grpc.CallOption) (*UserInfoResp, error) {
 	out := new(UserInfoResp)
 	err := c.cc.Invoke(ctx, BaseService_UserInfo_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *baseServiceClient) PublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error) {
-	out := new(PublishListResp)
-	err := c.cc.Invoke(ctx, BaseService_PublishList_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +130,6 @@ type BaseServiceServer interface {
 	UserRegister(context.Context, *UserRegisterReq) (*UserRegisterResp, error)
 	UserLogin(context.Context, *UserLoginReq) (*UserLoginResp, error)
 	UserInfo(context.Context, *UserInfoReq) (*UserInfoResp, error)
-	PublishList(context.Context, *PublishListReq) (*PublishListResp, error)
 	CreateComment(context.Context, *CreateCommentReq) (*CreateCommentResp, error)
 	CommentList(context.Context, *CommentListReq) (*CommentListResp, error)
 	LikeVideoAction(context.Context, *LikeVideoActionReq) (*LikeVideoActionResp, error)
@@ -162,9 +150,6 @@ func (UnimplementedBaseServiceServer) UserLogin(context.Context, *UserLoginReq) 
 }
 func (UnimplementedBaseServiceServer) UserInfo(context.Context, *UserInfoReq) (*UserInfoResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserInfo not implemented")
-}
-func (UnimplementedBaseServiceServer) PublishList(context.Context, *PublishListReq) (*PublishListResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PublishList not implemented")
 }
 func (UnimplementedBaseServiceServer) CreateComment(context.Context, *CreateCommentReq) (*CreateCommentResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateComment not implemented")
@@ -244,24 +229,6 @@ func _BaseService_UserInfo_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BaseServiceServer).UserInfo(ctx, req.(*UserInfoReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _BaseService_PublishList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PublishListReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BaseServiceServer).PublishList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: BaseService_PublishList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServiceServer).PublishList(ctx, req.(*PublishListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -374,10 +341,6 @@ var BaseService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserInfo",
 			Handler:    _BaseService_UserInfo_Handler,
-		},
-		{
-			MethodName: "PublishList",
-			Handler:    _BaseService_PublishList_Handler,
 		},
 		{
 			MethodName: "CreateComment",

@@ -39,8 +39,8 @@ func (s *Service) UserInfo(UserId string) (*baseApi.UserInfoResp, error) {
 	})
 }
 
-func (s *Service) PublishList(UserId string) (*baseApi.PublishListResp, error) {
-	return s.baseClient.PublishList(context.Background(), &baseApi.PublishListReq{
+func (s *Service) PublishList(UserId string) (*videoApi.PublishListResp, error) {
+	return s.videoClient.PublishList(context.Background(), &videoApi.PublishListReq{
 		UserId: UserId,
 	})
 }
@@ -71,4 +71,8 @@ func (s *Service) UploadVideo(ctx context.Context, req *videoApi.UploadVideoReq)
 
 func (s *Service) DownLoadVideo(ctx context.Context, req *videoApi.DownloadReq) (resp *videoApi.DownLoadResp, err error) {
 	return s.videoClient.DownLoadVideo(ctx, req)
+}
+
+func (s *Service) Callbackone(ctx context.Context, req *videoApi.RebackOneReq) (resp *videoApi.RebackOneResp, err error) {
+	return s.videoClient.CallbackOne(ctx, req)
 }

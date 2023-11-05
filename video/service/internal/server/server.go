@@ -34,8 +34,14 @@ func (s *Server) GetVideoInfoById(ctx context.Context, req *videoApi.GetVideoInf
 	return s.svr.GetVideoInfoById(ctx, req)
 }
 
-func (s *Server) Rebackone(ctx context.Context, req *videoApi.RebackOneReq) (resp *videoApi.RebackOneResp, err error) {
-	return
+func (s *Server) CallbackOne(ctx context.Context, req *videoApi.RebackOneReq) (resp *videoApi.RebackOneResp, err error) {
+	return s.svr.CallbackOne(ctx, req)
 }
 
-//func (s *Server) Rebacl
+func (s *Server) CallbackTwo(ctx context.Context, req *videoApi.RebackTwoReq) (resp *videoApi.RebackTwoResp, err error) {
+	return s.svr.CallbackTwo(ctx, req)
+}
+
+func (s *Server) PublishList(ctx context.Context, req *videoApi.PublishListReq) (resp *videoApi.PublishListResp, err error) {
+	return s.svr.PublishList(ctx, req)
+}

@@ -30,10 +30,6 @@ func (s *Server) UserInfo(ctx context.Context, req *baseApi.UserInfoReq) (resp *
 	return s.svr.UserInfo(ctx, req)
 }
 
-func (s *Server) PublishList(ctx context.Context, req *baseApi.PublishListReq) (resp *baseApi.PublishListResp, err error) {
-	return s.svr.PublishList(ctx, req)
-}
-
 func (s *Server) CreateComment(ctx context.Context, req *baseApi.CreateCommentReq) (resp *baseApi.CreateCommentResp, err error) {
 	return s.svr.CreateComment(ctx, req)
 }

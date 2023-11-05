@@ -25,8 +25,9 @@ const (
 	VideoService_UploadVideo_FullMethodName      = "/video.VideoService/UploadVideo"
 	VideoService_DownLoadVideo_FullMethodName    = "/video.VideoService/DownLoadVideo"
 	VideoService_GetVideoInfoById_FullMethodName = "/video.VideoService/GetVideoInfoById"
-	VideoService_Rebackone_FullMethodName        = "/video.VideoService/Rebackone"
-	VideoService_RebackTwo_FullMethodName        = "/video.VideoService/RebackTwo"
+	VideoService_CallbackOne_FullMethodName      = "/video.VideoService/CallbackOne"
+	VideoService_CallbackTwo_FullMethodName      = "/video.VideoService/CallbackTwo"
+	VideoService_PublishList_FullMethodName      = "/video.VideoService/PublishList"
 )
 
 // VideoServiceClient is the client API for VideoService service.
@@ -37,8 +38,9 @@ type VideoServiceClient interface {
 	UploadVideo(ctx context.Context, in *UploadVideoReq, opts ...grpc.CallOption) (*UploadVideoResp, error)
 	DownLoadVideo(ctx context.Context, in *DownloadReq, opts ...grpc.CallOption) (*DownLoadResp, error)
 	GetVideoInfoById(ctx context.Context, in *GetVideoInfoByIdReq, opts ...grpc.CallOption) (*GetVideoInfoByIdResp, error)
-	Rebackone(ctx context.Context, in *RebackOneReq, opts ...grpc.CallOption) (*RebackOneResp, error)
-	RebackTwo(ctx context.Context, in *RebackTwoReq, opts ...grpc.CallOption) (*RebackTwoResp, error)
+	CallbackOne(ctx context.Context, in *RebackOneReq, opts ...grpc.CallOption) (*RebackOneResp, error)
+	CallbackTwo(ctx context.Context, in *RebackTwoReq, opts ...grpc.CallOption) (*RebackTwoResp, error)
+	PublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
 }
 
 type videoServiceClient struct {
@@ -85,18 +87,27 @@ func (c *videoServiceClient) GetVideoInfoById(ctx context.Context, in *GetVideoI
 	return out, nil
 }
 
-func (c *videoServiceClient) Rebackone(ctx context.Context, in *RebackOneReq, opts ...grpc.CallOption) (*RebackOneResp, error) {
+func (c *videoServiceClient) CallbackOne(ctx context.Context, in *RebackOneReq, opts ...grpc.CallOption) (*RebackOneResp, error) {
 	out := new(RebackOneResp)
-	err := c.cc.Invoke(ctx, VideoService_Rebackone_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, VideoService_CallbackOne_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *videoServiceClient) RebackTwo(ctx context.Context, in *RebackTwoReq, opts ...grpc.CallOption) (*RebackTwoResp, error) {
+func (c *videoServiceClient) CallbackTwo(ctx context.Context, in *RebackTwoReq, opts ...grpc.CallOption) (*RebackTwoResp, error) {
 	out := new(RebackTwoResp)
-	err := c.cc.Invoke(ctx, VideoService_RebackTwo_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, VideoService_CallbackTwo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *videoServiceClient) PublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error) {
+	out := new(PublishListResp)
+	err := c.cc.Invoke(ctx, VideoService_PublishList_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -111,8 +122,9 @@ type VideoServiceServer interface {
 	UploadVideo(context.Context, *UploadVideoReq) (*UploadVideoResp, error)
 	DownLoadVideo(context.Context, *DownloadReq) (*DownLoadResp, error)
 	GetVideoInfoById(context.Context, *GetVideoInfoByIdReq) (*GetVideoInfoByIdResp, error)
-	Rebackone(context.Context, *RebackOneReq) (*RebackOneResp, error)
-	RebackTwo(context.Context, *RebackTwoReq) (*RebackTwoResp, error)
+	CallbackOne(context.Context, *RebackOneReq) (*RebackOneResp, error)
+	CallbackTwo(context.Context, *RebackTwoReq) (*RebackTwoResp, error)
+	PublishList(context.Context, *PublishListReq) (*PublishListResp, error)
 	mustEmbedUnimplementedVideoServiceServer()
 }
 
@@ -132,11 +144,14 @@ func (UnimplementedVideoServiceServer) DownLoadVideo(context.Context, *DownloadR
 func (UnimplementedVideoServiceServer) GetVideoInfoById(context.Context, *GetVideoInfoByIdReq) (*GetVideoInfoByIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVideoInfoById not implemented")
 }
-func (UnimplementedVideoServiceServer) Rebackone(context.Context, *RebackOneReq) (*RebackOneResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Rebackone not implemented")
+func (UnimplementedVideoServiceServer) CallbackOne(context.Context, *RebackOneReq) (*RebackOneResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CallbackOne not implemented")
 }
-func (UnimplementedVideoServiceServer) RebackTwo(context.Context, *RebackTwoReq) (*RebackTwoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RebackTwo not implemented")
+func (UnimplementedVideoServiceServer) CallbackTwo(context.Context, *RebackTwoReq) (*RebackTwoResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CallbackTwo not implemented")
+}
+func (UnimplementedVideoServiceServer) PublishList(context.Context, *PublishListReq) (*PublishListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublishList not implemented")
 }
 func (UnimplementedVideoServiceServer) mustEmbedUnimplementedVideoServiceServer() {}
 
@@ -223,38 +238,56 @@ func _VideoService_GetVideoInfoById_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _VideoService_Rebackone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _VideoService_CallbackOne_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RebackOneReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VideoServiceServer).Rebackone(ctx, in)
+		return srv.(VideoServiceServer).CallbackOne(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: VideoService_Rebackone_FullMethodName,
+		FullMethod: VideoService_CallbackOne_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VideoServiceServer).Rebackone(ctx, req.(*RebackOneReq))
+		return srv.(VideoServiceServer).CallbackOne(ctx, req.(*RebackOneReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _VideoService_RebackTwo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _VideoService_CallbackTwo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RebackTwoReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VideoServiceServer).RebackTwo(ctx, in)
+		return srv.(VideoServiceServer).CallbackTwo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: VideoService_RebackTwo_FullMethodName,
+		FullMethod: VideoService_CallbackTwo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VideoServiceServer).RebackTwo(ctx, req.(*RebackTwoReq))
+		return srv.(VideoServiceServer).CallbackTwo(ctx, req.(*RebackTwoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VideoService_PublishList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PublishListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoServiceServer).PublishList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VideoService_PublishList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoServiceServer).PublishList(ctx, req.(*PublishListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -283,12 +316,16 @@ var VideoService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _VideoService_GetVideoInfoById_Handler,
 		},
 		{
-			MethodName: "Rebackone",
-			Handler:    _VideoService_Rebackone_Handler,
+			MethodName: "CallbackOne",
+			Handler:    _VideoService_CallbackOne_Handler,
 		},
 		{
-			MethodName: "RebackTwo",
-			Handler:    _VideoService_RebackTwo_Handler,
+			MethodName: "CallbackTwo",
+			Handler:    _VideoService_CallbackTwo_Handler,
+		},
+		{
+			MethodName: "PublishList",
+			Handler:    _VideoService_PublishList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

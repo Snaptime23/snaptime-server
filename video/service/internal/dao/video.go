@@ -44,10 +44,16 @@ func GetVideoByVideoId(ctx context.Context, vid string) (*model.Video, error) {
 	return video, nil
 }
 
-func UpdateVideo(ctx context.Context, vid int64, videoMap *map[string]interface{}) (err error) {
-	err = DB.WithContext(ctx).Model(model.Video{}).Where("video_id = ?", vid).Updates(videoMap).Error
+func UpdateVideo(ctx context.Context, vid string, videoMap *map[string]interface{}) (err error) {
+	err = DB.WithContext(ctx).Model(&model.Video{}).Where("video_id = ?", vid).Updates(videoMap).Error
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func GetVideoListByUserId(ctx context.Context, uid string) (ret []*model.Video, err error) {
+	ret = make([]*model.Video, 0)
+	err = DB.WithContext(ctx).Model(&model.Video{}).Where("user_id = ? and upload_state > 0", uid).Updates(&ret).Error
+	return
 }

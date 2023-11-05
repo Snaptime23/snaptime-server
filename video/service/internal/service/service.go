@@ -91,3 +91,51 @@ func (s *Service) GetVideoInfoById(ctx context.Context, req *videoApi.GetVideoIn
 	}
 	return
 }
+
+func (s *Service) CallbackOne(ctx context.Context, req *videoApi.RebackOneReq) (resp *videoApi.RebackOneResp, err error) {
+	resp = new(videoApi.RebackOneResp)
+	video, err := dao.GetVideoByVideoId(ctx, req.Title)
+	if err != nil {
+		return
+	}
+	video.UploadState++
+	err = dao.UpdateVideo(ctx, video.VideoID, &map[string]interface{}{
+		"UploadState": video.UploadState,
+	})
+	return
+}
+
+func (s *Service) CallbackTwo(ctx context.Context, req *videoApi.RebackTwoReq) (resp *videoApi.RebackTwoResp, err error) {
+	resp = new(videoApi.RebackTwoResp)
+	return
+}
+
+func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq) (resp *videoApi.PublishListResp, err error) {
+	resp = new(videoApi.PublishListResp)
+	resp.Video = make([]*videoApi.VideoInfo, 0)
+	videos, err := dao.GetVideoListByUserId(ctx, req.UserId)
+	for _, val := range videos {
+		resp.Video = append(resp.Video, &videoApi.VideoInfo{
+			VideoID: val.VideoID,
+			Author: &videoApi.UserInfo{
+				UserId:          "",
+				UserName:        "",
+				FollowCount:     0,
+				FollowerCount:   0,
+				IsFollow:        0,
+				Avatar:          "",
+				PublishNum:      0,
+				FavouriteNum:    0,
+				LikeNum:         0,
+				ReceivedLikeNum: 0,
+			},
+			PlayUrl:       val.PlayUrl,
+			CoverUrl:      val.CoverUrl,
+			FavoriteCount: val.FavouriteCount,
+			CommentCount:  val.CommentCount,
+			IsFavorite:    0,
+			Title:         val.VideoName,
+		})
+	}
+	return
+}

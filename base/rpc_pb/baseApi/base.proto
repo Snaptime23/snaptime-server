@@ -46,10 +46,6 @@ message UserInfoResp {
   UserInfo User = 1 [json_name = "user", (gogoproto.jsontag) = "user"];
 }
 
-message PublishListReq {
-  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
-}
-
 message VideoInfo {
   string VideoId = 1 [json_name = "password", (gogoproto.jsontag) = "video_id"];
   UserInfo UserInfo = 2 [json_name = "user_info", (gogoproto.jsontag) = "user_info"];
@@ -57,10 +53,6 @@ message VideoInfo {
   int64 CommentCount = 4 [json_name = "comment_count", (gogoproto.jsontag) = "comment_count"];
   int64 IsFavorite = 5 [json_name = "is_favourite", (gogoproto.jsontag) = "is_favourite"];
   string Title = 6 [json_name = "title", (gogoproto.jsontag) = "title"];
-}
-
-message PublishListResp {
-  VideoInfo Video = 1 [json_name = "video", (gogoproto.jsontag) = "video"];
 }
 
 message CommentInfo {
@@ -128,7 +120,6 @@ service BaseService {
   rpc UserRegister(UserRegisterReq) returns (UserRegisterResp);
   rpc UserLogin(UserLoginReq) returns (UserLoginResp);
   rpc UserInfo(UserInfoReq) returns (UserInfoResp);
-  rpc PublishList (PublishListReq) returns (PublishListResp);
   rpc CreateComment (CreateCommentReq) returns (CreateCommentResp);
   rpc CommentList (CommentListReq) returns (CommentListResp);
   rpc LikeVideoAction (LikeVideoActionReq) returns (LikeVideoActionResp);

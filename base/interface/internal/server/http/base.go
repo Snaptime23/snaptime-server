@@ -9,6 +9,7 @@ import (
 	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
+	"strings"
 )
 
 type HttpServer struct {
@@ -181,4 +182,30 @@ func (s *HttpServer) UpLoadVideo(c *gin.Context) {
 func (s *HttpServer) DownLoadVideo(c *gin.Context) {
 	resp, err := s.svr.DownLoadVideo(context.Background(), &videoApi.DownloadReq{})
 	tools.HandleErrOrResp(c, resp, err)
+}
+
+func (s *HttpServer) Callbackone(c *gin.Context) {
+	arg := new(struct {
+		Input struct {
+			KodoFile struct {
+				Bucket string `json:"bucket"`
+				Key    string `json:"key"`
+			} `json:"kodo_file"`
+		} `json:"input"`
+	})
+	if tools.HandleError(c, c.Bind(arg), "") {
+		return
+	}
+	tmp := strings.Split(arg.Input.KodoFile.Key, ".")
+	if len(tmp) > 0 {
+		key := tmp[0]
+		resp, err := s.svr.Callbackone(context.Background(), &videoApi.RebackOneReq{
+			Title: key,
+		})
+		tools.HandleErrOrResp(c, resp, err)
+	}
+}
+
+func (s *HttpServer) CallbackTwo(c *gin.Context) {
+	
 }

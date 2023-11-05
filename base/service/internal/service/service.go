@@ -86,11 +86,6 @@ func (s *Service) UserInfo(ctx context.Context, req *baseApi.UserInfoReq) (resp 
 	return
 }
 
-func (s *Service) PublishList(ctx context.Context, req *baseApi.PublishListReq) (resp *baseApi.PublishListResp, err error) {
-	resp = new(baseApi.PublishListResp)
-	return
-}
-
 func (s *Service) CreateComment(ctx context.Context, req *baseApi.CreateCommentReq) (resp *baseApi.CreateCommentResp, err error) {
 	resp = new(baseApi.CreateCommentResp)
 	if req.ActionType == 0 { // create
