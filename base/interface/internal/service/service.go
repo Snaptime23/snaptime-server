@@ -80,3 +80,15 @@ func (s *Service) CallbackOne(ctx context.Context, req *videoApi.RebackOneReq) (
 func (s *Service) CallbackTwo(ctx context.Context, req *videoApi.RebackTwoReq) (resp *videoApi.RebackTwoResp, err error) {
 	return s.videoClient.CallbackTwo(ctx, req)
 }
+
+func (s *Service) FollowList(ctx context.Context, req *baseApi.FollowListReq) (resp *baseApi.FollowListResp, err error) {
+	return s.baseClient.FollowList(ctx, req)
+}
+
+func (s *Service) FollowerList(ctx context.Context, req *baseApi.FollowerListReq) (resp *baseApi.FollowerListResp, err error) {
+	return s.baseClient.FollowerList(ctx, req)
+}
+
+func (s *Service) Follow(ctx context.Context, req *baseApi.FollowReq) (resp *baseApi.FollowResp, err error) {
+	return s.baseClient.Follow(ctx, req)
+}

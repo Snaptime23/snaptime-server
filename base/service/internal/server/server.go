@@ -49,3 +49,15 @@ func (s *Server) VideoLikeList(ctx context.Context, req *baseApi.VideoLikeListRe
 func (s *Server) LikeComment(ctx context.Context, req *baseApi.LikeCommentReq) (resp *baseApi.LikeCommentResp, err error) {
 	return s.svr.LikeComment(ctx, req)
 }
+
+func (s *Server) FollowList(ctx context.Context, req *baseApi.FollowListReq) (resp *baseApi.FollowListResp, err error) {
+	return s.svr.FollowList(ctx, req)
+}
+
+func (s *Server) FollowerList(ctx context.Context, req *baseApi.FollowerListReq) (resp *baseApi.FollowerListResp, err error) {
+	return s.svr.FollowerList(ctx, req)
+}
+
+func (s *Server) Follow(ctx context.Context, req *baseApi.FollowReq) (resp *baseApi.FollowResp, err error) {
+	return s.svr.Follow(ctx, req)
+}

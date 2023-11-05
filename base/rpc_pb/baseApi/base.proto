@@ -115,6 +115,29 @@ message LikeCommentReq {
 message LikeCommentResp {
 }
 
+message FollowListReq {
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+}
+message FollowListResp {
+  repeated UserInfo User = 1 [json_name = "user_info", (gogoproto.jsontag) = "user_info"];
+}
+
+message FollowerListReq {
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+}
+message FollowerListResp {
+  repeated UserInfo User = 1 [json_name = "user_info", (gogoproto.jsontag) = "user_info"];
+}
+
+message FollowReq {
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+  string ToUserId = 2 [json_name = "to_user_id", (gogoproto.jsontag) = "to_user_id"];
+  int64 Action = 3  [json_name = "action", (gogoproto.jsontag) = "action"];
+}
+message FollowResp {
+}
+
+
 // 定义接口
 service BaseService {
   rpc UserRegister(UserRegisterReq) returns (UserRegisterResp);
@@ -125,4 +148,7 @@ service BaseService {
   rpc LikeVideoAction (LikeVideoActionReq) returns (LikeVideoActionResp);
   rpc VideoLikeList (VideoLikeListReq) returns (VideoLikeListResp);
   rpc LikeComment (LikeCommentReq) returns (LikeCommentResp);
+  rpc FollowList (FollowListReq) returns (FollowListResp);
+  rpc FollowerList (FollowerListReq) returns (FollowerListResp);
+  rpc Follow (FollowReq) returns (FollowResp);
 }

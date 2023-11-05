@@ -27,6 +27,9 @@ const (
 	BaseService_LikeVideoAction_FullMethodName = "/base.BaseService/LikeVideoAction"
 	BaseService_VideoLikeList_FullMethodName   = "/base.BaseService/VideoLikeList"
 	BaseService_LikeComment_FullMethodName     = "/base.BaseService/LikeComment"
+	BaseService_FollowList_FullMethodName      = "/base.BaseService/FollowList"
+	BaseService_FollowerList_FullMethodName    = "/base.BaseService/FollowerList"
+	BaseService_Follow_FullMethodName          = "/base.BaseService/Follow"
 )
 
 // BaseServiceClient is the client API for BaseService service.
@@ -41,6 +44,9 @@ type BaseServiceClient interface {
 	LikeVideoAction(ctx context.Context, in *LikeVideoActionReq, opts ...grpc.CallOption) (*LikeVideoActionResp, error)
 	VideoLikeList(ctx context.Context, in *VideoLikeListReq, opts ...grpc.CallOption) (*VideoLikeListResp, error)
 	LikeComment(ctx context.Context, in *LikeCommentReq, opts ...grpc.CallOption) (*LikeCommentResp, error)
+	FollowList(ctx context.Context, in *FollowListReq, opts ...grpc.CallOption) (*FollowListResp, error)
+	FollowerList(ctx context.Context, in *FollowerListReq, opts ...grpc.CallOption) (*FollowerListResp, error)
+	Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error)
 }
 
 type baseServiceClient struct {
@@ -123,6 +129,33 @@ func (c *baseServiceClient) LikeComment(ctx context.Context, in *LikeCommentReq,
 	return out, nil
 }
 
+func (c *baseServiceClient) FollowList(ctx context.Context, in *FollowListReq, opts ...grpc.CallOption) (*FollowListResp, error) {
+	out := new(FollowListResp)
+	err := c.cc.Invoke(ctx, BaseService_FollowList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseServiceClient) FollowerList(ctx context.Context, in *FollowerListReq, opts ...grpc.CallOption) (*FollowerListResp, error) {
+	out := new(FollowerListResp)
+	err := c.cc.Invoke(ctx, BaseService_FollowerList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseServiceClient) Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error) {
+	out := new(FollowResp)
+	err := c.cc.Invoke(ctx, BaseService_Follow_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BaseServiceServer is the server API for BaseService service.
 // All implementations must embed UnimplementedBaseServiceServer
 // for forward compatibility
@@ -135,6 +168,9 @@ type BaseServiceServer interface {
 	LikeVideoAction(context.Context, *LikeVideoActionReq) (*LikeVideoActionResp, error)
 	VideoLikeList(context.Context, *VideoLikeListReq) (*VideoLikeListResp, error)
 	LikeComment(context.Context, *LikeCommentReq) (*LikeCommentResp, error)
+	FollowList(context.Context, *FollowListReq) (*FollowListResp, error)
+	FollowerList(context.Context, *FollowerListReq) (*FollowerListResp, error)
+	Follow(context.Context, *FollowReq) (*FollowResp, error)
 	mustEmbedUnimplementedBaseServiceServer()
 }
 
@@ -165,6 +201,15 @@ func (UnimplementedBaseServiceServer) VideoLikeList(context.Context, *VideoLikeL
 }
 func (UnimplementedBaseServiceServer) LikeComment(context.Context, *LikeCommentReq) (*LikeCommentResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LikeComment not implemented")
+}
+func (UnimplementedBaseServiceServer) FollowList(context.Context, *FollowListReq) (*FollowListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FollowList not implemented")
+}
+func (UnimplementedBaseServiceServer) FollowerList(context.Context, *FollowerListReq) (*FollowerListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FollowerList not implemented")
+}
+func (UnimplementedBaseServiceServer) Follow(context.Context, *FollowReq) (*FollowResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Follow not implemented")
 }
 func (UnimplementedBaseServiceServer) mustEmbedUnimplementedBaseServiceServer() {}
 
@@ -323,6 +368,60 @@ func _BaseService_LikeComment_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BaseService_FollowList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).FollowList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_FollowList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).FollowList(ctx, req.(*FollowListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BaseService_FollowerList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowerListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).FollowerList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_FollowerList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).FollowerList(ctx, req.(*FollowerListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BaseService_Follow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).Follow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_Follow_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).Follow(ctx, req.(*FollowReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BaseService_ServiceDesc is the grpc.ServiceDesc for BaseService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -361,6 +460,18 @@ var BaseService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LikeComment",
 			Handler:    _BaseService_LikeComment_Handler,
+		},
+		{
+			MethodName: "FollowList",
+			Handler:    _BaseService_FollowList_Handler,
+		},
+		{
+			MethodName: "FollowerList",
+			Handler:    _BaseService_FollowerList_Handler,
+		},
+		{
+			MethodName: "Follow",
+			Handler:    _BaseService_Follow_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

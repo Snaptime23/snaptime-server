@@ -209,3 +209,65 @@ func (s *Service) VideoLikeList(ctx context.Context, req *baseApi.VideoLikeListR
 	}
 	return
 }
+
+func (s *Service) FollowList(ctx context.Context, req *baseApi.FollowListReq) (resp *baseApi.FollowListResp, err error) {
+	resp = new(baseApi.FollowListResp)
+	resp.User = make([]*baseApi.UserInfo, 0)
+	folloList, err := dao.GetFollowList(ctx, req.UserId)
+	if err != nil {
+		return
+	}
+	for _, val := range folloList {
+		user, err := dao.GetUserById(ctx, val)
+		if err != nil {
+			continue
+		}
+		resp.User = append(resp.User, &baseApi.UserInfo{
+			UserId:          user.UserID,
+			UserName:        user.UserName,
+			FollowCount:     user.FollowCount,
+			FollowerCount:   user.FollowerCount,
+			IsFollow:        0,
+			Avatar:          user.Avatar,
+			PublishNum:      user.VideoNum,
+			FavouriteNum:    user.FavouriteNum,
+			LikeNum:         user.FavouriteNum,
+			ReceivedLikeNum: 0,
+		})
+	}
+	return
+}
+
+func (s *Service) FollowerList(ctx context.Context, req *baseApi.FollowerListReq) (resp *baseApi.FollowerListResp, err error) {
+	resp = new(baseApi.FollowerListResp)
+	resp.User = make([]*baseApi.UserInfo, 0)
+	folloList, err := dao.GetFollowerList(ctx, req.UserId)
+	if err != nil {
+		return
+	}
+	for _, val := range folloList {
+		user, err := dao.GetUserById(ctx, val)
+		if err != nil {
+			continue
+		}
+		resp.User = append(resp.User, &baseApi.UserInfo{
+			UserId:          user.UserID,
+			UserName:        user.UserName,
+			FollowCount:     user.FollowCount,
+			FollowerCount:   user.FollowerCount,
+			IsFollow:        0,
+			Avatar:          user.Avatar,
+			PublishNum:      user.VideoNum,
+			FavouriteNum:    user.FavouriteNum,
+			LikeNum:         user.FavouriteNum,
+			ReceivedLikeNum: 0,
+		})
+	}
+	return
+}
+
+func (s *Service) Follow(ctx context.Context, req *baseApi.FollowReq) (resp *baseApi.FollowResp, err error) {
+	resp = new(baseApi.FollowResp)
+	err = dao.Follow(ctx, req.UserId, req.ToUserId, req.Action)
+	return
+}

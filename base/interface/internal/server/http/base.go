@@ -209,3 +209,39 @@ func (s *HttpServer) Callbackone(c *gin.Context) {
 func (s *HttpServer) CallbackTwo(c *gin.Context) {
 
 }
+
+func (s *HttpServer) FollowList(c *gin.Context) {
+	arg := new(struct {
+		UserId string `json:"user_id"`
+	})
+	arg.UserId = c.Query("user_id")
+	resp, err := s.svr.FollowList(context.Background(), &baseApi.FollowListReq{
+		UserId: arg.UserId,
+	})
+	tools.HandleErrOrResp(c, resp, err)
+}
+
+func (s *HttpServer) FollowerList(c *gin.Context) {
+	arg := new(struct {
+		UserId string `json:"user_id"`
+	})
+	arg.UserId = c.Query("user_id")
+	resp, err := s.svr.FollowerList(context.Background(), &baseApi.FollowerListReq{
+		UserId: arg.UserId,
+	})
+	tools.HandleErrOrResp(c, resp, err)
+}
+
+func (s *HttpServer) Follow(c *gin.Context) {
+	arg := new(struct {
+		UserId   string `json:"user_id"`
+		ToUserId string `json:"to_user_id"`
+	})
+	userId, _ := c.Get("user_id")
+	arg.UserId = userId.(string)
+	resp, err := s.svr.Follow(context.Background(), &baseApi.FollowReq{
+		UserId:   arg.UserId,
+		ToUserId: arg.ToUserId,
+	})
+	tools.HandleErrOrResp(c, resp, err)
+}
