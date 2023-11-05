@@ -42,6 +42,7 @@ func (s *Service) UploadVideo(ctx context.Context, req *videoApi.UploadVideoReq)
 			"video_name": req.Title,
 			"play_url":   "",
 			"cover_url":  "",
+			"meta_state": 1,
 		})
 		if err != nil {
 			return nil, err

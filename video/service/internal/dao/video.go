@@ -54,6 +54,6 @@ func UpdateVideo(ctx context.Context, vid string, videoMap *map[string]interface
 
 func GetVideoListByUserId(ctx context.Context, uid string) (ret []*model.Video, err error) {
 	ret = make([]*model.Video, 0)
-	err = DB.WithContext(ctx).Model(&model.Video{}).Where("user_id = ? and upload_state > 0", uid).Updates(&ret).Error
+	err = DB.WithContext(ctx).Model(&model.Video{}).Where("create_user_id = ?", uid).Find(&ret).Error
 	return
 }

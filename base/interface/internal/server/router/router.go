@@ -38,7 +38,7 @@ func InitBaseRouter(engine *gin.RouterGroup, server *http.HttpServer) {
 	comment := engine.Group("/comment")
 	{
 		comment.Use(mw.JwtAuth()).POST("/create", server.CreateComment)
-		comment.GET("/list", server.CommentList)
+		comment.Use(mw.XJwtAuth()).GET("/list", server.CommentList)
 		comment.Use(mw.JwtAuth()).POST("/like", server.LikeComment)
 	}
 

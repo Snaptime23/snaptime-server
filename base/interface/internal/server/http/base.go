@@ -178,6 +178,7 @@ func (s *HttpServer) UpLoadVideo(c *gin.Context) {
 		VideoTag:      arg.VideoTags,
 		FileExtension: arg.FileExtension,
 		UserId:        userId.(string),
+		VideoId:       arg.VideoId,
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }
