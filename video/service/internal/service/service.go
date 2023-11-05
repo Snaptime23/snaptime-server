@@ -138,3 +138,40 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 	}
 	return
 }
+
+func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.SearchVideoByVideoTagReq) (resp *videoApi.SearchVideoByVideoTagResp, err error) {
+	resp = new(videoApi.SearchVideoByVideoTagResp)
+	resp.Video = make([]*videoApi.VideoInfo, 0)
+	videoIds, err := dao.SearchByVideoTag(ctx, req.VideoTag)
+	if err != nil {
+		return
+	}
+	for _, videoId := range videoIds {
+		video, err := dao.GetVideoByVideoId(ctx, videoId)
+		if err != nil {
+			continue
+		}
+		resp.Video = append(resp.Video, &videoApi.VideoInfo{
+			VideoID: video.VideoID,
+			Author: &videoApi.UserInfo{
+				UserId:          "",
+				UserName:        "",
+				FollowCount:     0,
+				FollowerCount:   0,
+				IsFollow:        0,
+				Avatar:          "",
+				PublishNum:      0,
+				FavouriteNum:    0,
+				LikeNum:         0,
+				ReceivedLikeNum: 0,
+			},
+			PlayUrl:       video.PlayUrl,
+			CoverUrl:      video.CoverUrl,
+			FavoriteCount: video.FavouriteCount,
+			CommentCount:  video.CommentCount,
+			IsFavorite:    0,
+			Title:         video.VideoName,
+		})
+	}
+	return
+}

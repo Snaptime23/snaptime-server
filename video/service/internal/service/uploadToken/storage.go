@@ -93,7 +93,7 @@ func main() {
 
 func GetToken() string {
 	putPolicy := &storage.PutPolicy{
-		Scope: "snaptime-bucket",
+		Scope: bucket,
 	}
 	mac := auth.New(accessKey, secretKey)
 	//upToken := putPolicy.UploadToken(mac)

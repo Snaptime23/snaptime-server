@@ -50,5 +50,6 @@ func InitBaseRouter(engine *gin.RouterGroup, server *http.HttpServer) {
 		video.GET("/download", server.DownLoadVideo)
 		video.POST("/callback_one", server.Callbackone)
 		video.POST("/callback_two", server.Callbackone)
+		video.GET("/search", server.SearchVideoByVideoTag)
 	}
 }

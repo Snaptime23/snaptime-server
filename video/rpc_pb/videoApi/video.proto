@@ -43,7 +43,7 @@ message VideoFeedResp {
 message UploadVideoReq {
   string Description = 1 [json_name = "description", (gogoproto.jsontag) = "description"];
   string Title = 2 [json_name = "title", (gogoproto.jsontag) = "title"];
-  string VideoTag = 3 [json_name = "video_tag", (gogoproto.jsontag) = "video_tag"];
+  repeated string VideoTag = 3 [json_name = "video_tag", (gogoproto.jsontag) = "video_tag"];
   string FileExtension = 4 [json_name = "file_extension", (gogoproto.jsontag) = "file_extension"];
   string UserId = 5 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
 }
@@ -86,6 +86,13 @@ message PublishListResp {
   repeated VideoInfo Video = 1 [json_name = "video", (gogoproto.jsontag) = "video"];
 }
 
+message SearchVideoByVideoTagReq {
+  string VideoTag = 1 [json_name = "video_tag", (gogoproto.jsontag) = "video_tag"];
+}
+message SearchVideoByVideoTagResp {
+  repeated VideoInfo Video = 1 [json_name = "video_info", (gogoproto.jsontag) = "video_info"];
+}
+
 // 定义接口
 service VideoService {
   rpc VideoFeed (VideoFeedReq) returns(VideoFeedResp);
@@ -95,4 +102,5 @@ service VideoService {
   rpc CallbackOne(RebackOneReq) returns (RebackOneResp);
   rpc CallbackTwo(RebackTwoReq) returns (RebackTwoResp);
   rpc PublishList (PublishListReq) returns (PublishListResp);
+  rpc SearchVideoByVideoTag (SearchVideoByVideoTagReq) returns (SearchVideoByVideoTagResp);
 }

@@ -92,3 +92,7 @@ func (s *Service) FollowerList(ctx context.Context, req *baseApi.FollowerListReq
 func (s *Service) Follow(ctx context.Context, req *baseApi.FollowReq) (resp *baseApi.FollowResp, err error) {
 	return s.baseClient.Follow(ctx, req)
 }
+
+func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.SearchVideoByVideoTagReq) (resp *videoApi.SearchVideoByVideoTagResp, err error) {
+	return s.videoClient.SearchVideoByVideoTag(ctx, req)
+}

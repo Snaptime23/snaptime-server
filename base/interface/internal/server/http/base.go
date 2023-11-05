@@ -170,9 +170,9 @@ func (s *HttpServer) UpLoadVideo(c *gin.Context) {
 	// return user_upload/{user_uuid}/{video_uuid.file_extension}
 	userId, _ := c.Get("user_id")
 	resp, err := s.svr.UploadVideo(context.Background(), &videoApi.UploadVideoReq{
-		Description: arg.Description,
-		Title:       arg.Title,
-		//VideoTag:      arg.VideoTag,
+		Description:   arg.Description,
+		Title:         arg.Title,
+		VideoTag:      arg.VideoTags,
 		FileExtension: arg.FileExtension,
 		UserId:        userId.(string),
 	})
@@ -242,6 +242,17 @@ func (s *HttpServer) Follow(c *gin.Context) {
 	resp, err := s.svr.Follow(context.Background(), &baseApi.FollowReq{
 		UserId:   arg.UserId,
 		ToUserId: arg.ToUserId,
+	})
+	tools.HandleErrOrResp(c, resp, err)
+}
+
+func (s *HttpServer) SearchVideoByVideoTag(c *gin.Context) {
+	arg := new(struct {
+		VideoTag string `json:"video_tag"`
+	})
+	arg.VideoTag = c.Query("video_tag")
+	resp, err := s.svr.SearchVideoByVideoTag(context.Background(), &videoApi.SearchVideoByVideoTagReq{
+		VideoTag: arg.VideoTag,
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }

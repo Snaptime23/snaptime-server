@@ -21,13 +21,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	VideoService_VideoFeed_FullMethodName        = "/video.VideoService/VideoFeed"
-	VideoService_UploadVideo_FullMethodName      = "/video.VideoService/UploadVideo"
-	VideoService_DownLoadVideo_FullMethodName    = "/video.VideoService/DownLoadVideo"
-	VideoService_GetVideoInfoById_FullMethodName = "/video.VideoService/GetVideoInfoById"
-	VideoService_CallbackOne_FullMethodName      = "/video.VideoService/CallbackOne"
-	VideoService_CallbackTwo_FullMethodName      = "/video.VideoService/CallbackTwo"
-	VideoService_PublishList_FullMethodName      = "/video.VideoService/PublishList"
+	VideoService_VideoFeed_FullMethodName             = "/video.VideoService/VideoFeed"
+	VideoService_UploadVideo_FullMethodName           = "/video.VideoService/UploadVideo"
+	VideoService_DownLoadVideo_FullMethodName         = "/video.VideoService/DownLoadVideo"
+	VideoService_GetVideoInfoById_FullMethodName      = "/video.VideoService/GetVideoInfoById"
+	VideoService_CallbackOne_FullMethodName           = "/video.VideoService/CallbackOne"
+	VideoService_CallbackTwo_FullMethodName           = "/video.VideoService/CallbackTwo"
+	VideoService_PublishList_FullMethodName           = "/video.VideoService/PublishList"
+	VideoService_SearchVideoByVideoTag_FullMethodName = "/video.VideoService/SearchVideoByVideoTag"
 )
 
 // VideoServiceClient is the client API for VideoService service.
@@ -41,6 +42,7 @@ type VideoServiceClient interface {
 	CallbackOne(ctx context.Context, in *RebackOneReq, opts ...grpc.CallOption) (*RebackOneResp, error)
 	CallbackTwo(ctx context.Context, in *RebackTwoReq, opts ...grpc.CallOption) (*RebackTwoResp, error)
 	PublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
+	SearchVideoByVideoTag(ctx context.Context, in *SearchVideoByVideoTagReq, opts ...grpc.CallOption) (*SearchVideoByVideoTagResp, error)
 }
 
 type videoServiceClient struct {
@@ -114,6 +116,15 @@ func (c *videoServiceClient) PublishList(ctx context.Context, in *PublishListReq
 	return out, nil
 }
 
+func (c *videoServiceClient) SearchVideoByVideoTag(ctx context.Context, in *SearchVideoByVideoTagReq, opts ...grpc.CallOption) (*SearchVideoByVideoTagResp, error) {
+	out := new(SearchVideoByVideoTagResp)
+	err := c.cc.Invoke(ctx, VideoService_SearchVideoByVideoTag_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VideoServiceServer is the server API for VideoService service.
 // All implementations must embed UnimplementedVideoServiceServer
 // for forward compatibility
@@ -125,6 +136,7 @@ type VideoServiceServer interface {
 	CallbackOne(context.Context, *RebackOneReq) (*RebackOneResp, error)
 	CallbackTwo(context.Context, *RebackTwoReq) (*RebackTwoResp, error)
 	PublishList(context.Context, *PublishListReq) (*PublishListResp, error)
+	SearchVideoByVideoTag(context.Context, *SearchVideoByVideoTagReq) (*SearchVideoByVideoTagResp, error)
 	mustEmbedUnimplementedVideoServiceServer()
 }
 
@@ -152,6 +164,9 @@ func (UnimplementedVideoServiceServer) CallbackTwo(context.Context, *RebackTwoRe
 }
 func (UnimplementedVideoServiceServer) PublishList(context.Context, *PublishListReq) (*PublishListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PublishList not implemented")
+}
+func (UnimplementedVideoServiceServer) SearchVideoByVideoTag(context.Context, *SearchVideoByVideoTagReq) (*SearchVideoByVideoTagResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchVideoByVideoTag not implemented")
 }
 func (UnimplementedVideoServiceServer) mustEmbedUnimplementedVideoServiceServer() {}
 
@@ -292,6 +307,24 @@ func _VideoService_PublishList_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VideoService_SearchVideoByVideoTag_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchVideoByVideoTagReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoServiceServer).SearchVideoByVideoTag(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VideoService_SearchVideoByVideoTag_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoServiceServer).SearchVideoByVideoTag(ctx, req.(*SearchVideoByVideoTagReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VideoService_ServiceDesc is the grpc.ServiceDesc for VideoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -326,6 +359,10 @@ var VideoService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PublishList",
 			Handler:    _VideoService_PublishList_Handler,
+		},
+		{
+			MethodName: "SearchVideoByVideoTag",
+			Handler:    _VideoService_SearchVideoByVideoTag_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

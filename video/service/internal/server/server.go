@@ -45,3 +45,7 @@ func (s *Server) CallbackTwo(ctx context.Context, req *videoApi.RebackTwoReq) (r
 func (s *Server) PublishList(ctx context.Context, req *videoApi.PublishListReq) (resp *videoApi.PublishListResp, err error) {
 	return s.svr.PublishList(ctx, req)
 }
+
+func (s *Server) SearchVideoByVideoTag(ctx context.Context, req *videoApi.SearchVideoByVideoTagReq) (resp *videoApi.SearchVideoByVideoTagResp, err error) {
+	return s.svr.SearchVideoByVideoTag(ctx, req)
+}
