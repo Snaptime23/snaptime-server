@@ -30,8 +30,8 @@ message VideoInfo {
   int64 CommentCount = 6 [json_name = "comment_count", (gogoproto.jsontag) = "comment_count"];
   int64 IsFavorite = 7 [json_name = "is_favorite", (gogoproto.jsontag) = "is_favorite"];
   string Title = 8 [json_name = "title", (gogoproto.jsontag) = "title"];
+  bool IsEncoding = 9 [json_name = "is_encoding", (gogoproto.jsontag) = "is_encoding"];
 }
-
 
 message VideoFeedReq {
   int64 LatestTime = 1 [json_name = "latest_time", (gogoproto.jsontag) = "latest_time"];

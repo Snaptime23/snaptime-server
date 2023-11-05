@@ -135,6 +135,11 @@ func (s *Service) CallbackOne(ctx context.Context, req *videoApi.RebackOneReq) (
 
 func (s *Service) CallbackTwo(ctx context.Context, req *videoApi.RebackTwoReq) (resp *videoApi.RebackTwoResp, err error) {
 	resp = new(videoApi.RebackTwoResp)
+	video, err := dao.GetVideoByVideoId(ctx, req.VideoId)
+	video.UploadState++
+	err = dao.UpdateVideo(ctx, video.VideoID, &map[string]interface{}{
+		"upload_state": video.UploadState,
+	})
 	for i := 0; i < len(req.ResourceKey); i++ {
 		definition := &model.Definition{
 			VideoID:     req.VideoId,
@@ -152,6 +157,13 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 	resp.Video = make([]*videoApi.VideoInfo, 0)
 	videos, err := dao.GetVideoListByUserId(ctx, req.UserId)
 	for _, val := range videos {
+		if val.UploadState == 0 || val.MetaState == 0 {
+			continue
+		}
+		isEncoding := true
+		if val.UploadState == 2 {
+			isEncoding = false
+		}
 		resp.Video = append(resp.Video, &videoApi.VideoInfo{
 			VideoID: val.VideoID,
 			Author: &videoApi.UserInfo{
@@ -172,6 +184,7 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 			CommentCount:  val.CommentCount,
 			IsFavorite:    0,
 			Title:         val.VideoName,
+			IsEncoding:    isEncoding,
 		})
 	}
 	return
