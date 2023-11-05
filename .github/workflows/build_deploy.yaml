@@ -61,7 +61,6 @@ jobs:
           node-version: 18
       - name: Replace secrets and variables
         run: |
-          cd action-product
           sed -i "s|__PLACEHOLDER_DB_PASSWORD__|${{ secrets.DB_PASSWORD }}|g" ./serverless/serverless.yaml
           sed -i "s|__PLACEHOLDER_QINIU_ACCESS_KEY__|${{ secrets.QINIU_ACCESS_KEY }}|g" ./serverless/serverless.yaml
           sed -i "s|__PLACEHOLDER_QINIU_SECRET_KEY__|${{ secrets.QINIU_SECRET_KEY }}|g" ./serverless/serverless.yaml
