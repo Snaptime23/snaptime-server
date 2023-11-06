@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
+	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/cache"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/server"
 	"google.golang.org/grpc"
@@ -12,6 +13,7 @@ const PORT = "9002"
 
 func Run() {
 	dao.Init()
+	cache.InitRedis()
 
 	s := grpc.NewServer()
 	videoApi.RegisterVideoServiceServer(s, server.NewServer())

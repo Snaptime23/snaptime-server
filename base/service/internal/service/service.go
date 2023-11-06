@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
+	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/cache"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao"
 	"github.com/Snaptime23/snaptime-server/v2/base/service/internal/dao/model"
 	"github.com/Snaptime23/snaptime-server/v2/tools/errno"
@@ -184,58 +185,159 @@ func (s *Service) LikeComment(ctx context.Context, req *baseApi.LikeCommentReq) 
 
 func (s *Service) LikeVideoAction(ctx context.Context, req *baseApi.LikeVideoActionReq) (resp *baseApi.LikeVideoActionResp, err error) {
 	resp = new(baseApi.LikeVideoActionResp)
-	err = dao.UpdateAndInsertLikeRecord(ctx, req.UserId, req.VideoId, req.ActionType)
-	if err == nil {
+	if cache.LikeIsExists(ctx, req.UserId) == 0 {
+		likeList, err := dao.GetUserLikeRecords(ctx, req.UserId)
+		if err != nil {
+			return resp, err
+		}
+		if len(likeList) > 0 {
+			kv := make([]string, 0)
+			for _, videoId := range likeList {
+				kv = append(kv, videoId)
+				kv = append(kv, "1")
+			}
+			if !cache.SetFavoriteList(ctx, req.UserId, kv...) {
+				return resp, errno.NewErrNo("Redis设置用户点赞视频缓存出错")
+			}
+		}
+	}
+	if cache.UserIsExists(ctx, req.UserId) == 0 {
+		user, err := dao.GetUserById(ctx, req.UserId)
+		if err != nil {
+			return resp, err
+		}
+		if !cache.SetUserInfo(ctx, user) {
+			return resp, errno.NewErrNo("Redis缓存用户信息出错")
+		}
+	}
+	if cache.VideoIsExists(ctx, req.VideoId) == 0 {
 		video, err := s.videoClient.GetVideoInfoById(ctx, &videoApi.GetVideoInfoByIdReq{
 			VideoId: req.VideoId,
 		})
 		if err != nil {
-			return resp, err
+			return nil, err
 		}
-		if req.ActionType == 1 {
-			video.Video.FavoriteCount--
-		} else {
-			video.Video.FavoriteCount++
+		if !cache.SetVideoMessage(ctx, &videoApi.VideoInfo{
+			VideoID:       video.Video.VideoID,
+			Author:        video.Video.Author,
+			PlayUrl:       video.Video.PlayUrl,
+			CoverUrl:      video.Video.CoverUrl,
+			FavoriteCount: video.Video.FavoriteCount,
+			CommentCount:  video.Video.CommentCount,
+			Title:         video.Video.Title,
+			IsEncoding:    video.Video.IsEncoding,
+		}) {
+			return nil, errno.NewErrNo("Redis缓存视频信息出错")
 		}
-		_, err = s.videoClient.UpdateVideo(ctx, &videoApi.UpdateVideoReq{Video: video.Video})
+	}
+	res := cache.GetVideoFields(ctx, req.VideoId, "user_id")
+	authorID, _ := res[0].(string)
+	if cache.UserIsExists(ctx, authorID) == 0 {
+		user, err := dao.GetUserById(ctx, authorID)
 		if err != nil {
 			return resp, err
 		}
+		if !cache.SetUserInfo(ctx, user) {
+			return resp, errno.NewErrNo("Redis缓存用户信息出错")
+		}
 	}
+
+	var action int64
+	like := cache.IsLike(ctx, req.UserId, req.VideoId)
+	if like && req.GetActionType() == 1 {
+		action = -1
+	} else if !like && req.GetActionType() == 0 {
+		action = 1
+	} else {
+		return
+	}
+
+	// 更新点赞列表
+	if !cache.FavoriteAction(ctx, req.UserId, req.VideoId, action) {
+		return resp, errno.NewErrNo("更新点赞列表失败")
+	}
+	// 更新用户点赞数
+	if !cache.IncrUserField(ctx, req.UserId, "favorite_count", action) {
+		return resp, errno.NewErrNo("更新用户点赞数")
+	}
+	// 更新作者获赞数
+	if !cache.IncrUserField(ctx, authorID, "total_favorited", action) {
+		return resp, errno.NewErrNo("更新点赞列表失败")
+	}
+	// 更新视频获赞数
+	if !cache.IncrVideoField(ctx, req.VideoId, "favorite_count", action) {
+		return resp, errno.NewErrNo("更新视频获赞数")
+	}
+
 	return
 }
 
 func (s *Service) VideoLikeList(ctx context.Context, req *baseApi.VideoLikeListReq) (resp *baseApi.VideoLikeListResp, err error) {
 	resp = new(baseApi.VideoLikeListResp)
-	resp.VideoList = make([]*baseApi.VideoInfo, 0)
-	videoIDS, err := dao.GetUserLikeRecords(ctx, req.UserId)
-	for _, videoID := range videoIDS {
-		video, err := s.videoClient.GetVideoInfoById(ctx, &videoApi.GetVideoInfoByIdReq{
-			VideoId: videoID,
-		})
+	var likeList []string
+	if cache.LikeIsExists(ctx, req.UserId) == 0 {
+		likeList, err = dao.GetUserLikeRecords(ctx, req.UserId)
 		if err != nil {
-			continue
+			return resp, err
 		}
-		resp.VideoList = append(resp.VideoList, &baseApi.VideoInfo{
-			VideoId: videoID,
-			UserInfo: &baseApi.UserInfo{
-				UserId:          video.Video.Author.UserId,
-				UserName:        video.Video.Author.UserName,
-				FollowCount:     video.Video.Author.FollowerCount,
-				FollowerCount:   video.Video.Author.FollowerCount,
-				IsFollow:        0,
-				Avatar:          video.Video.Author.Avatar,
-				PublishNum:      video.Video.Author.PublishNum,
-				FavouriteNum:    video.Video.Author.FavouriteNum,
-				LikeNum:         video.Video.Author.LikeNum,
-				ReceivedLikeNum: video.Video.Author.ReceivedLikeNum,
+		if len(likeList) > 0 {
+			kv := make([]string, 0)
+			for _, videoId := range likeList {
+				kv = append(kv, videoId)
+				kv = append(kv, "1")
+			}
+			if !cache.SetFavoriteList(ctx, req.UserId, kv...) {
+				return resp, errno.NewErrNo("Redis设置用户点赞视频缓存出错")
+			}
+		}
+	} else {
+		likeList = cache.GetAllUserLikes(ctx, req.UserId)
+	}
+
+	var videoList []*videoApi.VideoInfo
+	for _, vid := range likeList {
+		var video *videoApi.GetVideoInfoByIdResp
+		if cache.VideoIsExists(ctx, vid) == 0 {
+			video, err = s.videoClient.GetVideoInfoById(ctx, &videoApi.GetVideoInfoByIdReq{
+				VideoId: vid,
+			})
+			if err != nil {
+				return nil, err
+			}
+			cache.SetVideoMessage(ctx, video.Video)
+		} else {
+			video.Video, err = cache.GetVideoMessage(ctx, vid)
+		}
+
+		var user *model.User
+		if cache.UserIsExists(ctx, video.Video.Author.UserId) == 0 {
+			user, err = dao.GetUserById(ctx, video.Video.Author.UserId)
+			if err != nil {
+				return nil, err
+			}
+			cache.SetUserInfo(ctx, user)
+		} else {
+			user, err = cache.GetUserInfo(ctx, video.Video.Author.UserId)
+		}
+
+		retVideo := &videoApi.VideoInfo{
+			VideoID: vid,
+			Author: &videoApi.UserInfo{
+				UserId:        video.Video.Author.UserId,
+				UserName:      user.UserName,
+				FollowerCount: 0,
+				IsFollow:      0,
 			},
+			PlayUrl:       video.Video.PlayUrl,
+			CoverUrl:      video.Video.CoverUrl,
 			FavoriteCount: video.Video.FavoriteCount,
-			CommentCount:  video.Video.CommentCount,
+			CommentCount:  0,
 			IsFavorite:    0,
 			Title:         video.Video.Title,
-		})
+		}
+		videoList = append(videoList, retVideo)
 	}
+
 	return
 }
 
