@@ -396,7 +396,7 @@ func (s *Service) UpdateVideo(ctx context.Context, req *videoApi.UpdateVideoReq)
 		"favourite_count": req.Video.FavoriteCount,
 		"cover_url":       req.Video.CoverUrl,
 		"comment_count":   req.Video.CommentCount,
-		"title":           req.Video.Title,
+		"video_name":      req.Video.Title,
 		"collect_count":   req.Video.CollectCount,
 	})
 	return
