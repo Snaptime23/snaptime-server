@@ -91,7 +91,7 @@ func UpdateCommentLikeCount(ctx context.Context, commentId, userId string, likeA
 			Create(&model.CommentLike{
 				LikeID:    uuid.NewString(),
 				UserId:    userId,
-				CommentId: "",
+				CommentId: commentId,
 				Action:    0,
 			}).Error
 		return err
