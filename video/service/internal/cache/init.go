@@ -31,7 +31,7 @@ func InitRedis() {
 	}
 
 	s := gocron.NewScheduler(time.Local)
-	_, _ = s.Every(5).Minutes().Do(func() {
+	_, _ = s.Every(5).Second().Do(func() {
 		go func() {
 			// 获取所有视频的点赞数量
 			videoIDs, _ := Rs.Keys(context.Background(), "video:*:likes").Result()
