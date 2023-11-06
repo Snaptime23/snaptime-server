@@ -394,7 +394,8 @@ func (s *HttpServer) VideoCollectList(c *gin.Context) {
 	arg := new(struct {
 		UserId string `json:"user_id"`
 	})
-	arg.UserId = c.Query("user_id")
+	userID, _ := c.Get("user_id")
+	arg.UserId = userID.(string)
 	resp, err := s.svr.VideoCollectList(context.Background(), &baseApi.VideoCollectListReq{
 		UserId: arg.UserId,
 	})
