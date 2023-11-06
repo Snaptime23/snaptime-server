@@ -47,12 +47,16 @@ message UserInfoResp {
 }
 
 message VideoInfo {
-  string VideoId = 1 [json_name = "password", (gogoproto.jsontag) = "video_id"];
-  UserInfo UserInfo = 2 [json_name = "user_info", (gogoproto.jsontag) = "user_info"];
-  int64 FavoriteCount = 3 [json_name = "favourite_count", (gogoproto.jsontag) = "favourite_count"];
-  int64 CommentCount = 4 [json_name = "comment_count", (gogoproto.jsontag) = "comment_count"];
-  int64 IsFavorite = 5 [json_name = "is_favourite", (gogoproto.jsontag) = "is_favourite"];
-  string Title = 6 [json_name = "title", (gogoproto.jsontag) = "title"];
+  string VideoID = 1 [json_name = "video_id", (gogoproto.jsontag) = "video_id"];
+  UserInfo Author = 2 [json_name = "author", (gogoproto.jsontag) = "author"];
+  string PlayUrl = 3 [json_name = "play_url", (gogoproto.jsontag) = "play_url"];
+  string CoverUrl = 4 [json_name = "cover_url", (gogoproto.jsontag) = "cover_url"];
+  int64 FavoriteCount = 5 [json_name = "favorite_count", (gogoproto.jsontag) = "favorite_count"];
+  int64 CommentCount = 6 [json_name = "comment_count", (gogoproto.jsontag) = "comment_count"];
+  int64 IsFavorite = 7 [json_name = "is_favorite", (gogoproto.jsontag) = "is_favorite"];
+  string Title = 8 [json_name = "title", (gogoproto.jsontag) = "title"];
+  bool IsEncoding = 9 [json_name = "is_encoding", (gogoproto.jsontag) = "is_encoding"];
+  int64 CollectCount = 10 [json_name = "collect_count", (gogoproto.jsontag) = "collect_count"];
 }
 
 message CommentInfo {
@@ -140,6 +144,22 @@ message FollowResp {
 }
 
 
+message CollectVideoActionReq {
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+  string VideoId = 2 [json_name = "video_id", (gogoproto.jsontag) = "video_id"];
+  int64 ActionType = 3 [json_name = "action_type", (gogoproto.jsontag) = "action_type"];
+}
+message CollectVideoActionResp {
+}
+
+message VideoCollectListReq {
+  string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
+}
+message VideoCollectListResp {
+  repeated VideoInfo VideoList = 1 [json_name = "video_info", (gogoproto.jsontag) = "video_info"];
+}
+
+
 // 定义接口
 service BaseService {
   rpc UserRegister(UserRegisterReq) returns (UserRegisterResp);
@@ -153,4 +173,6 @@ service BaseService {
   rpc FollowList (FollowListReq) returns (FollowListResp);
   rpc FollowerList (FollowerListReq) returns (FollowerListResp);
   rpc Follow (FollowReq) returns (FollowResp);
+  rpc CollectVideoAction (CollectVideoActionReq) returns (CollectVideoActionResp);
+  rpc VideoCollectList (VideoCollectListReq) returns (VideoCollectListResp);
 }

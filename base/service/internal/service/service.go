@@ -220,8 +220,8 @@ func (s *Service) VideoLikeList(ctx context.Context, req *baseApi.VideoLikeListR
 			continue
 		}
 		resp.VideoList = append(resp.VideoList, &baseApi.VideoInfo{
-			VideoId: videoID,
-			UserInfo: &baseApi.UserInfo{
+			VideoID: videoID,
+			Author: &baseApi.UserInfo{
 				UserId:          video.Video.Author.UserId,
 				UserName:        video.Video.Author.UserName,
 				FollowCount:     video.Video.Author.FollowerCount,
@@ -235,6 +235,7 @@ func (s *Service) VideoLikeList(ctx context.Context, req *baseApi.VideoLikeListR
 			},
 			FavoriteCount: video.Video.FavoriteCount,
 			CommentCount:  video.Video.CommentCount,
+			CollectCount:  video.Video.CollectCount,
 			IsFavorite:    0,
 			Title:         video.Video.Title,
 		})
@@ -301,5 +302,63 @@ func (s *Service) FollowerList(ctx context.Context, req *baseApi.FollowerListReq
 func (s *Service) Follow(ctx context.Context, req *baseApi.FollowReq) (resp *baseApi.FollowResp, err error) {
 	resp = new(baseApi.FollowResp)
 	err = dao.Follow(ctx, req.UserId, req.ToUserId, req.ActionType)
+	return
+}
+
+func (s *Service) CollectVideoAction(ctx context.Context, req *baseApi.CollectVideoActionReq) (resp *baseApi.CollectVideoActionResp, err error) {
+	resp = new(baseApi.CollectVideoActionResp)
+	err = dao.UpdateAndInsertCollectRecord(ctx, req.UserId, req.VideoId, req.ActionType)
+	if err == nil {
+		video, err := s.videoClient.GetVideoInfoById(ctx, &videoApi.GetVideoInfoByIdReq{
+			VideoId: req.VideoId,
+		})
+		if err != nil {
+			return resp, err
+		}
+		if req.ActionType == 1 {
+			video.Video.CollectCount--
+		} else {
+			video.Video.CollectCount++
+		}
+		_, err = s.videoClient.UpdateVideo(ctx, &videoApi.UpdateVideoReq{Video: video.Video})
+		if err != nil {
+			return resp, err
+		}
+	}
+	return
+}
+
+func (s *Service) VideoCollectList(ctx context.Context, req *baseApi.VideoCollectListReq) (resp *baseApi.VideoCollectListResp, err error) {
+	resp = new(baseApi.VideoCollectListResp)
+	resp.VideoList = make([]*baseApi.VideoInfo, 0)
+	videoIDS, err := dao.GetUserLikeRecords(ctx, req.UserId)
+	for _, videoID := range videoIDS {
+		video, err := s.videoClient.GetVideoInfoById(ctx, &videoApi.GetVideoInfoByIdReq{
+			VideoId: videoID,
+		})
+		if err != nil {
+			continue
+		}
+		resp.VideoList = append(resp.VideoList, &baseApi.VideoInfo{
+			VideoID: videoID,
+			Author: &baseApi.UserInfo{
+				UserId:          video.Video.Author.UserId,
+				UserName:        video.Video.Author.UserName,
+				FollowCount:     video.Video.Author.FollowerCount,
+				FollowerCount:   video.Video.Author.FollowerCount,
+				IsFollow:        0,
+				Avatar:          video.Video.Author.Avatar,
+				PublishNum:      video.Video.Author.PublishNum,
+				FavouriteNum:    video.Video.Author.FavouriteNum,
+				LikeNum:         video.Video.Author.LikeNum,
+				ReceivedLikeNum: video.Video.Author.ReceivedLikeNum,
+			},
+			FavoriteCount: video.Video.FavoriteCount,
+			CommentCount:  video.Video.CommentCount,
+			CollectCount:  video.Video.CollectCount,
+			IsFavorite:    0,
+			Title:         video.Video.Title,
+		})
+	}
 	return
 }

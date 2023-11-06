@@ -360,3 +360,33 @@ func (s *HttpServer) VideoFeed(c *gin.Context) {
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }
+
+func (s *HttpServer) CollectVideoAction(c *gin.Context) {
+	arg := new(struct {
+		UserId     string `json:"user_id"`
+		VideoId    string `json:"video_id"`
+		ActionType int64  `json:"action_type"`
+	})
+	userID, _ := c.Get("user_id")
+	arg.UserId = userID.(string)
+	if tools.HandleError(c, c.Bind(arg), "") {
+		return
+	}
+	resp, err := s.svr.CollectVideoAction(context.Background(), &baseApi.CollectVideoActionReq{
+		UserId:     arg.UserId,
+		VideoId:    arg.VideoId,
+		ActionType: arg.ActionType,
+	})
+	tools.HandleErrOrResp(c, resp, err)
+}
+
+func (s *HttpServer) VideoCollectList(c *gin.Context) {
+	arg := new(struct {
+		UserId string `json:"user_id"`
+	})
+	arg.UserId = c.Query("user_id")
+	resp, err := s.svr.VideoCollectList(context.Background(), &baseApi.VideoCollectListReq{
+		UserId: arg.UserId,
+	})
+	tools.HandleErrOrResp(c, resp, err)
+}

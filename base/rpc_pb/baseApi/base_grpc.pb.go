@@ -19,17 +19,19 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	BaseService_UserRegister_FullMethodName    = "/base.BaseService/UserRegister"
-	BaseService_UserLogin_FullMethodName       = "/base.BaseService/UserLogin"
-	BaseService_UserInfo_FullMethodName        = "/base.BaseService/UserInfo"
-	BaseService_CreateComment_FullMethodName   = "/base.BaseService/CreateComment"
-	BaseService_CommentList_FullMethodName     = "/base.BaseService/CommentList"
-	BaseService_LikeVideoAction_FullMethodName = "/base.BaseService/LikeVideoAction"
-	BaseService_VideoLikeList_FullMethodName   = "/base.BaseService/VideoLikeList"
-	BaseService_LikeComment_FullMethodName     = "/base.BaseService/LikeComment"
-	BaseService_FollowList_FullMethodName      = "/base.BaseService/FollowList"
-	BaseService_FollowerList_FullMethodName    = "/base.BaseService/FollowerList"
-	BaseService_Follow_FullMethodName          = "/base.BaseService/Follow"
+	BaseService_UserRegister_FullMethodName       = "/base.BaseService/UserRegister"
+	BaseService_UserLogin_FullMethodName          = "/base.BaseService/UserLogin"
+	BaseService_UserInfo_FullMethodName           = "/base.BaseService/UserInfo"
+	BaseService_CreateComment_FullMethodName      = "/base.BaseService/CreateComment"
+	BaseService_CommentList_FullMethodName        = "/base.BaseService/CommentList"
+	BaseService_LikeVideoAction_FullMethodName    = "/base.BaseService/LikeVideoAction"
+	BaseService_VideoLikeList_FullMethodName      = "/base.BaseService/VideoLikeList"
+	BaseService_LikeComment_FullMethodName        = "/base.BaseService/LikeComment"
+	BaseService_FollowList_FullMethodName         = "/base.BaseService/FollowList"
+	BaseService_FollowerList_FullMethodName       = "/base.BaseService/FollowerList"
+	BaseService_Follow_FullMethodName             = "/base.BaseService/Follow"
+	BaseService_CollectVideoAction_FullMethodName = "/base.BaseService/CollectVideoAction"
+	BaseService_VideoCollectList_FullMethodName   = "/base.BaseService/VideoCollectList"
 )
 
 // BaseServiceClient is the client API for BaseService service.
@@ -47,6 +49,8 @@ type BaseServiceClient interface {
 	FollowList(ctx context.Context, in *FollowListReq, opts ...grpc.CallOption) (*FollowListResp, error)
 	FollowerList(ctx context.Context, in *FollowerListReq, opts ...grpc.CallOption) (*FollowerListResp, error)
 	Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error)
+	CollectVideoAction(ctx context.Context, in *CollectVideoActionReq, opts ...grpc.CallOption) (*CollectVideoActionResp, error)
+	VideoCollectList(ctx context.Context, in *VideoCollectListReq, opts ...grpc.CallOption) (*VideoCollectListResp, error)
 }
 
 type baseServiceClient struct {
@@ -156,6 +160,24 @@ func (c *baseServiceClient) Follow(ctx context.Context, in *FollowReq, opts ...g
 	return out, nil
 }
 
+func (c *baseServiceClient) CollectVideoAction(ctx context.Context, in *CollectVideoActionReq, opts ...grpc.CallOption) (*CollectVideoActionResp, error) {
+	out := new(CollectVideoActionResp)
+	err := c.cc.Invoke(ctx, BaseService_CollectVideoAction_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseServiceClient) VideoCollectList(ctx context.Context, in *VideoCollectListReq, opts ...grpc.CallOption) (*VideoCollectListResp, error) {
+	out := new(VideoCollectListResp)
+	err := c.cc.Invoke(ctx, BaseService_VideoCollectList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BaseServiceServer is the server API for BaseService service.
 // All implementations must embed UnimplementedBaseServiceServer
 // for forward compatibility
@@ -171,6 +193,8 @@ type BaseServiceServer interface {
 	FollowList(context.Context, *FollowListReq) (*FollowListResp, error)
 	FollowerList(context.Context, *FollowerListReq) (*FollowerListResp, error)
 	Follow(context.Context, *FollowReq) (*FollowResp, error)
+	CollectVideoAction(context.Context, *CollectVideoActionReq) (*CollectVideoActionResp, error)
+	VideoCollectList(context.Context, *VideoCollectListReq) (*VideoCollectListResp, error)
 	mustEmbedUnimplementedBaseServiceServer()
 }
 
@@ -210,6 +234,12 @@ func (UnimplementedBaseServiceServer) FollowerList(context.Context, *FollowerLis
 }
 func (UnimplementedBaseServiceServer) Follow(context.Context, *FollowReq) (*FollowResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Follow not implemented")
+}
+func (UnimplementedBaseServiceServer) CollectVideoAction(context.Context, *CollectVideoActionReq) (*CollectVideoActionResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CollectVideoAction not implemented")
+}
+func (UnimplementedBaseServiceServer) VideoCollectList(context.Context, *VideoCollectListReq) (*VideoCollectListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VideoCollectList not implemented")
 }
 func (UnimplementedBaseServiceServer) mustEmbedUnimplementedBaseServiceServer() {}
 
@@ -422,6 +452,42 @@ func _BaseService_Follow_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BaseService_CollectVideoAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CollectVideoActionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).CollectVideoAction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_CollectVideoAction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).CollectVideoAction(ctx, req.(*CollectVideoActionReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BaseService_VideoCollectList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VideoCollectListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).VideoCollectList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_VideoCollectList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).VideoCollectList(ctx, req.(*VideoCollectListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BaseService_ServiceDesc is the grpc.ServiceDesc for BaseService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -472,6 +538,14 @@ var BaseService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Follow",
 			Handler:    _BaseService_Follow_Handler,
+		},
+		{
+			MethodName: "CollectVideoAction",
+			Handler:    _BaseService_CollectVideoAction_Handler,
+		},
+		{
+			MethodName: "VideoCollectList",
+			Handler:    _BaseService_VideoCollectList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

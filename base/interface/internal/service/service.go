@@ -100,3 +100,11 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (resp *videoApi.VideoFeedResp, err error) {
 	return s.videoClient.VideoFeed(ctx, req)
 }
+
+func (s *Service) CollectVideoAction(ctx context.Context, req *baseApi.CollectVideoActionReq) (resp *baseApi.CollectVideoActionResp, err error) {
+	return s.baseClient.CollectVideoAction(ctx, req)
+}
+
+func (s *Service) VideoCollectList(ctx context.Context, req *baseApi.VideoCollectListReq) (resp *baseApi.VideoCollectListResp, err error) {
+	return s.baseClient.VideoCollectList(ctx, req)
+}

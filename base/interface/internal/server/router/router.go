@@ -52,6 +52,9 @@ func InitBaseRouter(engine *gin.RouterGroup, server *http.HttpServer) {
 
 		video.Use(mw.JwtAuth()).POST("/upload/token", server.UpLoadVideo)
 		video.Use(mw.JwtAuth()).POST("/upload/meta", server.UpLoadVideo)
+
+		video.Use(mw.JwtAuth()).POST("/collect", server.CollectVideoAction)
+		video.Use(mw.JwtAuth()).GET("/collect/list", server.VideoCollectList)
 	}
 
 	callback := engine.Group("/qiniu/callback").Use(mw.QiniuAuth())

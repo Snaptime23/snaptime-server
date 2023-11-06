@@ -61,3 +61,11 @@ func (s *Server) FollowerList(ctx context.Context, req *baseApi.FollowerListReq)
 func (s *Server) Follow(ctx context.Context, req *baseApi.FollowReq) (resp *baseApi.FollowResp, err error) {
 	return s.svr.Follow(ctx, req)
 }
+
+func (s *Server) CollectVideoAction(ctx context.Context, req *baseApi.CollectVideoActionReq) (resp *baseApi.CollectVideoActionResp, err error) {
+	return s.svr.CollectVideoAction(ctx, req)
+}
+
+func (s *Server) VideoCollectList(ctx context.Context, req *baseApi.VideoCollectListReq) (resp *baseApi.VideoCollectListResp, err error) {
+	return s.svr.VideoCollectList(ctx, req)
+}

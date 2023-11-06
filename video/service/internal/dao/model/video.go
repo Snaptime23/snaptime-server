@@ -19,6 +19,7 @@ type Video struct {
 	CoverUrl       string
 	CommentCount   int64
 	FavouriteCount int64
+	CollectCount   int64
 	UploadState    int64
 	MetaState      int64
 	ResourceKey    string

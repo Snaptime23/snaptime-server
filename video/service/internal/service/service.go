@@ -49,6 +49,9 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 		if !(video.UploadState != 0 && video.MetaState != 0) {
 			continue
 		}
+		if video.UploadState == 0 {
+			continue
+		}
 		isEncoding := true
 		if video.UploadState == 2 {
 			isEncoding = false
@@ -81,6 +84,7 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 			CommentCount:  video.CommentCount,
 			IsFavorite:    0,
 			Title:         video.VideoName,
+			CollectCount:  video.CollectCount,
 			IsEncoding:    isEncoding,
 		})
 	}
@@ -168,6 +172,7 @@ func (s *Service) GetVideoInfoById(ctx context.Context, req *videoApi.GetVideoIn
 		CoverUrl:      video.CoverUrl,
 		FavoriteCount: cache.GetVideoLikesCount(video.VideoID),
 		CommentCount:  video.CommentCount,
+		CollectCount:  video.CollectCount,
 		IsFavorite:    0,
 		Title:         video.VideoName,
 	}
@@ -255,6 +260,7 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 			IsFavorite:    0,
 			Title:         val.VideoName,
 			IsEncoding:    isEncoding,
+			CollectCount:  val.CollectCount,
 		})
 	}
 	return
@@ -292,6 +298,7 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 			CommentCount:  video.CommentCount,
 			IsFavorite:    0,
 			Title:         video.VideoName,
+			CollectCount:  video.CollectCount,
 		})
 	}
 	return
@@ -317,6 +324,7 @@ func (s *Service) UpdateVideo(ctx context.Context, req *videoApi.UpdateVideoReq)
 		"cover_url":      req.Video.CoverUrl,
 		"comment_count":  req.Video.CommentCount,
 		"title":          req.Video.Title,
+		"collect_count":  req.Video.CollectCount,
 	})
 	return
 }
