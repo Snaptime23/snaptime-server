@@ -1,19 +1,15 @@
 package model
 
 import (
-	"database/sql"
-	"time"
+	"gorm.io/gorm"
 )
 
 const TableNameVideoTag = "video_tag"
 
 type VideoTag struct {
-	TagId     string `gorm:"primarykey"`
-	TagName   string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime `gorm:"index"`
-	VideoId   string       `gorm:"index"`
+	gorm.Model
+	TagName string `gorm:"index"`
+	VideoId string `gorm:"index"`
 }
 
 // TableName Comment's table name

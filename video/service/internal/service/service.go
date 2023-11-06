@@ -49,6 +49,12 @@ func (s *Service) UploadVideo(ctx context.Context, req *videoApi.UploadVideoReq)
 		if err != nil {
 			return nil, err
 		}
+		for _, tag := range req.VideoTag {
+			err = dao.CreateVideoTag(ctx, tag, req.VideoId)
+			if err != nil {
+				continue
+			}
+		}
 		return
 	} else {
 		videoId = uuid.NewString()
