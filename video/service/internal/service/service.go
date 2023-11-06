@@ -64,19 +64,25 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 		if playUrl == "" {
 			playUrl = video.PlayUrl
 		}
+		user, err := s.baseClient.UserInfo(ctx, &baseApi.UserInfoReq{
+			UserId: video.CreateUserId,
+		})
+		if err != nil {
+			continue
+		}
 		resp.VideoList = append(resp.VideoList, &videoApi.VideoInfo{
 			VideoID: video.VideoID,
 			Author: &videoApi.UserInfo{
-				UserId:          "",
-				UserName:        "",
-				FollowCount:     0,
-				FollowerCount:   0,
+				UserId:          user.User.UserId,
+				UserName:        user.User.UserName,
+				FollowCount:     user.User.FollowCount,
+				FollowerCount:   user.User.FollowerCount,
 				IsFollow:        0,
-				Avatar:          "",
-				PublishNum:      0,
-				FavouriteNum:    0,
-				LikeNum:         0,
-				ReceivedLikeNum: 0,
+				Avatar:          user.User.Avatar,
+				PublishNum:      user.User.PublishNum,
+				FavouriteNum:    user.User.FavouriteNum,
+				LikeNum:         user.User.FavouriteNum,
+				ReceivedLikeNum: user.User.ReceivedLikeNum,
 			},
 			PlayUrl:       playUrl,
 			CoverUrl:      downloadToken.GetToken(video.CoverUrl),
@@ -239,19 +245,25 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 		if playUrl == "" {
 			playUrl = val.PlayUrl
 		}
+		user, err := s.baseClient.UserInfo(ctx, &baseApi.UserInfoReq{
+			UserId: val.CreateUserId,
+		})
+		if err != nil {
+			continue
+		}
 		resp.Video = append(resp.Video, &videoApi.VideoInfo{
 			VideoID: val.VideoID,
 			Author: &videoApi.UserInfo{
-				UserId:          "",
-				UserName:        "",
-				FollowCount:     0,
-				FollowerCount:   0,
+				UserId:          user.User.UserId,
+				UserName:        user.User.UserName,
+				FollowCount:     user.User.FollowCount,
+				FollowerCount:   user.User.FollowerCount,
 				IsFollow:        0,
-				Avatar:          "",
-				PublishNum:      0,
-				FavouriteNum:    0,
-				LikeNum:         0,
-				ReceivedLikeNum: 0,
+				Avatar:          user.User.Avatar,
+				PublishNum:      user.User.PublishNum,
+				FavouriteNum:    user.User.FavouriteNum,
+				LikeNum:         user.User.FavouriteNum,
+				ReceivedLikeNum: user.User.ReceivedLikeNum,
 			},
 			PlayUrl:       playUrl,
 			CoverUrl:      downloadToken.GetToken(val.CoverUrl),
@@ -278,19 +290,25 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 		if err != nil {
 			continue
 		}
+		user, err := s.baseClient.UserInfo(ctx, &baseApi.UserInfoReq{
+			UserId: video.CreateUserId,
+		})
+		if err != nil {
+			continue
+		}
 		resp.Video = append(resp.Video, &videoApi.VideoInfo{
 			VideoID: video.VideoID,
 			Author: &videoApi.UserInfo{
-				UserId:          "",
-				UserName:        "",
-				FollowCount:     0,
-				FollowerCount:   0,
+				UserId:          user.User.UserId,
+				UserName:        user.User.UserName,
+				FollowCount:     user.User.FollowCount,
+				FollowerCount:   user.User.FollowerCount,
 				IsFollow:        0,
-				Avatar:          "",
-				PublishNum:      0,
-				FavouriteNum:    0,
-				LikeNum:         0,
-				ReceivedLikeNum: 0,
+				Avatar:          user.User.Avatar,
+				PublishNum:      user.User.PublishNum,
+				FavouriteNum:    user.User.FavouriteNum,
+				LikeNum:         user.User.FavouriteNum,
+				ReceivedLikeNum: user.User.ReceivedLikeNum,
 			},
 			PlayUrl:       video.PlayUrl,
 			CoverUrl:      downloadToken.GetToken(video.CoverUrl),
