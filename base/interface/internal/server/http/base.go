@@ -134,7 +134,8 @@ func (s *HttpServer) VideoLikeList(c *gin.Context) {
 	arg := new(struct {
 		UserId string `json:"user_id"`
 	})
-	arg.UserId = c.Query("user_id")
+	userID, _ := c.Get("user_id")
+	arg.UserId = userID.(string)
 	resp, err := s.svr.VideoLikeList(context.Background(), &baseApi.VideoLikeListReq{
 		UserId: arg.UserId,
 	})
