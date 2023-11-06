@@ -70,6 +70,20 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 		if err != nil {
 			continue
 		}
+		hasCollect, err := s.baseClient.HasCollect(ctx, &baseApi.HasCollectReq{
+			UserId:  req.UserId,
+			VideoId: video.VideoID,
+		})
+		if err != nil {
+			continue
+		}
+		hasLike, err := s.baseClient.HasLike(ctx, &baseApi.HasLikeReq{
+			UserId:  req.UserId,
+			VideoId: video.VideoID,
+		})
+		if err != nil {
+			continue
+		}
 		resp.VideoList = append(resp.VideoList, &videoApi.VideoInfo{
 			VideoID: video.VideoID,
 			Author: &videoApi.UserInfo{
@@ -92,6 +106,8 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 			Title:         video.VideoName,
 			CollectCount:  video.CollectCount,
 			IsEncoding:    isEncoding,
+			HasCollect:    hasCollect.HasCollect,
+			HasLike:       hasLike.HasLike,
 		})
 	}
 	return
@@ -251,6 +267,20 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 		if err != nil {
 			continue
 		}
+		hasCollect, err := s.baseClient.HasCollect(ctx, &baseApi.HasCollectReq{
+			UserId:  req.UserId,
+			VideoId: val.VideoID,
+		})
+		if err != nil {
+			continue
+		}
+		hasLike, err := s.baseClient.HasLike(ctx, &baseApi.HasLikeReq{
+			UserId:  req.UserId,
+			VideoId: val.VideoID,
+		})
+		if err != nil {
+			continue
+		}
 		resp.Video = append(resp.Video, &videoApi.VideoInfo{
 			VideoID: val.VideoID,
 			Author: &videoApi.UserInfo{
@@ -273,6 +303,8 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 			Title:         val.VideoName,
 			IsEncoding:    isEncoding,
 			CollectCount:  val.CollectCount,
+			HasCollect:    hasCollect.HasCollect,
+			HasLike:       hasLike.HasLike,
 		})
 	}
 	return
@@ -292,6 +324,20 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 		}
 		user, err := s.baseClient.UserInfo(ctx, &baseApi.UserInfoReq{
 			UserId: video.CreateUserId,
+		})
+		if err != nil {
+			continue
+		}
+		hasCollect, err := s.baseClient.HasCollect(ctx, &baseApi.HasCollectReq{
+			UserId:  req.UserId,
+			VideoId: video.VideoID,
+		})
+		if err != nil {
+			continue
+		}
+		hasLike, err := s.baseClient.HasLike(ctx, &baseApi.HasLikeReq{
+			UserId:  req.UserId,
+			VideoId: video.VideoID,
 		})
 		if err != nil {
 			continue
@@ -317,6 +363,8 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 			IsFavorite:    0,
 			Title:         video.VideoName,
 			CollectCount:  video.CollectCount,
+			HasCollect:    hasCollect.HasCollect,
+			HasLike:       hasLike.HasLike,
 		})
 	}
 	return

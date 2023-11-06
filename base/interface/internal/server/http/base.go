@@ -346,17 +346,27 @@ func (s *HttpServer) Follow(c *gin.Context) {
 func (s *HttpServer) SearchVideoByVideoTag(c *gin.Context) {
 	arg := new(struct {
 		VideoTag string `json:"video_tag"`
+		UserId   string `json:"user_id"`
 	})
 	arg.VideoTag = c.Query("video_tag")
+	userId, _ := c.Get("user_id")
+	arg.UserId = userId.(string)
 	resp, err := s.svr.SearchVideoByVideoTag(context.Background(), &videoApi.SearchVideoByVideoTagReq{
 		VideoTag: arg.VideoTag,
+		UserId:   arg.UserId,
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }
 
 func (s *HttpServer) VideoFeed(c *gin.Context) {
+	arg := new(struct {
+		UserId string `json:"user_id"`
+	})
+	userID, _ := c.Get("user_id")
+	arg.UserId = userID.(string)
 	resp, err := s.svr.VideoFeed(context.Background(), &videoApi.VideoFeedReq{
 		LatestTime: 0,
+		UserId:     arg.UserId,
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }

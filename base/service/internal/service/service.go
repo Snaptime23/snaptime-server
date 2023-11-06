@@ -362,3 +362,31 @@ func (s *Service) VideoCollectList(ctx context.Context, req *baseApi.VideoCollec
 	}
 	return
 }
+
+func (s *Service) HasLike(ctx context.Context, req *baseApi.HasLikeReq) (resp *baseApi.HasLikeResp, err error) {
+	resp = new(baseApi.HasLikeResp)
+	var ret int64
+	is, err := dao.HasLiked(ctx, req.UserId, req.VideoId)
+	if err != nil {
+		return resp, err
+	}
+	if is {
+		ret = 1
+	}
+	resp.HasLike = ret
+	return
+}
+
+func (s *Service) HasCollect(ctx context.Context, req *baseApi.HasCollectReq) (resp *baseApi.HasCollectResp, err error) {
+	resp = new(baseApi.HasCollectResp)
+	var ret int64
+	is, err := dao.HasCollected(ctx, req.UserId, req.VideoId)
+	if err != nil {
+		return resp, err
+	}
+	if is {
+		ret = 1
+	}
+	resp.HasCollect = ret
+	return
+}

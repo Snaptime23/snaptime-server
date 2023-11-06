@@ -69,3 +69,11 @@ func (s *Server) CollectVideoAction(ctx context.Context, req *baseApi.CollectVid
 func (s *Server) VideoCollectList(ctx context.Context, req *baseApi.VideoCollectListReq) (resp *baseApi.VideoCollectListResp, err error) {
 	return s.svr.VideoCollectList(ctx, req)
 }
+
+func (s *Server) HasLike(ctx context.Context, req *baseApi.HasLikeReq) (resp *baseApi.HasLikeResp, err error) {
+	return s.svr.HasLike(ctx, req)
+}
+
+func (s *Server) HasCollect(ctx context.Context, req *baseApi.HasCollectReq) (resp *baseApi.HasCollectResp, err error) {
+	return s.svr.HasCollect(ctx, req)
+}

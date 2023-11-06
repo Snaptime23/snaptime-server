@@ -32,6 +32,8 @@ const (
 	BaseService_Follow_FullMethodName             = "/base.BaseService/Follow"
 	BaseService_CollectVideoAction_FullMethodName = "/base.BaseService/CollectVideoAction"
 	BaseService_VideoCollectList_FullMethodName   = "/base.BaseService/VideoCollectList"
+	BaseService_HasLike_FullMethodName            = "/base.BaseService/HasLike"
+	BaseService_HasCollect_FullMethodName         = "/base.BaseService/HasCollect"
 )
 
 // BaseServiceClient is the client API for BaseService service.
@@ -51,6 +53,8 @@ type BaseServiceClient interface {
 	Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error)
 	CollectVideoAction(ctx context.Context, in *CollectVideoActionReq, opts ...grpc.CallOption) (*CollectVideoActionResp, error)
 	VideoCollectList(ctx context.Context, in *VideoCollectListReq, opts ...grpc.CallOption) (*VideoCollectListResp, error)
+	HasLike(ctx context.Context, in *HasLikeReq, opts ...grpc.CallOption) (*HasLikeResp, error)
+	HasCollect(ctx context.Context, in *HasCollectReq, opts ...grpc.CallOption) (*HasCollectResp, error)
 }
 
 type baseServiceClient struct {
@@ -178,6 +182,24 @@ func (c *baseServiceClient) VideoCollectList(ctx context.Context, in *VideoColle
 	return out, nil
 }
 
+func (c *baseServiceClient) HasLike(ctx context.Context, in *HasLikeReq, opts ...grpc.CallOption) (*HasLikeResp, error) {
+	out := new(HasLikeResp)
+	err := c.cc.Invoke(ctx, BaseService_HasLike_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseServiceClient) HasCollect(ctx context.Context, in *HasCollectReq, opts ...grpc.CallOption) (*HasCollectResp, error) {
+	out := new(HasCollectResp)
+	err := c.cc.Invoke(ctx, BaseService_HasCollect_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BaseServiceServer is the server API for BaseService service.
 // All implementations must embed UnimplementedBaseServiceServer
 // for forward compatibility
@@ -195,6 +217,8 @@ type BaseServiceServer interface {
 	Follow(context.Context, *FollowReq) (*FollowResp, error)
 	CollectVideoAction(context.Context, *CollectVideoActionReq) (*CollectVideoActionResp, error)
 	VideoCollectList(context.Context, *VideoCollectListReq) (*VideoCollectListResp, error)
+	HasLike(context.Context, *HasLikeReq) (*HasLikeResp, error)
+	HasCollect(context.Context, *HasCollectReq) (*HasCollectResp, error)
 	mustEmbedUnimplementedBaseServiceServer()
 }
 
@@ -240,6 +264,12 @@ func (UnimplementedBaseServiceServer) CollectVideoAction(context.Context, *Colle
 }
 func (UnimplementedBaseServiceServer) VideoCollectList(context.Context, *VideoCollectListReq) (*VideoCollectListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VideoCollectList not implemented")
+}
+func (UnimplementedBaseServiceServer) HasLike(context.Context, *HasLikeReq) (*HasLikeResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HasLike not implemented")
+}
+func (UnimplementedBaseServiceServer) HasCollect(context.Context, *HasCollectReq) (*HasCollectResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HasCollect not implemented")
 }
 func (UnimplementedBaseServiceServer) mustEmbedUnimplementedBaseServiceServer() {}
 
@@ -488,6 +518,42 @@ func _BaseService_VideoCollectList_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BaseService_HasLike_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HasLikeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).HasLike(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_HasLike_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).HasLike(ctx, req.(*HasLikeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BaseService_HasCollect_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HasCollectReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServiceServer).HasCollect(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BaseService_HasCollect_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServiceServer).HasCollect(ctx, req.(*HasCollectReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BaseService_ServiceDesc is the grpc.ServiceDesc for BaseService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -546,6 +612,14 @@ var BaseService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VideoCollectList",
 			Handler:    _BaseService_VideoCollectList_Handler,
+		},
+		{
+			MethodName: "HasLike",
+			Handler:    _BaseService_HasLike_Handler,
+		},
+		{
+			MethodName: "HasCollect",
+			Handler:    _BaseService_HasCollect_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

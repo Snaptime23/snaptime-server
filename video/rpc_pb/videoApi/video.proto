@@ -32,10 +32,14 @@ message VideoInfo {
   string Title = 8 [json_name = "title", (gogoproto.jsontag) = "title"];
   bool IsEncoding = 9 [json_name = "is_encoding", (gogoproto.jsontag) = "is_encoding"];
   int64 CollectCount = 10 [json_name = "collect_count", (gogoproto.jsontag) = "collect_count"];
+  int64 HasLike = 11 [json_name = "has_like", (gogoproto.jsontag) = "has_like"];
+  int64 HasCollect = 12 [json_name = "has_collect", (gogoproto.jsontag) = "has_collect"];
+  string Description = 13 [json_name = "description", (gogoproto.jsontag) = "description"];
 }
 
 message VideoFeedReq {
   int64 LatestTime = 1 [json_name = "latest_time", (gogoproto.jsontag) = "latest_time"];
+  string UserId = 2 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
 }
 message VideoFeedResp {
   repeated VideoInfo VideoList = 1 [json_name = "video_info", (gogoproto.jsontag) = "video_info"];
@@ -94,6 +98,7 @@ message PublishListResp {
 
 message SearchVideoByVideoTagReq {
   string VideoTag = 1 [json_name = "video_tag", (gogoproto.jsontag) = "video_tag"];
+  string UserId = 2 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
 }
 message SearchVideoByVideoTagResp {
   repeated VideoInfo Video = 1 [json_name = "video_info", (gogoproto.jsontag) = "video_info"];
