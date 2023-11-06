@@ -331,7 +331,7 @@ func (s *Service) CollectVideoAction(ctx context.Context, req *baseApi.CollectVi
 func (s *Service) VideoCollectList(ctx context.Context, req *baseApi.VideoCollectListReq) (resp *baseApi.VideoCollectListResp, err error) {
 	resp = new(baseApi.VideoCollectListResp)
 	resp.VideoList = make([]*baseApi.VideoInfo, 0)
-	videoIDS, err := dao.GetUserLikeRecords(ctx, req.UserId)
+	videoIDS, err := dao.GetUserCollectRecords(ctx, req.UserId)
 	for _, videoID := range videoIDS {
 		video, err := s.videoClient.GetVideoInfoById(ctx, &videoApi.GetVideoInfoByIdReq{
 			VideoId: videoID,
