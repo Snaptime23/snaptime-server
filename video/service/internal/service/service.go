@@ -337,12 +337,12 @@ func (s *Service) InrcCommentCount(ctx context.Context, req *videoApi.InrcCommen
 func (s *Service) UpdateVideo(ctx context.Context, req *videoApi.UpdateVideoReq) (resp *videoApi.UpdateVideoResp, err error) {
 	resp = new(videoApi.UpdateVideoResp)
 	err = dao.UpdateVideo(ctx, req.Video.VideoID, &map[string]interface{}{
-		"play_url":       req.Video.PlayUrl,
-		"favorite_count": req.Video.FavoriteCount,
-		"cover_url":      req.Video.CoverUrl,
-		"comment_count":  req.Video.CommentCount,
-		"title":          req.Video.Title,
-		"collect_count":  req.Video.CollectCount,
+		"play_url":        req.Video.PlayUrl,
+		"favourite_count": req.Video.FavoriteCount,
+		"cover_url":       req.Video.CoverUrl,
+		"comment_count":   req.Video.CommentCount,
+		"title":           req.Video.Title,
+		"collect_count":   req.Video.CollectCount,
 	})
 	return
 }
