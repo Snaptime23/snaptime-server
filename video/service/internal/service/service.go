@@ -52,6 +52,9 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 		if video.UploadState == 0 {
 			continue
 		}
+		if video.UploadState != 1 {
+			continue
+		}
 		isEncoding := true
 		if video.UploadState == 2 {
 			isEncoding = false
@@ -108,6 +111,7 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 			IsEncoding:    isEncoding,
 			HasCollect:    hasCollect.HasCollect,
 			HasLike:       hasLike.HasLike,
+			Description:   video.Bio,
 		})
 	}
 	return
@@ -197,6 +201,7 @@ func (s *Service) GetVideoInfoById(ctx context.Context, req *videoApi.GetVideoIn
 		CollectCount:  video.CollectCount,
 		IsFavorite:    0,
 		Title:         video.VideoName,
+		Description:   video.Bio,
 	}
 	return
 }
@@ -305,6 +310,7 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 			CollectCount:  val.CollectCount,
 			HasCollect:    hasCollect.HasCollect,
 			HasLike:       hasLike.HasLike,
+			Description:   val.Bio,
 		})
 	}
 	return
@@ -365,6 +371,7 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 			CollectCount:  video.CollectCount,
 			HasCollect:    hasCollect.HasCollect,
 			HasLike:       hasLike.HasLike,
+			Description:   video.Bio,
 		})
 	}
 	return

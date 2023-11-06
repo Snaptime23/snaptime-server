@@ -67,7 +67,7 @@ func GetCommentList(ctx context.Context, vid string) ([]model.Comment, error) {
 }
 
 func CreateComment(ctx context.Context, comment *model.Comment) error {
-	return DB.WithContext(ctx).Model(model.Comment{}).
+	return DB.WithContext(ctx).Model(&model.Comment{}).
 		Create(comment).Error
 }
 
