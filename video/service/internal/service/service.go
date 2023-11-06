@@ -6,6 +6,7 @@ import (
 	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/tools/errno"
 	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
+	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/cache"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao/model"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/service/downloadToken"
@@ -76,7 +77,7 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 			},
 			PlayUrl:       playUrl,
 			CoverUrl:      downloadToken.GetToken(video.CoverUrl),
-			FavoriteCount: video.FavouriteCount,
+			FavoriteCount: cache.GetVideoLikesCount(video.VideoID),
 			CommentCount:  video.CommentCount,
 			IsFavorite:    0,
 			Title:         video.VideoName,
@@ -165,7 +166,7 @@ func (s *Service) GetVideoInfoById(ctx context.Context, req *videoApi.GetVideoIn
 		},
 		PlayUrl:       video.PlayUrl,
 		CoverUrl:      video.CoverUrl,
-		FavoriteCount: video.FavouriteCount,
+		FavoriteCount: cache.GetVideoLikesCount(video.VideoID),
 		CommentCount:  video.CommentCount,
 		IsFavorite:    0,
 		Title:         video.VideoName,
@@ -249,7 +250,7 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 			},
 			PlayUrl:       playUrl,
 			CoverUrl:      downloadToken.GetToken(val.CoverUrl),
-			FavoriteCount: val.FavouriteCount,
+			FavoriteCount: cache.GetVideoLikesCount(val.VideoID),
 			CommentCount:  val.CommentCount,
 			IsFavorite:    0,
 			Title:         val.VideoName,
@@ -317,5 +318,14 @@ func (s *Service) UpdateVideo(ctx context.Context, req *videoApi.UpdateVideoReq)
 		"comment_count":  req.Video.CommentCount,
 		"title":          req.Video.Title,
 	})
+	return
+}
+
+func (s *Service) IncrFiled(ctx context.Context, req *videoApi.IncrFiledReq) (resp *videoApi.IncrFiledResp, err error) {
+	resp = new(videoApi.IncrFiledResp)
+	err = cache.IncrVideoField(ctx, req.VideoId, req.Value)
+	if err != nil {
+		return resp, errno.NewErrNo("update video filed failed")
+	}
 	return
 }

@@ -112,6 +112,15 @@ message UpdateVideoResp {
 
 }
 
+message IncrFiledReq {
+  string Filed = 1 [json_name = "filed", (gogoproto.jsontag) = "filed"];
+  int64 Value = 2 [json_name = "value", (gogoproto.jsontag) = "value"];
+  string VideoId = 3 [json_name = "video_id", (gogoproto.jsontag) = "video_id"];
+}
+message IncrFiledResp {
+
+}
+
 // 定义接口
 service VideoService {
   rpc VideoFeed (VideoFeedReq) returns(VideoFeedResp);
@@ -124,4 +133,5 @@ service VideoService {
   rpc SearchVideoByVideoTag (SearchVideoByVideoTagReq) returns (SearchVideoByVideoTagResp);
   rpc InrcCommentCount (InrcCommentCountReq) returns (InrcCommentCountResp);
   rpc UpdateVideo (UpdateVideoReq) returns (UpdateVideoResp);
+  rpc IncrFiled (IncrFiledReq) returns (IncrFiledResp);
 }

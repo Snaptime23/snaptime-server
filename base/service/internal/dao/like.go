@@ -24,7 +24,7 @@ func GetUserLikeRecords(ctx context.Context, uid string) ([]string, error) {
 }
 
 func HasLiked(ctx context.Context, uid, vid string) (bool, error) {
-	var ret bool
+	var ret int64
 	err := DB.WithContext(ctx).Model(model.Like{}).
 		Select("action").
 		Where("user_id=? AND video_id=?", uid, vid).
@@ -35,7 +35,7 @@ func HasLiked(ctx context.Context, uid, vid string) (bool, error) {
 		}
 		return false, err
 	}
-	return ret, nil
+	return ret == 0, nil
 }
 
 func UpdateAndInsertLikeRecord(ctx context.Context, uid, vid string, action int64) error {
@@ -65,7 +65,8 @@ func UpdateAndInsertLikeRecord(ctx context.Context, uid, vid string, action int6
 	}
 	if history.LikeID != "" && history.Action != record.Action {
 		err = DB.WithContext(ctx).Model(&model.Like{}).
-			UpdateColumn("action_type", action).
+			Where("user_id=? AND video_id=?", uid, vid).
+			UpdateColumn("action", action).
 			Error
 		if err != nil {
 			return err

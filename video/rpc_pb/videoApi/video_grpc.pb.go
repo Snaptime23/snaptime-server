@@ -31,6 +31,7 @@ const (
 	VideoService_SearchVideoByVideoTag_FullMethodName = "/video.VideoService/SearchVideoByVideoTag"
 	VideoService_InrcCommentCount_FullMethodName      = "/video.VideoService/InrcCommentCount"
 	VideoService_UpdateVideo_FullMethodName           = "/video.VideoService/UpdateVideo"
+	VideoService_IncrFiled_FullMethodName             = "/video.VideoService/IncrFiled"
 )
 
 // VideoServiceClient is the client API for VideoService service.
@@ -47,6 +48,7 @@ type VideoServiceClient interface {
 	SearchVideoByVideoTag(ctx context.Context, in *SearchVideoByVideoTagReq, opts ...grpc.CallOption) (*SearchVideoByVideoTagResp, error)
 	InrcCommentCount(ctx context.Context, in *InrcCommentCountReq, opts ...grpc.CallOption) (*InrcCommentCountResp, error)
 	UpdateVideo(ctx context.Context, in *UpdateVideoReq, opts ...grpc.CallOption) (*UpdateVideoResp, error)
+	IncrFiled(ctx context.Context, in *IncrFiledReq, opts ...grpc.CallOption) (*IncrFiledResp, error)
 }
 
 type videoServiceClient struct {
@@ -147,6 +149,15 @@ func (c *videoServiceClient) UpdateVideo(ctx context.Context, in *UpdateVideoReq
 	return out, nil
 }
 
+func (c *videoServiceClient) IncrFiled(ctx context.Context, in *IncrFiledReq, opts ...grpc.CallOption) (*IncrFiledResp, error) {
+	out := new(IncrFiledResp)
+	err := c.cc.Invoke(ctx, VideoService_IncrFiled_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VideoServiceServer is the server API for VideoService service.
 // All implementations must embed UnimplementedVideoServiceServer
 // for forward compatibility
@@ -161,6 +172,7 @@ type VideoServiceServer interface {
 	SearchVideoByVideoTag(context.Context, *SearchVideoByVideoTagReq) (*SearchVideoByVideoTagResp, error)
 	InrcCommentCount(context.Context, *InrcCommentCountReq) (*InrcCommentCountResp, error)
 	UpdateVideo(context.Context, *UpdateVideoReq) (*UpdateVideoResp, error)
+	IncrFiled(context.Context, *IncrFiledReq) (*IncrFiledResp, error)
 	mustEmbedUnimplementedVideoServiceServer()
 }
 
@@ -197,6 +209,9 @@ func (UnimplementedVideoServiceServer) InrcCommentCount(context.Context, *InrcCo
 }
 func (UnimplementedVideoServiceServer) UpdateVideo(context.Context, *UpdateVideoReq) (*UpdateVideoResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateVideo not implemented")
+}
+func (UnimplementedVideoServiceServer) IncrFiled(context.Context, *IncrFiledReq) (*IncrFiledResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IncrFiled not implemented")
 }
 func (UnimplementedVideoServiceServer) mustEmbedUnimplementedVideoServiceServer() {}
 
@@ -391,6 +406,24 @@ func _VideoService_UpdateVideo_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VideoService_IncrFiled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IncrFiledReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoServiceServer).IncrFiled(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: VideoService_IncrFiled_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoServiceServer).IncrFiled(ctx, req.(*IncrFiledReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VideoService_ServiceDesc is the grpc.ServiceDesc for VideoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -437,6 +470,10 @@ var VideoService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateVideo",
 			Handler:    _VideoService_UpdateVideo_Handler,
+		},
+		{
+			MethodName: "IncrFiled",
+			Handler:    _VideoService_IncrFiled_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

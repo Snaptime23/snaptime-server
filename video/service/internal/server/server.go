@@ -57,3 +57,7 @@ func (s *Server) InrcCommentCount(ctx context.Context, req *videoApi.InrcComment
 func (s *Server) UpdateVideo(ctx context.Context, req *videoApi.UpdateVideoReq) (resp *videoApi.UpdateVideoResp, err error) {
 	return s.svr.UpdateVideo(ctx, req)
 }
+
+func (s *Server) IncrFiled(ctx context.Context, req *videoApi.IncrFiledReq) (resp *videoApi.IncrFiledResp, err error) {
+	return s.svr.IncrFiled(ctx, req)
+}
