@@ -45,10 +45,10 @@ func InitBaseRouter(engine *gin.RouterGroup, server *http.HttpServer) {
 	video := engine.Group("/video")
 	{
 		video.Use(mw.XJwtAuth()).GET("/feed", server.VideoFeed)
+		video.Use(mw.XJwtAuth()).GET("/search", server.SearchVideoByVideoTag)
 		video.Use(mw.JwtAuth()).POST("/like", server.LikeVideoAction)
 		video.Use(mw.JwtAuth()).GET("/like/list", server.VideoLikeList)
 		video.Use(mw.JwtAuth()).GET("/download", server.DownLoadVideo)
-		video.Use(mw.JwtAuth()).GET("/search", server.SearchVideoByVideoTag)
 
 		video.Use(mw.JwtAuth()).POST("/upload/token", server.UpLoadVideo)
 		video.Use(mw.JwtAuth()).POST("/upload/meta", server.UpLoadVideo)

@@ -323,7 +323,11 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 	if err != nil {
 		return
 	}
-	for _, videoId := range videoIds {
+	if len(videoIds) == 0 {
+		return resp, errno.NewErrNo("空空如也")
+	}
+	for i := 0; i < 10; i++ {
+		videoId := videoIds[rand.Intn(len(videoIds))]
 		video, err := dao.GetVideoByVideoId(ctx, videoId)
 		if err != nil {
 			continue
