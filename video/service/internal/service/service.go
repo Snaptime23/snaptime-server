@@ -52,7 +52,7 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 		if video.UploadState == 0 {
 			continue
 		}
-		if video.UploadState != 1 {
+		if video.UploadState == 1 {
 			continue
 		}
 		isEncoding := true
