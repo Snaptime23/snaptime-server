@@ -134,7 +134,7 @@ message FollowerListResp {
 message FollowReq {
   string UserId = 1 [json_name = "user_id", (gogoproto.jsontag) = "user_id"];
   string ToUserId = 2 [json_name = "to_user_id", (gogoproto.jsontag) = "to_user_id"];
-  int64 Action = 3  [json_name = "action", (gogoproto.jsontag) = "action"];
+  int64 ActionType = 3  [json_name = "action_type", (gogoproto.jsontag) = "action_type"];
 }
 message FollowResp {
 }

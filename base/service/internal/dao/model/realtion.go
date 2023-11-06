@@ -12,5 +12,5 @@ type Relation struct {
 	DeletedAt  sql.NullTime `gorm:"index"`
 	UserId     string       `gorm:"column:user_id;not null;uniqueIndex:idx_relation"`
 	ToUserId   string       `gorm:"column:to_user_id;not null;uniqueIndex:idx_relation"`
-	Action     int64        `gorm:"column:action" json:"action"`
+	ActionType int64        `gorm:"column:action_type" json:"action_type"`
 }

@@ -57,3 +57,7 @@ func (s *Server) FollowList(ctx context.Context, req *baseApi.FollowListReq) (re
 func (s *Server) FollowerList(ctx context.Context, req *baseApi.FollowerListReq) (resp *baseApi.FollowerListResp, err error) {
 	return s.svr.FollowerList(ctx, req)
 }
+
+func (s *Server) Follow(ctx context.Context, req *baseApi.FollowReq) (resp *baseApi.FollowResp, err error) {
+	return s.svr.Follow(ctx, req)
+}

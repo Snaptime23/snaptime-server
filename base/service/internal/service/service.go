@@ -277,3 +277,9 @@ func (s *Service) FollowerList(ctx context.Context, req *baseApi.FollowerListReq
 	}
 	return
 }
+
+func (s *Service) Follow(ctx context.Context, req *baseApi.FollowReq) (resp *baseApi.FollowResp, err error) {
+	resp = new(baseApi.FollowResp)
+	err = dao.Follow(ctx, req.UserId, req.ToUserId, req.ActionType)
+	return
+}

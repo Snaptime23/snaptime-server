@@ -326,14 +326,19 @@ func (s *HttpServer) FollowerList(c *gin.Context) {
 
 func (s *HttpServer) Follow(c *gin.Context) {
 	arg := new(struct {
-		UserId   string `json:"user_id"`
-		ToUserId string `json:"to_user_id"`
+		UserId     string `json:"user_id"`
+		ToUserId   string `json:"to_user_id"`
+		ActionType int64  `json:"action_type"`
 	})
+	if tools.HandleError(c, c.Bind(arg), "") {
+		return
+	}
 	userId, _ := c.Get("user_id")
 	arg.UserId = userId.(string)
 	resp, err := s.svr.Follow(context.Background(), &baseApi.FollowReq{
-		UserId:   arg.UserId,
-		ToUserId: arg.ToUserId,
+		UserId:     arg.UserId,
+		ToUserId:   arg.ToUserId,
+		ActionType: arg.ActionType,
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }
