@@ -63,6 +63,7 @@ func GetVideoList(ctx context.Context) (ret []string, err error) {
 	err = DB.WithContext(ctx).
 		Model(&model.Video{}).
 		Select("video_id").
+		Where("upload_state > 0 and meta_state > 0").
 		Find(&ret).Error
 	return
 }

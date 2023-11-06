@@ -45,7 +45,7 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 		if err != nil {
 			continue
 		}
-		if video.UploadState == 0 && video.MetaState == 0 {
+		if !(video.UploadState != 0 && video.MetaState != 0) {
 			continue
 		}
 		isEncoding := true
@@ -218,7 +218,7 @@ func (s *Service) PublishList(ctx context.Context, req *videoApi.PublishListReq)
 	resp.Video = make([]*videoApi.VideoInfo, 0)
 	videos, err := dao.GetVideoListByUserId(ctx, req.UserId)
 	for _, val := range videos {
-		if val.UploadState == 0 && val.MetaState == 0 {
+		if !(val.UploadState != 0 && val.MetaState != 0) {
 			continue
 		}
 		isEncoding := true
