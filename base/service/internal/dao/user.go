@@ -7,11 +7,14 @@ import (
 	"log"
 )
 
-func CreateUser(ctx context.Context, username, password string) (string, error) {
+func CreateUser(ctx context.Context, username, password, avtar, des, email string) (string, error) {
 	user := &model.User{
 		UserID:   uuid.NewString(),
 		UserName: username,
 		Password: password,
+		Avatar:   avtar,
+		Bio:      des,
+		Email:    email,
 	}
 	err := DB.WithContext(ctx).Model(model.User{}).Create(user).Error
 	if err != nil {

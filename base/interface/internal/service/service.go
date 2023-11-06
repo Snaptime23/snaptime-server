@@ -19,10 +19,13 @@ func NewService(connBase, connVideo *grpc.ClientConn) *Service {
 	}
 }
 
-func (s *Service) UserRegister(username, password string) (*baseApi.UserRegisterResp, error) {
+func (s *Service) UserRegister(username, password, avtar, description, email string) (*baseApi.UserRegisterResp, error) {
 	return s.baseClient.UserRegister(context.Background(), &baseApi.UserRegisterReq{
-		UserName: username,
-		Password: password,
+		UserName:    username,
+		Password:    password,
+		Avatar:      avtar,
+		Description: description,
+		Email:       email,
 	})
 }
 

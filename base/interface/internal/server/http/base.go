@@ -24,14 +24,17 @@ func NewServer(connBase, connVideo *grpc.ClientConn) *HttpServer {
 
 func (s *HttpServer) UserRegister(c *gin.Context) {
 	arg := new(struct {
-		UserName string `json:"user_name"`
-		Password string `json:"password"`
+		UserName    string `json:"user_name"`
+		Password    string `json:"password"`
+		Avatar      string `json:"avatar"`
+		Description string `json:"description"`
+		Email       string `json:"email"`
 	})
 	if tools.HandleError(c, c.Bind(arg), "") {
 		return
 	}
 	fmt.Println(arg)
-	resp, err := s.svr.UserRegister(arg.UserName, arg.Password)
+	resp, err := s.svr.UserRegister(arg.UserName, arg.Password, arg.Avatar, arg.Description, arg.Email)
 	tools.HandleErrOrResp(c, resp, err)
 }
 

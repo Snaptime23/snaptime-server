@@ -20,6 +20,7 @@ type User struct {
 	FollowerCount int64
 	VideoNum      int64
 	FavouriteNum  int64
+	Email         string
 }
 
 // TableName Comment's table name

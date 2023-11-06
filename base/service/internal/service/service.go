@@ -43,7 +43,7 @@ func (s *Service) UserRegister(ctx context.Context, req *baseApi.UserRegisterReq
 	if err != nil {
 		return
 	}
-	resp.UserId, err = dao.CreateUser(ctx, req.UserName, string(EncodePassword))
+	resp.UserId, err = dao.CreateUser(ctx, req.UserName, string(EncodePassword), req.Avatar, req.Description, req.Description)
 	if err != nil {
 		return
 	}
