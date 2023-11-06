@@ -62,6 +62,7 @@ jobs:
       - name: Replace secrets and variables
         run: |
           sed -i "s|__PLACEHOLDER_DB_PASSWORD__|${{ secrets.DB_PASSWORD }}|g" ./serverless/serverless.yaml
+          sed -i "s|__PLACEHOLDER_REDIS_PASSWORD__|${{ secrets.REDIS_PASSWORD }}|g" ./serverless/serverless.yaml
           sed -i "s|__PLACEHOLDER_QINIU_ACCESS_KEY__|${{ secrets.QINIU_ACCESS_KEY }}|g" ./serverless/serverless.yaml
           sed -i "s|__PLACEHOLDER_QINIU_SECRET_KEY__|${{ secrets.QINIU_SECRET_KEY }}|g" ./serverless/serverless.yaml
       - name: Install Serverless Cloud Framework
