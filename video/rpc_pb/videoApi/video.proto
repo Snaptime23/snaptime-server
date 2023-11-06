@@ -105,6 +105,13 @@ message InrcCommentCountReq {
 message InrcCommentCountResp {
 }
 
+message UpdateVideoReq {
+  VideoInfo Video = 1;
+}
+message UpdateVideoResp {
+
+}
+
 // 定义接口
 service VideoService {
   rpc VideoFeed (VideoFeedReq) returns(VideoFeedResp);
@@ -116,4 +123,5 @@ service VideoService {
   rpc PublishList (PublishListReq) returns (PublishListResp);
   rpc SearchVideoByVideoTag (SearchVideoByVideoTagReq) returns (SearchVideoByVideoTagResp);
   rpc InrcCommentCount (InrcCommentCountReq) returns (InrcCommentCountResp);
+  rpc UpdateVideo (UpdateVideoReq) returns (UpdateVideoResp);
 }

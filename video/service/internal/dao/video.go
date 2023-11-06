@@ -57,3 +57,12 @@ func GetVideoListByUserId(ctx context.Context, uid string) (ret []*model.Video, 
 	err = DB.WithContext(ctx).Model(&model.Video{}).Where("create_user_id = ?", uid).Find(&ret).Error
 	return
 }
+
+func GetVideoList(ctx context.Context) (ret []string, err error) {
+	ret = make([]string, 0)
+	err = DB.WithContext(ctx).
+		Model(&model.Video{}).
+		Select("video_id").
+		Find(&ret).Error
+	return
+}

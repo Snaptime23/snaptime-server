@@ -96,3 +96,7 @@ func (s *Service) Follow(ctx context.Context, req *baseApi.FollowReq) (resp *bas
 func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.SearchVideoByVideoTagReq) (resp *videoApi.SearchVideoByVideoTagResp, err error) {
 	return s.videoClient.SearchVideoByVideoTag(ctx, req)
 }
+
+func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (resp *videoApi.VideoFeedResp, err error) {
+	return s.videoClient.VideoFeed(ctx, req)
+}

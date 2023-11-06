@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
+	"github.com/Snaptime23/snaptime-server/v2/tools/errno"
 	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao"
 	"github.com/Snaptime23/snaptime-server/v2/video/service/internal/dao/model"
@@ -13,6 +14,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"gorm.io/gorm"
+	"math/rand"
 	"strings"
 )
 
@@ -31,6 +33,56 @@ func NewService() *Service {
 }
 
 func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (resp *videoApi.VideoFeedResp, err error) {
+	resp = new(videoApi.VideoFeedResp)
+	resp.VideoList = make([]*videoApi.VideoInfo, 0)
+	videoIds, err := dao.GetVideoList(ctx)
+	if len(videoIds) == 0 {
+		return resp, errno.NewErrNo("空空如也")
+	}
+	for i := 0; i < 10; i++ {
+		videoId := videoIds[rand.Intn(len(videoIds))]
+		video, err := dao.GetVideoByVideoId(ctx, videoId)
+		if err != nil {
+			continue
+		}
+		if video.UploadState == 0 && video.MetaState == 0 {
+			continue
+		}
+		isEncoding := true
+		if video.UploadState == 2 {
+			isEncoding = false
+		}
+		playUrl, err := dao.GetHighUrl(ctx, video.VideoID)
+		playUrl = downloadToken.GetToken(playUrl)
+		if err != nil && err != gorm.ErrRecordNotFound {
+			continue
+		}
+		if playUrl == "" {
+			playUrl = video.PlayUrl
+		}
+		resp.VideoList = append(resp.VideoList, &videoApi.VideoInfo{
+			VideoID: video.VideoID,
+			Author: &videoApi.UserInfo{
+				UserId:          "",
+				UserName:        "",
+				FollowCount:     0,
+				FollowerCount:   0,
+				IsFollow:        0,
+				Avatar:          "",
+				PublishNum:      0,
+				FavouriteNum:    0,
+				LikeNum:         0,
+				ReceivedLikeNum: 0,
+			},
+			PlayUrl:       playUrl,
+			CoverUrl:      downloadToken.GetToken(video.CoverUrl),
+			FavoriteCount: video.FavouriteCount,
+			CommentCount:  video.CommentCount,
+			IsFavorite:    0,
+			Title:         video.VideoName,
+			IsEncoding:    isEncoding,
+		})
+	}
 	return
 }
 
@@ -252,6 +304,18 @@ func (s *Service) InrcCommentCount(ctx context.Context, req *videoApi.InrcCommen
 	}
 	err = dao.UpdateVideo(ctx, req.VideoId, &map[string]interface{}{
 		"comment_count": video.CommentCount + req.Count,
+	})
+	return
+}
+
+func (s *Service) UpdateVideo(ctx context.Context, req *videoApi.UpdateVideoReq) (resp *videoApi.UpdateVideoResp, err error) {
+	resp = new(videoApi.UpdateVideoResp)
+	err = dao.UpdateVideo(ctx, req.Video.VideoID, &map[string]interface{}{
+		"play_url":       req.Video.PlayUrl,
+		"favorite_count": req.Video.FavoriteCount,
+		"cover_url":      req.Video.CoverUrl,
+		"comment_count":  req.Video.CommentCount,
+		"title":          req.Video.Title,
 	})
 	return
 }

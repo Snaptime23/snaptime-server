@@ -185,6 +185,23 @@ func (s *Service) LikeComment(ctx context.Context, req *baseApi.LikeCommentReq) 
 func (s *Service) LikeVideoAction(ctx context.Context, req *baseApi.LikeVideoActionReq) (resp *baseApi.LikeVideoActionResp, err error) {
 	resp = new(baseApi.LikeVideoActionResp)
 	err = dao.UpdateAndInsertLikeRecord(ctx, req.UserId, req.VideoId, req.ActionType)
+	if err == nil {
+		video, err := s.videoClient.GetVideoInfoById(ctx, &videoApi.GetVideoInfoByIdReq{
+			VideoId: req.VideoId,
+		})
+		if err != nil {
+			return resp, err
+		}
+		if req.ActionType == 1 {
+			video.Video.FavoriteCount--
+		} else {
+			video.Video.FavoriteCount++
+		}
+		_, err = s.videoClient.UpdateVideo(ctx, &videoApi.UpdateVideoReq{Video: video.Video})
+		if err != nil {
+			return resp, err
+		}
+	}
 	return
 }
 

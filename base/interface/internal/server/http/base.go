@@ -353,3 +353,10 @@ func (s *HttpServer) SearchVideoByVideoTag(c *gin.Context) {
 	})
 	tools.HandleErrOrResp(c, resp, err)
 }
+
+func (s *HttpServer) VideoFeed(c *gin.Context) {
+	resp, err := s.svr.VideoFeed(context.Background(), &videoApi.VideoFeedReq{
+		LatestTime: 0,
+	})
+	tools.HandleErrOrResp(c, resp, err)
+}
