@@ -14,7 +14,12 @@ func Init() {
 		return
 	}
 	password := os.Getenv("DB_PASSWORD")
-	dsn := "jiyeon:" + password + "@tcp(d.reeky.org:13307)/snaptime?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := os.Getenv("MYSQL_USERNAME") +
+		":" +
+		password +
+		"@tcp(" +
+		os.Getenv("DB_ADDR") +
+		")/snaptime?charset=utf8mb4&parseTime=True&loc=Local"
 	var err error
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {

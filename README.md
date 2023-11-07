@@ -3,12 +3,15 @@
 ## 快速开始
 
 ### 需要提前设置的环境变量
-
-```bash
-DB_PASSWORD="xxx"
-QINIU_ACCESS_KEY="xxx"
-QINIU_SECRET_KEY="xxx"
-REDIS_PASSWORD="xxx"
+```
+DB_PASSWORD
+HOST=0.0.0.0
+MYSQL_USERNAME
+QINIU_ACCESS_KEY
+QINIU_SECRET_KEY
+REDIS_CONN_URL
+REDIS_PASSWORD
+MYSQL_CONN_URL
 ```
 
 ### 下载依赖
@@ -47,7 +50,6 @@ protoc -I=. -I=$GOPATH/pkg/mod --go-grpc_out=. --gogo_out=. *.proto
 ```
 
 ## 技术选型与开发设计
-
 ### 技术选型
 
 ![img.png](./docs/images/img.png)

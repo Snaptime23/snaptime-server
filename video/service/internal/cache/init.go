@@ -20,7 +20,7 @@ func InitRedis() {
 		return
 	}
 	Rs = redis.NewClient(&redis.Options{
-		Addr:     "d.reeky.org:32771",
+		Addr:     os.Getenv("REDIS_ADDR"),
 		Password: os.Getenv("REDIS_PASSWORD"),
 		DB:       0,
 	})
