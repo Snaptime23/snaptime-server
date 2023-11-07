@@ -220,6 +220,9 @@ func (s *Service) CallbackOne(ctx context.Context, req *videoApi.RebackOneReq) (
 		return
 	}
 	video.UploadState++
+	if req.CoverUrl == "" {
+		req.CoverUrl = fmt.Sprintf("encoded/screenshots/%s_screenshot.jpg", video.VideoID)
+	}
 	err = dao.UpdateVideo(ctx, video.VideoID, &map[string]interface{}{
 		"upload_state": video.UploadState,
 		"cover_url":    req.CoverUrl,
@@ -366,7 +369,7 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 				LikeNum:         user.User.FavouriteNum,
 				ReceivedLikeNum: user.User.ReceivedLikeNum,
 			},
-			PlayUrl:       video.PlayUrl,
+			PlayUrl:       downloadToken.GetToken(video.ResourceKey),
 			CoverUrl:      downloadToken.GetToken(video.CoverUrl),
 			FavoriteCount: video.FavouriteCount,
 			CommentCount:  video.CommentCount,
