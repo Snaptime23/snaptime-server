@@ -1,5 +1,43 @@
 # 服务端
 
+## 快速开始
+### 需要提前设置的环境变量
+```
+DB_PASSWORD=;
+HOST=0.0.0.0;
+QINIU_ACCESS_KEY=;
+QINIU_SECRET_KEY=;
+REDIS_PASSWORD=;
+```
+
+### 下载依赖
+在项目的根目录下
+```
+go mod tidy
+```
+运行
+```
+go run main.go
+```
+
+### 如果想 修改/生成 gRPC 代码
+```
+go get github.com/gogo/protobuf/proto 
+go get github.com/gogo/protobuf/gogoproto
+go get google.golang.org/grpc
+go install google.golang.org/protobuf/cmd/protoc-gen-go
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+go install github.com/gogo/protobuf/gogoproto 
+```
+然后在 proto 的文件夹下执行：
+
+但是需要确保 ```github.com/gogo/protobuf/gogoproto/gogo.proto``` 在 ```$GOPATH/pkg/mod``` 目录下
+
+最后执行
+```
+protoc -I=. -I=$GOPATH/pkg/mod --go-grpc_out=. --gogo_out=. *.proto
+```
+
 ## 技术选型与开发设计
 ### 技术选型
 ![img.png](img.png)
