@@ -14,7 +14,7 @@ func Init() {
 		return
 	}
 	password := os.Getenv("DB_PASSWORD")
-	dsn := os.Getenv("MYSQL_USERNAME") +
+	dsn := os.Getenv("DB_USERNAME") +
 		":" +
 		password +
 		"@tcp(" +
