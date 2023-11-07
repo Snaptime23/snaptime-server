@@ -67,6 +67,8 @@ jobs:
           sed -i "s|__PLACEHOLDER_REDIS_PASSWORD__|${{ secrets.REDIS_PASSWORD }}|g" ./serverless/serverless.yaml
           sed -i "s|__PLACEHOLDER_QINIU_ACCESS_KEY__|${{ secrets.QINIU_ACCESS_KEY }}|g" ./serverless/serverless.yaml
           sed -i "s|__PLACEHOLDER_QINIU_SECRET_KEY__|${{ secrets.QINIU_SECRET_KEY }}|g" ./serverless/serverless.yaml
+          sed -i "s|__PLACEHOLDER_DB_ADDR__|${{ vars.DB_ADDR }}|g" ./serverless/serverless.yaml
+          sed -i "s|__PLACEHOLDER_REDIS_ADDR__|${{ vars.REDIS_ADDR }}|g" ./serverless/serverless.yaml
       - name: Install Serverless Cloud Framework
         run: npm install -g serverless-cloud-framework
       - name: Configure SCF credentials
