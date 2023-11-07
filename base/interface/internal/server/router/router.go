@@ -26,9 +26,9 @@ func CreateEngine() *gin.Engine {
 func InitBaseRouter(engine *gin.RouterGroup, server *http.HttpServer) {
 	user := engine.Group("/user")
 	{
+		user.Use(mw.XJwtAuth()).GET("/info", server.UserInfo)
 		user.POST("/register", server.UserRegister)
 		user.POST("/login", server.UserLogin)
-		user.Use(mw.JwtAuth()).GET("/info", server.UserInfo)
 		user.Use(mw.JwtAuth()).GET("/publish/list", server.PublishList)
 		user.Use(mw.JwtAuth()).POST("/follow", server.Follow)
 		user.Use(mw.JwtAuth()).GET("/follow/list", server.FollowList)

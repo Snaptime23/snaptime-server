@@ -105,6 +105,9 @@ func (s *HttpServer) CommentList(c *gin.Context) {
 	arg.Token = c.Query("token")
 	arg.RootId = c.Query("root_id")
 	arg.ParentID = c.Query("parent_id")
+	if arg.VideoId == "" {
+		tools.HandleErrOrResp(c, nil, nil)
+	}
 	resp, err := s.svr.CommentList(context.Background(), &baseApi.CommentListReq{
 		VideoId:  arg.VideoId,
 		Token:    arg.Token,
