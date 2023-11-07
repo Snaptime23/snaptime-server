@@ -3,6 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
+	"math/rand"
+	"strings"
+
 	"github.com/Snaptime23/snaptime-server/v2/base/rpc_pb/baseApi"
 	"github.com/Snaptime23/snaptime-server/v2/tools/errno"
 	"github.com/Snaptime23/snaptime-server/v2/video/rpc_pb/videoApi"
@@ -15,8 +18,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"gorm.io/gorm"
-	"math/rand"
-	"strings"
 )
 
 type Service struct {
@@ -225,9 +226,7 @@ func (s *Service) CallbackOne(ctx context.Context, req *videoApi.RebackOneReq) (
 		return
 	}
 	video.UploadState++
-	if req.CoverUrl == "" {
-		req.CoverUrl = fmt.Sprintf("encoded/screenshots/%s_screenshot.jpg", video.VideoID)
-	}
+	req.CoverUrl = fmt.Sprintf("encoded/screenshots/%s_screenshot.jpg", video.VideoID)
 	err = dao.UpdateVideo(ctx, video.VideoID, &map[string]interface{}{
 		"upload_state": video.UploadState,
 		"cover_url":    req.CoverUrl,
