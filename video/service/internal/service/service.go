@@ -40,7 +40,11 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 	if len(videoIds) == 0 {
 		return resp, errno.NewErrNo("空空如也")
 	}
-	for i := 0; i < 10; i++ {
+	cnt := 0
+	for i := 0; i < 1000; i++ {
+		if cnt > 10 {
+			break
+		}
 		videoId := videoIds[rand.Intn(len(videoIds))]
 		video, err := dao.GetVideoByVideoId(ctx, videoId)
 		if err != nil {
@@ -87,6 +91,7 @@ func (s *Service) VideoFeed(ctx context.Context, req *videoApi.VideoFeedReq) (re
 		if err != nil {
 			continue
 		}
+		cnt++
 		resp.VideoList = append(resp.VideoList, &videoApi.VideoInfo{
 			VideoID: video.VideoID,
 			Author: &videoApi.UserInfo{
@@ -329,7 +334,11 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 	if len(videoIds) == 0 {
 		return resp, errno.NewErrNo("空空如也")
 	}
-	for i := 0; i < 10; i++ {
+	cnt := 0
+	for i := 0; i < 1000; i++ {
+		if cnt > 10 {
+			break
+		}
 		videoId := videoIds[rand.Intn(len(videoIds))]
 		video, err := dao.GetVideoByVideoId(ctx, videoId)
 		if err != nil {
@@ -355,6 +364,7 @@ func (s *Service) SearchVideoByVideoTag(ctx context.Context, req *videoApi.Searc
 		if err != nil {
 			continue
 		}
+		cnt++
 		resp.Video = append(resp.Video, &videoApi.VideoInfo{
 			VideoID: video.VideoID,
 			Author: &videoApi.UserInfo{
