@@ -20,8 +20,8 @@
 * 每张表都添加了 $deleted_at$ 字段用于软删除。
 * 索引：
     - 用户表：对( $username$ , $deleted_at$ )做唯一索引；
-    - 评论表：$vid$、$uid$ 做索引；
-    - 点赞表：$uid$、$vid$ 做索引，（$uid$, $vid$, $deleted_at$ ）做唯一约束；
+    - 评论表：$vid$ 、$uid$ 做索引；
+    - 点赞表：$uid$ 、$vid$ 做索引，（ $uid$, $vid$ , $deleted$_$at$ ）做唯一约束；
 
 
 缓存层，使用 $Redis$ 的 $String$ 的数据结构，使用 $key$ - $value$，存储一个视频的点赞数量。
